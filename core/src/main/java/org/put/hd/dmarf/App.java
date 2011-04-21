@@ -1,8 +1,7 @@
 package org.put.hd.dmarf;
 
 /**
- * Hello world!
- *
+ * Entry point for DMARF application. 
  */
 public class App 
 {
