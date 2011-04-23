@@ -2,11 +2,13 @@ package org.put.hd.dmarf.unit;
 
 import java.io.File;
 import java.io.IOException;
+import java.io.Reader;
 
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
-import org.put.hd.dmarf.DataLoader;
+import org.mockito.Mockito;
+import org.put.hd.dmarf.SimpleDataLoader;
 import org.put.hd.dmarf.IDataLoader;
 
 /**
@@ -15,10 +17,12 @@ import org.put.hd.dmarf.IDataLoader;
 public class DataLoading {
 
 	private IDataLoader loader;
+	private IDataFormatter mockFormatter;
 
 	@Before
 	public void set_up() {
-		loader = new DataLoader();
+		mockFormatter = Mockito.mock(IDataFormatter.class);
+		loader = new SimpleDataLoader(mockFormatter);
 	}
 
 	@Test
@@ -48,6 +52,7 @@ public class DataLoading {
 
 	@Test
 	public void providing_normal_file_gets_the_data_formater_being_used() {
+
 		// create the stub file
 		String fileName = "testFileName";
 		File f = new File(fileName);
@@ -60,10 +65,16 @@ public class DataLoading {
 
 		}
 
-		// perform test
 		try {
+
+			// perform test
 			loader.setInputFileName(fileName);
 			loader.loadData();
+
+			// assert that good formatter was used
+			Mockito.verify(mockFormatter).getFormattedData(
+					Mockito.any(Reader.class));
+
 		} finally {
 			// clean up after this fileName
 			if (f.exists())
