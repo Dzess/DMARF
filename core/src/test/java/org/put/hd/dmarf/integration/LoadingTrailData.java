@@ -3,8 +3,8 @@ package org.put.hd.dmarf.integration;
 import org.junit.Test;
 
 /**
- * Integration level test for loading all data.
- * 
+ * Integration level test for loading all data. 
+ * Acceptance level of test for data loading.
  * @author Piotr
  * 
  */

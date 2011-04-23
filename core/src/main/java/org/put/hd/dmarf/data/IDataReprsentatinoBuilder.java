@@ -12,7 +12,7 @@ public interface IDataReprsentatinoBuilder {
 	 * one more item.
 	 * @param itemIdentifier - single item to be pushed to the last transaction.
 	 */
-	public void addItemInTransactino(Integer itemIdentifier);
+	public void addItemInTransaction(Integer itemIdentifier);
 	
 	/**
 	 * Invoke this method when you want builder to produce representation containing one 

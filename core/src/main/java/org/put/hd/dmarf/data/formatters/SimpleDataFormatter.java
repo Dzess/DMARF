@@ -58,7 +58,7 @@ public class SimpleDataFormatter implements IDataFormatter {
 				// builder
 				String singleItemString = (String) tokenizer.nextElement();
 				Integer item = Integer.parseInt(singleItemString);
-				builder.addItemInTransactino(item);
+				builder.addItemInTransaction(item);
 			}
 
 		}
