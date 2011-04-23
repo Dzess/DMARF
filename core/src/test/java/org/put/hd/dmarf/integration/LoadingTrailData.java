@@ -15,7 +15,7 @@ public class LoadingTrailData {
 		// TODO: write this test (integration level)
 	}
 	
-	
+	@Test
 	public void providing_inccorect_file_resutls_in_exception(){
 		// TODO: write this integration level test
 	}

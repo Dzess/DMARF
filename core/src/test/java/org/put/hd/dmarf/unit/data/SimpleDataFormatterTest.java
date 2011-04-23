@@ -19,7 +19,7 @@ import org.put.hd.dmarf.utils.InvocatinoNumbered;
  * 
  * @author Piotr
  */
-public class SimpleDataFormatterTests {
+public class SimpleDataFormatterTest {
 
 	@Mock
 	private IDataReprsentatinoBuilder builderMock;
@@ -28,9 +28,6 @@ public class SimpleDataFormatterTests {
 	 * System under test
 	 */
 	private SimpleDataFormatter fomratter;
-
-	private DataRepresentationBase result;
-	
 
 	@Before
 	public void set_up() {
@@ -64,8 +61,7 @@ public class SimpleDataFormatterTests {
 		String fileMock = "2 3" + System.getProperty("line.separator");
 		Reader someReader = new StringReader(fileMock);
 
-		// check if invoking data get uses the proper builder
-		result =fomratter.getFormattedData(someReader);
+		fomratter.getFormattedData(someReader);
 		
 		// verify that 3 items have appeared in this sequence
 		Mockito.verify(builderMock, new InvocatinoNumbered(0)).addTransaction(0);
@@ -82,8 +78,7 @@ public class SimpleDataFormatterTests {
 		String fileMock = line1 + line2;
 		Reader someReader = new StringReader(fileMock);
 
-		// check if invoking data get uses the proper builder
-		result =fomratter.getFormattedData(someReader);
+		fomratter.getFormattedData(someReader);
 		
 		// verify that 3 items have appeared in this sequence
 		Mockito.verify(builderMock, new InvocatinoNumbered(0)).addTransaction(0);

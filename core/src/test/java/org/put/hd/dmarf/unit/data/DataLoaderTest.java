@@ -16,7 +16,7 @@ import org.put.hd.dmarf.data.loaders.SimpleDataLoader;
  * Testing data loading. Using {@link IDataLoader} classes.
  * Mainly test the invoker of the {@link IDataFormatter} class.
  */
-public class DataLoaderTests {
+public class DataLoaderTest {
 
 	private IDataLoader loader;
 	private IDataFormatter mockFormatter;
