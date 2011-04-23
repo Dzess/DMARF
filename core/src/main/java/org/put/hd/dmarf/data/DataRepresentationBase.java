@@ -11,7 +11,7 @@ import java.util.Map;
  * This is only the interface for the data representation using other interfaces
  * like {@link Map} or {@link List}.
  * 
- * @author Piotr Jessa
+ * @author Piotr
  */
 public abstract class DataRepresentationBase {
 

@@ -9,7 +9,7 @@ import org.put.hd.dmarf.data.formatters.IDataFormatter;
 
 /**
  * Sample file data loader. Injected with IDataFormatter class.
- * @author Piotr Jessa
+ * @author Piotr 
  */
 public class SimpleDataLoader implements IDataLoader {
 
