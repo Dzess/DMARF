@@ -1,4 +1,4 @@
-package org.put.hd.dmarf.unit;
+package org.put.hd.dmarf.unit.data;
 
 import java.io.File;
 import java.io.IOException;
@@ -8,11 +8,13 @@ import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 import org.mockito.Mockito;
-import org.put.hd.dmarf.SimpleDataLoader;
-import org.put.hd.dmarf.IDataLoader;
+import org.put.hd.dmarf.data.formatters.IDataFormatter;
+import org.put.hd.dmarf.data.loaders.IDataLoader;
+import org.put.hd.dmarf.data.loaders.SimpleDataLoader;
 
 /**
- * Testing data loading. Using IDataLoader classes.
+ * Testing data loading. Using {@link IDataLoader} classes.
+ * Mainly test the invoker of the {@link IDataFormatter} class.
  */
 public class DataLoading {
 
@@ -23,6 +25,18 @@ public class DataLoading {
 	public void set_up() {
 		mockFormatter = Mockito.mock(IDataFormatter.class);
 		loader = new SimpleDataLoader(mockFormatter);
+	}
+	
+	@Test
+	public void providing_null_formater_results_in_exception(){
+		
+		try {
+			loader = new SimpleDataLoader(null);
+		} catch (NullPointerException e) {
+			return;
+		}
+		
+		Assert.fail("The exception should be thrown");
 	}
 
 	@Test

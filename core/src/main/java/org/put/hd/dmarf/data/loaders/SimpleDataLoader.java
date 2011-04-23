@@ -1,11 +1,11 @@
-package org.put.hd.dmarf;
+package org.put.hd.dmarf.data.loaders;
 
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.Reader;
 
-import org.put.hd.dmarf.unit.IDataFormatter;
+import org.put.hd.dmarf.data.formatters.IDataFormatter;
 
 /**
  * Sample file data loader. Injected with IDataFormatter class.
@@ -17,6 +17,9 @@ public class SimpleDataLoader implements IDataLoader {
 	private final IDataFormatter fomratter;
 	
 	public SimpleDataLoader(IDataFormatter fomratter) {
+		if(fomratter == null)
+			throw new NullPointerException("formatter parameter cannot be null");
+		
 		this.fomratter = fomratter;
 	}
 
