@@ -1,5 +1,7 @@
 package org.put.hd.dmarf.data.loaders;
 
+import org.put.hd.dmarf.data.DataRepresentationBase;
+
 /**
  * Describes the behavior of data loading class.
  * @author Piotr Jessa
@@ -12,6 +14,6 @@ public interface IDataLoader {
 	 */
 	public void setInputFileName(String name);
 
-	public void loadData();
+	public DataRepresentationBase loadData();
 
 }

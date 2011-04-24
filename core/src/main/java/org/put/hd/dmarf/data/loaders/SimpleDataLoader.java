@@ -5,6 +5,7 @@ import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.Reader;
 
+import org.put.hd.dmarf.data.DataRepresentationBase;
 import org.put.hd.dmarf.data.formatters.IDataFormatter;
 
 /**
@@ -42,7 +43,7 @@ public class SimpleDataLoader implements IDataLoader {
 		 
 	}
 
-	public void loadData() {
+	public DataRepresentationBase loadData() {
 		Reader fileReader = null;
 		
 		try {
@@ -51,7 +52,7 @@ public class SimpleDataLoader implements IDataLoader {
 			// this will not happen at all
 		}
 		
-		fomratter.getFormattedData(fileReader);
+		return fomratter.getFormattedData(fileReader);
 	}
 
 }

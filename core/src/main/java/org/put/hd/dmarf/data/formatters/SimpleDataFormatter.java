@@ -6,7 +6,7 @@ import java.io.Reader;
 import java.util.StringTokenizer;
 
 import org.put.hd.dmarf.data.DataRepresentationBase;
-import org.put.hd.dmarf.data.IDataReprsentatinoBuilder;
+import org.put.hd.dmarf.data.builders.IDataReprsentatinoBuilder;
 
 /**
  * Gets the data from stream and reads the input providing output in a nice

@@ -1,4 +1,6 @@
-package org.put.hd.dmarf.data;
+package org.put.hd.dmarf.data.builders;
+
+import org.put.hd.dmarf.data.DataRepresentationBase;
 
 /**
  * Implementing building means that this thing knows how to produce
