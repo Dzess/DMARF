@@ -1,5 +1,6 @@
 package org.put.hd.dmarf.algorithms;
 
+import java.util.LinkedList;
 import java.util.List;
 
 import org.put.hd.dmarf.data.DataRepresentationBase;
@@ -10,27 +11,26 @@ import org.put.hd.dmarf.data.DataRepresentationBase;
  * @author Piotr
  *
  */
-public class RandomAlgorithm implements IAlgorithm {
+public class RandomAlgorithm extends AlgorithmBase {
 
-	public long getElapsedTimeOverall() {
-		// TODO Auto-generated method stub
-		return 0;
-	}
-
-	public long getElapsedTimeGeneration() {
-		// TODO Auto-generated method stub
-		return 0;
-	}
-
-	public void start(DataRepresentationBase data, double minSupport,
-			double minCredibility) {
-		// TODO Auto-generated method stub
-
-	}
-
+	private List<Rule> rules = new LinkedList<Rule>();
+	
+	@Override
 	public List<Rule> getRules() {
-		// TODO Auto-generated method stub
-		return null;
+		return rules;
 	}
+
+	@Override
+	protected void startRuleGeneration(DataRepresentationBase data,
+			double minSupport, double minCredibility) {
+		// get some random rules out of data
+	}
+
+	@Override
+	protected void startSetGeneration(DataRepresentationBase data,
+			double minSupport, double minCredibility) {
+		// NOTE: in this method there is no such step
+	}
+
 
 }
