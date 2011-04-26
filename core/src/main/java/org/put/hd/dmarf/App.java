@@ -2,8 +2,12 @@ package org.put.hd.dmarf;
 
 import org.put.hd.dmarf.algorithms.IAlgorithm;
 import org.put.hd.dmarf.algorithms.IAlgorithmFactory;
+import org.put.hd.dmarf.algorithms.SimpleAlgorithmFactory;
 import org.put.hd.dmarf.data.DataRepresentationBase;
+import org.put.hd.dmarf.data.builders.BasicDataBuilder;
+import org.put.hd.dmarf.data.builders.IDataReprsentatinoBuilder;
 import org.put.hd.dmarf.data.formatters.IDataFormatter;
+import org.put.hd.dmarf.data.formatters.SimpleDataFormatter;
 import org.put.hd.dmarf.data.loaders.IDataLoader;
 import org.put.hd.dmarf.data.loaders.SimpleDataLoader;
 import org.put.hd.dmarf.output.OutputFormatter;
@@ -13,21 +17,24 @@ import org.put.hd.dmarf.output.OutputFormatter;
  */
 public class App {
 	public static void main(String[] args) {
-		IAlgorithmFactory algorithmFactory = null;
+		// get some algorithm factory
+		IAlgorithmFactory algorithmFactory = new SimpleAlgorithmFactory();
 
 		// use parser
 		ArgumentParser parser = new ArgumentParser(algorithmFactory);
 		parser.setInputArguments(args);
 
+		
 		// loading data phase
-		IDataFormatter fomratter = null;
+		IDataReprsentatinoBuilder builder = new BasicDataBuilder();
+		IDataFormatter fomratter = new SimpleDataFormatter(builder);
 		IDataLoader loader = new SimpleDataLoader(fomratter);
 		loader.setInputFileName(parser.getInputFileName());
 		DataRepresentationBase data = loader.loadData();
 
 		// running the algorithm
 		IAlgorithm algorithm = parser.getAlgorithm();
-		algorithm.start(data);
+		algorithm.start(data,parser.getMinSupport(),parser.getMinCredibility());
 
 		// saving the output
 		OutputFormatter outputFormatter = new OutputFormatter();
@@ -39,6 +46,6 @@ public class App {
 		String outputString = outputFormatter.getFormattedOutputString();
 
 		// write the output to the standard output
-		System.out.println(outputString);
+		System.out.println(outputString);	
 	}
 }

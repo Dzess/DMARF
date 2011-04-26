@@ -10,6 +10,7 @@ import org.put.hd.dmarf.data.DataRepresentationBase;
  *
  */
 public interface IAlgorithm {
+	
 	/**
 	 * Gets the time of the all algorithm operations without  the I/O operations.
 	 * @return time of algorithm operations in seconds.
@@ -23,9 +24,11 @@ public interface IAlgorithm {
 	
 	/**
 	 * Starts the algorithm using the passed data.
-	 * @param data
+	 * @param data. Data representation
+	 * @param minSupport. Minimal support.
+	 * @param minCredibility. Minimal credibility.
 	 */
-	public void start(DataRepresentationBase data);
+	public void start(DataRepresentationBase data, double minSupport, double minCredibility);
 	
 	/**
 	 * Gets the result for the this algorithm
