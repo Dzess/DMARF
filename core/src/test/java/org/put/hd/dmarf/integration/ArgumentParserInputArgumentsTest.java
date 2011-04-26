@@ -25,7 +25,6 @@ public class ArgumentParserInputArgumentsTest {
 	private String minCredibility;
 	private String algorithm;
 
-	@Mock private IDataLoader mockDataLoader;
 	@Mock private IAlgorithmFactory mockAlgorithmFactory;
 	private String[] list;
 	
@@ -34,7 +33,7 @@ public class ArgumentParserInputArgumentsTest {
 		
 		MockitoAnnotations.initMocks(this);
 		
-		parser = new ArgumentParser(mockDataLoader,mockAlgorithmFactory);
+		parser = new ArgumentParser(mockAlgorithmFactory);
 		inputFileName = "inputFile";
 		outputFileName = "outputFile";
 		minSupport = "30";
