@@ -63,10 +63,36 @@ public class OutputFormatter {
 	}
 
 	private void appendRule(Rule rule) {
-		// TODO: write rules formatting
-		// numer reguly: ( item_1 AND item_2 ...AND...item_n) => ( item_m )
-		// Support: wartosc wsparcia reguly
-		// Confidence: wartosci ufnosci reguly
+
+		// creating the first line
+		// no: ( item_1 AND item_2 ...AND...item_n) => ( item_m )
+		builder.append(rule.getId());
+		builder.append(": ( ");
+
+		List<Integer> itemsConditional = rule.getConditionalPart();
+		appendItems(itemsConditional);
+
+		builder.append(" ) => ( ");
+
+		List<Integer> itemsExecutive = rule.getExecutivePart();
+		appendItems(itemsExecutive);
+
+		builder.append(" )");
+		builder.append(lineSeparator);
+
+		// Support:
+		append("Support: " + rule.getSupport());
+
+		// Confidence:
+		append("Confidance: " + rule.getConfidance());
+	}
+
+	private void appendItems(List<Integer> items) {
+		for (int i = 0; i < items.size(); i++) {
+			builder.append(items.get(i) + " ");
+			if (i + 1 != items.size())
+				builder.append(" AND ");
+		}
 	}
 
 	private void append(String string) {

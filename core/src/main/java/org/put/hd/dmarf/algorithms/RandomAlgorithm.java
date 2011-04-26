@@ -23,6 +23,7 @@ public class RandomAlgorithm extends AlgorithmBase {
 	@Override
 	protected void startRuleGeneration(DataRepresentationBase data,
 			double minSupport, double minCredibility) {
+		// TODO: write sample algorithm
 		// get some random rules out of data
 	}
 

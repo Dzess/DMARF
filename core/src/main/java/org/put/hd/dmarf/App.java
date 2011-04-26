@@ -20,11 +20,16 @@ public class App {
 		// get some algorithm factory
 		IAlgorithmFactory algorithmFactory = new SimpleAlgorithmFactory();
 
-		// use parser
-		ArgumentParser parser = new ArgumentParser(algorithmFactory);
-		parser.setInputArguments(args);
+		ArgumentParser parser = null;
+		try {
+			// use parser
+			parser = new ArgumentParser(algorithmFactory);
+			parser.setInputArguments(args);
+		} catch (Exception e) {
+			System.out.println(e.getMessage());
+			return;
+		}
 
-		
 		// loading data phase
 		IDataReprsentatinoBuilder builder = new BasicDataBuilder();
 		IDataFormatter fomratter = new SimpleDataFormatter(builder);
@@ -34,7 +39,8 @@ public class App {
 
 		// running the algorithm
 		IAlgorithm algorithm = parser.getAlgorithm();
-		algorithm.start(data,parser.getMinSupport(),parser.getMinCredibility());
+		algorithm.start(data, parser.getMinSupport(),
+				parser.getMinCredibility());
 
 		// saving the output
 		OutputFormatter outputFormatter = new OutputFormatter();
@@ -46,6 +52,6 @@ public class App {
 		String outputString = outputFormatter.getFormattedOutputString();
 
 		// write the output to the standard output
-		System.out.println(outputString);	
+		System.out.println(outputString);
 	}
 }
