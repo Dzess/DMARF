@@ -1,7 +1,7 @@
 package org.put.hd.dmarf;
 
 import org.put.hd.dmarf.algorithms.IAlgorithm;
-import org.put.hd.dmarf.algorithms.IAlgorithmFactory;
+import org.put.hd.dmarf.algorithms.factories.IAlgorithmFactory;
 
 /**
  * Parses the arguments from the command line. Shows the proper messages upon

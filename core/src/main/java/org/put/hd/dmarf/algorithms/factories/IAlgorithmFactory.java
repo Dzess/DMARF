@@ -1,4 +1,6 @@
-package org.put.hd.dmarf.algorithms;
+package org.put.hd.dmarf.algorithms.factories;
+
+import org.put.hd.dmarf.algorithms.IAlgorithm;
 
 
 /**

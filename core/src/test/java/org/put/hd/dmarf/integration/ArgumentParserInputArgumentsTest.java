@@ -7,7 +7,7 @@ import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.mockito.MockitoAnnotations;
 import org.put.hd.dmarf.ArgumentParser;
-import org.put.hd.dmarf.algorithms.IAlgorithmFactory;
+import org.put.hd.dmarf.algorithms.factories.IAlgorithmFactory;
 import org.put.hd.dmarf.data.loaders.IDataLoader;
 
 /**

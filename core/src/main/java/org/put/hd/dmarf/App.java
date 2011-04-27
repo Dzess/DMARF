@@ -1,8 +1,9 @@
 package org.put.hd.dmarf;
 
 import org.put.hd.dmarf.algorithms.IAlgorithm;
-import org.put.hd.dmarf.algorithms.IAlgorithmFactory;
-import org.put.hd.dmarf.algorithms.SimpleAlgorithmFactory;
+import org.put.hd.dmarf.algorithms.factories.IAlgorithmFactory;
+import org.put.hd.dmarf.algorithms.factories.ProductionAlgorithmFactory;
+import org.put.hd.dmarf.algorithms.factories.TestAlgorithmFactory;
 import org.put.hd.dmarf.data.DataRepresentationBase;
 import org.put.hd.dmarf.data.builders.BasicDataBuilder;
 import org.put.hd.dmarf.data.builders.IDataReprsentatinoBuilder;
@@ -17,8 +18,8 @@ import org.put.hd.dmarf.output.OutputFormatter;
  */
 public class App {
 	public static void main(String[] args) {
-		// get some algorithm factory
-		IAlgorithmFactory algorithmFactory = new SimpleAlgorithmFactory();
+		// get some algorithm factory (use stable production factory)
+		IAlgorithmFactory algorithmFactory = new ProductionAlgorithmFactory();
 
 		ArgumentParser parser = null;
 		try {
