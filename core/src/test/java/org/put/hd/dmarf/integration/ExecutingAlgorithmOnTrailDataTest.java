@@ -10,6 +10,7 @@ import org.junit.Before;
 import org.junit.Test;
 import org.put.hd.dmarf.algorithms.IAlgorithm;
 import org.put.hd.dmarf.algorithms.Rule;
+import org.put.hd.dmarf.algorithms.WekaAlgorithm;
 import org.put.hd.dmarf.algorithms.factories.IAlgorithmFactory;
 import org.put.hd.dmarf.algorithms.factories.TestAlgorithmFactory;
 import org.put.hd.dmarf.data.DataRepresentationBase;
@@ -19,6 +20,9 @@ import org.put.hd.dmarf.data.formatters.IDataFormatter;
 import org.put.hd.dmarf.data.formatters.SimpleDataFormatter;
 import org.put.hd.dmarf.data.loaders.IDataLoader;
 import org.put.hd.dmarf.data.loaders.SimpleDataLoader;
+
+import weka.core.Instance;
+import weka.core.Instances;
 
 /**
  * Runs all the tests for each of the algorithms in the
@@ -41,6 +45,7 @@ public class ExecutingAlgorithmOnTrailDataTest {
 	private IDataFormatter fomratter;
 	private IDataReprsentatinoBuilder builder;
 	private TestAlgorithmFactory factory;
+	private IAlgorithm wekaProvider;
 
 	@Before
 	public void set_up() {
@@ -54,6 +59,9 @@ public class ExecutingAlgorithmOnTrailDataTest {
 		fomratter = new SimpleDataFormatter(builder);
 		loader = new SimpleDataLoader(fomratter);
 
+		// get the Weka provider
+		wekaProvider = new WekaAlgorithm();
+		
 		// set the parameters of the algorithms
 		minSupport = 0.3;
 		minConfidance = 0.6;
@@ -68,9 +76,15 @@ public class ExecutingAlgorithmOnTrailDataTest {
 		// get data
 		loader.setInputFileName(fileName);
 		DataRepresentationBase data = loader.loadData();
+		
+		// get the weka results - expected ones
+		wekaProvider.start(data, minSupport, minConfidance);
+		List<Rule> wekaResults = wekaProvider.getRules();
 
 		// run the tests for each algorithm
 		for (int i = 0; i < factory.getNumberOfAlgorithms(); i++) {
+			
+			// out part of algorithms
 			IAlgorithm algorithm = factory.getAlgorithm(i);
 			algorithm.start(data, minSupport, minConfidance);
 
@@ -78,18 +92,9 @@ public class ExecutingAlgorithmOnTrailDataTest {
 			List<Rule> result = algorithm.getRules();
 
 			// verify that result is good
-			verifyOutput(result, getRulesForTrail_1());
+			verifyOutput(result, wekaResults);
 		}
 
-	}
-
-	private List<Rule> getRulesForTrail_1() {
-		List<Rule> list = new LinkedList<Rule>();
-
-		// TODO: mark the rules which should be used 
-		// TODO: use Weka for that ? - thats the tricky idea
-		
-		return list;
 	}
 
 	private void verifyOutput(List<Rule> result, List<Rule> expectedRules) {

@@ -1,0 +1,15 @@
+@relation whatever
+
+@attribute a1 numeric
+@attribute a2 numeric
+@attribute a3 numeric
+@attribute a4 numeric
+@attribute a5 numeric
+
+
+@data
+1 , 2 , 3 , 4 , 5 
+1 , 2 ,  ,  ,  
+3 , 4 ,  ,  ,  
+1 , 2 , 3 , 4 , 5 
+

@@ -29,5 +29,5 @@ public class TestAlgorithmFactory implements IAlgorithmFactory {
 	public IAlgorithm getAlgorithm(int number) {
 		return algorithms.get(number);
 	}
-
+	
 }
