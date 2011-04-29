@@ -8,7 +8,6 @@ import org.junit.Test;
 import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.mockito.MockitoAnnotations;
-import org.put.hd.dmarf.data.DataRepresentationBase;
 import org.put.hd.dmarf.data.builders.IDataReprsentatinoBuilder;
 import org.put.hd.dmarf.data.formatters.SimpleDataFormatter;
 import org.put.hd.dmarf.utils.InvocatinoNumbered;

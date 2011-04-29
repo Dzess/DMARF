@@ -1,0 +1,46 @@
+=== Run information ===
+
+Scheme:       weka.associations.Apriori -N 10 -T 0 -C 0.6 -D 0.05 -U 1.0 -M 0.3 -S -1.0 -c -1
+Relation:     Data
+Instances:    4
+Attributes:   5
+              1
+              2
+              3
+              4
+              5
+=== Associator model (full training set) ===
+
+
+Apriori
+=======
+
+Minimum support: 0.6 (2 instances)
+Minimum metric <confidence>: 0.6
+Number of cycles performed: 8
+
+Generated sets of large itemsets:
+
+Size of set of large itemsets L(1): 6
+
+Size of set of large itemsets L(2): 10
+
+Size of set of large itemsets L(3): 10
+
+Size of set of large itemsets L(4): 5
+
+Size of set of large itemsets L(5): 1
+
+Best rules found:
+
+ 1. 2=1 3 ==> 1=1 3    <conf:(1)> lift:(1.33) lev:(0.19) [0] conv:(0.75)
+ 2. 1=1 3 ==> 2=1 3    <conf:(1)> lift:(1.33) lev:(0.19) [0] conv:(0.75)
+ 3. 4=1 3 ==> 3=1 3    <conf:(1)> lift:(1.33) lev:(0.19) [0] conv:(0.75)
+ 4. 3=1 3 ==> 4=1 3    <conf:(1)> lift:(1.33) lev:(0.19) [0] conv:(0.75)
+ 5. 5=1 2 ==> 1=1 2    <conf:(1)> lift:(1.33) lev:(0.13) [0] conv:(0.5)
+ 6. 5=1 2 ==> 2=1 2    <conf:(1)> lift:(1.33) lev:(0.13) [0] conv:(0.5)
+ 7. 5=1 2 ==> 3=1 2    <conf:(1)> lift:(1.33) lev:(0.13) [0] conv:(0.5)
+ 8. 5=1 2 ==> 4=1 2    <conf:(1)> lift:(1.33) lev:(0.13) [0] conv:(0.5)
+ 9. 2=1 3=1 2 ==> 1=1 2    <conf:(1)> lift:(1.33) lev:(0.13) [0] conv:(0.5)
+10. 1=1 3=1 2 ==> 2=1 2    <conf:(1)> lift:(1.33) lev:(0.13) [0] conv:(0.5)
+

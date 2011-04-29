@@ -1,9 +1,6 @@
 package org.put.hd.dmarf.integration;
 
-import java.util.LinkedList;
 import java.util.List;
-
-import junit.framework.AssertionFailedError;
 
 import org.junit.Assert;
 import org.junit.Before;
@@ -20,9 +17,6 @@ import org.put.hd.dmarf.data.formatters.IDataFormatter;
 import org.put.hd.dmarf.data.formatters.SimpleDataFormatter;
 import org.put.hd.dmarf.data.loaders.IDataLoader;
 import org.put.hd.dmarf.data.loaders.SimpleDataLoader;
-
-import weka.core.Instance;
-import weka.core.Instances;
 
 /**
  * Runs all the tests for each of the algorithms in the
@@ -101,12 +95,14 @@ public class ExecutingAlgorithmOnTrailDataTest {
 
 		// check the sizes - must be the same
 		if(result.size() != expectedRules.size())
-			Assert.fail("The both result rules should be the equal lenght");
+			Assert.fail("The both result rules should be of equal lenght");
 		
 		
 		// for each rule in the rule set search it in the output rule set
 		for (Rule rule : result) {
-			// TODO: get the validation properly
+				
+			if(!expectedRules.contains(rule))
+				Assert.fail("The rule" + rule + "could not be found in expected rule set.");
 		}
 		
 	}

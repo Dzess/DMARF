@@ -79,6 +79,7 @@ public class OutputFormatter {
 
 		builder.append(" )");
 		builder.append(lineSeparator);
+		
 
 		// Support:
 		append("Support: " + rule.getSupport());

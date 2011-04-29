@@ -8,7 +8,6 @@ import org.mockito.Mockito;
 import org.mockito.MockitoAnnotations;
 import org.put.hd.dmarf.ArgumentParser;
 import org.put.hd.dmarf.algorithms.factories.IAlgorithmFactory;
-import org.put.hd.dmarf.data.loaders.IDataLoader;
 
 /**
  * Unit level testing of starting application and string parsing.

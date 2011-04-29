@@ -3,7 +3,6 @@ package org.put.hd.dmarf;
 import org.put.hd.dmarf.algorithms.IAlgorithm;
 import org.put.hd.dmarf.algorithms.factories.IAlgorithmFactory;
 import org.put.hd.dmarf.algorithms.factories.ProductionAlgorithmFactory;
-import org.put.hd.dmarf.algorithms.factories.TestAlgorithmFactory;
 import org.put.hd.dmarf.data.DataRepresentationBase;
 import org.put.hd.dmarf.data.builders.BasicDataBuilder;
 import org.put.hd.dmarf.data.builders.IDataReprsentatinoBuilder;
