@@ -9,6 +9,7 @@ import org.put.hd.dmarf.algorithms.IAlgorithm;
 import org.put.hd.dmarf.algorithms.Rule;
 import org.put.hd.dmarf.algorithms.WekaAlgorithm;
 import org.put.hd.dmarf.algorithms.factories.IAlgorithmFactory;
+import org.put.hd.dmarf.algorithms.factories.ProductionAlgorithmFactory;
 import org.put.hd.dmarf.algorithms.factories.TestAlgorithmFactory;
 import org.put.hd.dmarf.data.DataRepresentationBase;
 import org.put.hd.dmarf.data.builders.BasicDataBuilder;
@@ -38,7 +39,7 @@ public class ExecutingAlgorithmOnTrailDataTest {
 	private IDataLoader loader;
 	private IDataFormatter fomratter;
 	private IDataReprsentatinoBuilder builder;
-	private TestAlgorithmFactory factory;
+	private IAlgorithmFactory factory;
 	private IAlgorithm wekaProvider;
 
 	@Before
@@ -46,7 +47,7 @@ public class ExecutingAlgorithmOnTrailDataTest {
 
 		// TODO: change into production factory
 		// place here factory to be used
-		factory = new TestAlgorithmFactory();
+		factory = new ProductionAlgorithmFactory();
 
 		// set the loaders for the algorithms
 		builder = new BasicDataBuilder();

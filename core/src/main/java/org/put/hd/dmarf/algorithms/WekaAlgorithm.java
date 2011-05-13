@@ -1,7 +1,7 @@
 package org.put.hd.dmarf.algorithms;
 
 import java.util.Arrays;
-import java.util.Enumeration;
+import java.util.Collection;
 import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
@@ -9,12 +9,14 @@ import java.util.List;
 import org.put.hd.dmarf.data.DataRepresentationBase;
 
 import weka.associations.Apriori;
-import weka.associations.AprioriItemSet;
-import weka.classifiers.misc.monotone.EnumerationIterator;
+import weka.associations.AssociationRule;
+import weka.associations.AssociationRules;
+import weka.associations.Item;
 import weka.core.Attribute;
 import weka.core.FastVector;
 import weka.core.Instance;
 import weka.core.Instances;
+import weka.core.SparseInstance;
 
 /**
  * Implementation of Apriori algorithm using Weka tool. Used for verification
@@ -27,14 +29,14 @@ public class WekaAlgorithm implements IAlgorithm {
 
 	private List<Rule> listOfRules;
 	private Apriori apriori;
-	private FastVector decisions;
-	private FastVector attributes;
+	private FastVector<String> decisions;
+	private FastVector<Attribute> attributes;
 	private Instances wekaData;
 
 	public WekaAlgorithm() {
 
 		// decision about the products
-		decisions = new FastVector();
+		decisions = new FastVector<String>();
 		decisions.addElement("0");
 		decisions.addElement("1");
 
@@ -93,7 +95,7 @@ public class WekaAlgorithm implements IAlgorithm {
 				}
 			}
 
-			Instance instance = new Instance(1.0, values);
+			Instance instance = new SparseInstance(1.0, values);
 			wekaData.add(instance);
 
 		}
@@ -101,7 +103,7 @@ public class WekaAlgorithm implements IAlgorithm {
 	}
 
 	private void generateAttributes(DataRepresentationBase data) {
-		attributes = new FastVector();
+		attributes = new FastVector<Attribute>();
 
 		// generate vector from attributes (should be sorting somewhere here
 		// made)
@@ -126,8 +128,42 @@ public class WekaAlgorithm implements IAlgorithm {
 	public List<Rule> getRules() {
 
 		listOfRules = new LinkedList<Rule>();
+		AssociationRules rules = apriori.getAssociationRules();
+		int i = 0;
+		for (AssociationRule rule : rules.getRules()) {
+
+			Collection<Item> premise = rule.getPremise();
+			List<Integer> conditional = new LinkedList<Integer>();
+			getRulePart(premise, conditional);
+
+			Collection<Item> consequence = rule.getConsequence();
+			List<Integer> executive = new LinkedList<Integer>();
+			getRulePart(consequence, executive);
+
+			int confidance = 0;
+			try {
+				confidance = (int) (rule.getMetricValuesForRule()[0] * 100);
+			} catch (Exception e) {
+				// this code should throw up if something is bad
+				e.printStackTrace();
+			}
+
+			Rule dmarfRule = new Rule(i++, conditional, executive, confidance,
+					rule.getTotalSupport());
+			
+			listOfRules.add(dmarfRule);
+		}
 
 		return listOfRules;
+	}
+
+	private void getRulePart(Collection<Item> premise, List<Integer> conditional) {
+		for (Item item : premise) {
+			// total slow conversion
+			String s = item.getAttribute().name();
+			Integer element = Integer.parseInt(s);
+			conditional.add(element);
+		}
 	}
 
 }
