@@ -57,8 +57,8 @@ public class ExecutingAlgorithmOnTrailDataTest {
 		wekaProvider = new WekaAlgorithm();
 		
 		// set the parameters of the algorithms
-		minSupport = 0.3;
-		minConfidance = 0.6;
+		minSupport = 0.8;
+		minConfidance = 0.75;
 	}
 
 	@Test

@@ -39,14 +39,28 @@
 		</plugins>
 	</build>
 	<repositories>
+		<!--
+		Fancy repository with some nice 3rd party libraries. Includes the old version of Weka 
+		 -->
 		<repository>
 			<id>maven_add</id>
-			<name>mavenadditional repository</name>
+			<name>maven additional repository</name>
 			<url>https://maven.ch.cam.ac.uk/m2repo/</url>
 			<layout>default</layout>
 		</repository>
+		<!--
+		Local Repository for placing additional dependencies like Weka development version
+		 -->
+		<repository>
+			<id>local+repo</id>
+			<name>local maven repository</name>
+			<url>file://${basedir}/local_mvn</url>
+			<releases>
+				<checksumPolicy>ignore</checksumPolicy>
+			</releases>
+		</repository>
 	</repositories>
-	<dependencies>		
+	<dependencies>
 		<dependency>
 			<groupId>junit</groupId>
 			<artifactId>junit</artifactId>
@@ -60,7 +74,7 @@
 		<dependency>
 			<groupId>weka</groupId>
 			<artifactId>weka</artifactId>
-			<version>3.5.7</version>
+			<version>3.7.3</version>
 		</dependency>
 	</dependencies>
 </project>

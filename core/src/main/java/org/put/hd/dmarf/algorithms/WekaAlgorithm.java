@@ -1,6 +1,7 @@
 package org.put.hd.dmarf.algorithms;
 
 import java.util.Arrays;
+import java.util.Enumeration;
 import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
@@ -9,13 +10,14 @@ import org.put.hd.dmarf.data.DataRepresentationBase;
 
 import weka.associations.Apriori;
 import weka.associations.AprioriItemSet;
+import weka.classifiers.misc.monotone.EnumerationIterator;
 import weka.core.Attribute;
 import weka.core.FastVector;
 import weka.core.Instance;
 import weka.core.Instances;
 
 /**
- * Implementation of A Priori algorithm using Weka tool. Used for verification
+ * Implementation of Apriori algorithm using Weka tool. Used for verification
  * purposes.
  * 
  * @author Piotr
@@ -95,9 +97,6 @@ public class WekaAlgorithm implements IAlgorithm {
 			wekaData.add(instance);
 
 		}
-		
-		System.out.println(wekaData.toString());
-		
 		return wekaData;
 	}
 
@@ -111,6 +110,7 @@ public class WekaAlgorithm implements IAlgorithm {
 		int i = 0;
 		while (it.hasNext()) {
 			vector[i] = it.next().intValue();
+			i++;
 		}
 
 		// elements in the vector must be sorted !
@@ -126,14 +126,6 @@ public class WekaAlgorithm implements IAlgorithm {
 	public List<Rule> getRules() {
 
 		listOfRules = new LinkedList<Rule>();
-
-		FastVector[] rules = apriori.getAllTheRules();
-
-		for (FastVector fastVector : rules) {
-			AprioriItemSet item = (AprioriItemSet) fastVector.firstElement();
-			// TODO: write the extraction of data in weka rule
-			System.out.println(item.toString(wekaData));
-		}
 
 		return listOfRules;
 	}
