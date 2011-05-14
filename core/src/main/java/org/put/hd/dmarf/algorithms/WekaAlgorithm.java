@@ -33,6 +33,8 @@ public class WekaAlgorithm implements IAlgorithm {
 	private FastVector<Attribute> attributes;
 	private Instances wekaData;
 
+	private StopWatch stopWatch;
+
 	public WekaAlgorithm() {
 
 		// decision about the products
@@ -42,20 +44,22 @@ public class WekaAlgorithm implements IAlgorithm {
 
 		// create apriori
 		apriori = new Apriori();
+
+		stopWatch = new StopWatch();
 	}
 
 	public long getElapsedTimeOverall() {
-		// TODO Auto-generated method stub
-		return 0;
+		return stopWatch.getElapsedTimeSecs();
 	}
 
 	public long getElapsedTimeGeneration() {
-		// TODO Auto-generated method stub
-		return 0;
+		return stopWatch.getElapsedTimeSecs();
 	}
 
 	public void start(DataRepresentationBase data, double minSupport,
 			double minCredibility) {
+
+		stopWatch.start();
 
 		generateAttributes(data);
 
@@ -76,6 +80,8 @@ public class WekaAlgorithm implements IAlgorithm {
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
+
+		stopWatch.stop();
 	}
 
 	private Instances generateData(DataRepresentationBase data) {
@@ -150,7 +156,7 @@ public class WekaAlgorithm implements IAlgorithm {
 
 			Rule dmarfRule = new Rule(i++, conditional, executive, confidance,
 					rule.getTotalSupport());
-			
+
 			listOfRules.add(dmarfRule);
 		}
 
