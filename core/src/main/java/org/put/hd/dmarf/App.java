@@ -17,6 +17,9 @@ import org.put.hd.dmarf.output.OutputFormatter;
  */
 public class App {
 	public static void main(String[] args) {
+		
+		// TODO: add stopwatch element here
+		
 		// get some algorithm factory (use stable production factory)
 		IAlgorithmFactory algorithmFactory = new ProductionAlgorithmFactory();
 
@@ -53,5 +56,7 @@ public class App {
 
 		// write the output to the standard output
 		System.out.println(outputString);
+		
+		// TODO: write saving this into file
 	}
 }

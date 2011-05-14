@@ -1,13 +1,15 @@
 /**
  * 
  */
-package org.put.hd.dmarf.algorithms;
+package org.put.hd.dmarf.algorithms.apriori;
 
 import java.util.LinkedList;
 import jcuda.*;
 import jcuda.runtime.*;
 import java.util.List;
 
+import org.put.hd.dmarf.algorithms.AlgorithmBase;
+import org.put.hd.dmarf.algorithms.Rule;
 import org.put.hd.dmarf.data.DataRepresentationBase;
 
 /**

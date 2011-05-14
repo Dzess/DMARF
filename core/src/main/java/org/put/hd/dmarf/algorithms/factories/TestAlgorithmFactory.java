@@ -5,6 +5,7 @@ import java.util.List;
 
 import org.put.hd.dmarf.algorithms.IAlgorithm;
 import org.put.hd.dmarf.algorithms.RandomAlgorithm;
+import org.put.hd.dmarf.algorithms.apriori.AprioriCudaAlgorithm;
 
 /**
  * Simple class where algorithms will be placed for testing purposes.
@@ -20,6 +21,7 @@ public class TestAlgorithmFactory implements IAlgorithmFactory {
 
 		algorithms = new LinkedList<IAlgorithm>();
 		algorithms.add(new RandomAlgorithm());
+		algorithms.add(new AprioriCudaAlgorithm());
 	}
 
 	public int getNumberOfAlgorithms() {
