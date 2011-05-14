@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<metadata>
+  <groupId>jcuda</groupId>
+  <artifactId>jcuda-native</artifactId>
+  <versioning>
+    <release>0.3.2a</release>
+    <versions>
+      <version>0.3.2a</version>
+    </versions>
+    <lastUpdated>20110513165349</lastUpdated>
+  </versioning>
+</metadata>
