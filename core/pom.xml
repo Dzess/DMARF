@@ -110,11 +110,6 @@
 			<groupId>jcuda</groupId>
 			<artifactId>jcuda-native</artifactId>
 			<version>0.3.2a</version>
-		</dependency>
-		<dependency>
-			<groupId>jcuda</groupId>
-			<artifactId>jcudaUtils</artifactId>
-			<version>0.0.2</version>
 		</dependency>		
 		<dependency>
 			<groupId>org.jocl</groupId>
