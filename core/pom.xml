@@ -115,6 +115,11 @@
 			<groupId>jcuda</groupId>
 			<artifactId>jcudaUtils</artifactId>
 			<version>0.0.2</version>
+		</dependency>		
+		<dependency>
+			<groupId>org.jocl</groupId>
+			<artifactId>jocl</artifactId>
+			<version>0.1.6</version>
 		</dependency>
 	</dependencies>
 </project>

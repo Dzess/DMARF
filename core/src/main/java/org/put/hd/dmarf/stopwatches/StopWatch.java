@@ -1,4 +1,4 @@
-package org.put.hd.dmarf.algorithms;
+package org.put.hd.dmarf.stopwatches;
 
 /*
  Copyright (c) 2005, Corey Goldberg
@@ -8,17 +8,23 @@ package org.put.hd.dmarf.algorithms;
  the Free Software Foundation; either version 2 of the License, or
  (at your option) any later version.
  */
-public class StopWatch {
+public class StopWatch implements IStopWatch {
 
 	private long startTime = 0;
 	private long stopTime = 0;
 	private boolean running = false;
 
+	/* (non-Javadoc)
+	 * @see org.put.hd.dmarf.stopwatches.IStopWatch#start()
+	 */
 	public void start() {
 		this.startTime = System.currentTimeMillis();
 		this.running = true;
 	}
 
+	/* (non-Javadoc)
+	 * @see org.put.hd.dmarf.stopwatches.IStopWatch#stop()
+	 */
 	public void stop() {
 		this.stopTime = System.currentTimeMillis();
 		this.running = false;
@@ -36,6 +42,9 @@ public class StopWatch {
 	}
 
 	// Elapsed time in seconds
+	/* (non-Javadoc)
+	 * @see org.put.hd.dmarf.stopwatches.IStopWatch#getElapsedTimeSecs()
+	 */
 	public long getElapsedTimeSecs() {
 		long elapsed;
 		if (running) {

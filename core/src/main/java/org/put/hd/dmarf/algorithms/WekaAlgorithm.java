@@ -7,6 +7,8 @@ import java.util.LinkedList;
 import java.util.List;
 
 import org.put.hd.dmarf.data.DataRepresentationBase;
+import org.put.hd.dmarf.stopwatches.IStopWatch;
+import org.put.hd.dmarf.stopwatches.StopWatch;
 
 import weka.associations.Apriori;
 import weka.associations.AssociationRule;
@@ -33,7 +35,7 @@ public class WekaAlgorithm implements IAlgorithm {
 	private FastVector<Attribute> attributes;
 	private Instances wekaData;
 
-	private StopWatch stopWatch;
+	private IStopWatch stopWatch;
 
 	public WekaAlgorithm() {
 

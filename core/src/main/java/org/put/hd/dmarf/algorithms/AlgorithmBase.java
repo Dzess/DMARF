@@ -3,6 +3,8 @@ package org.put.hd.dmarf.algorithms;
 import java.util.List;
 
 import org.put.hd.dmarf.data.DataRepresentationBase;
+import org.put.hd.dmarf.stopwatches.IStopWatch;
+import org.put.hd.dmarf.stopwatches.StopWatch;
 
 /**
  * Fancy class for easier algorithm development. Using pattern template method
@@ -14,8 +16,8 @@ import org.put.hd.dmarf.data.DataRepresentationBase;
  */
 public abstract class AlgorithmBase implements IAlgorithm {
 
-	private StopWatch overallStopWatch = new StopWatch();
-	protected StopWatch generationStopWatch = new StopWatch();
+	private IStopWatch overallStopWatch = new StopWatch();
+	protected IStopWatch generationStopWatch = new StopWatch();
 
 	public long getElapsedTimeOverall() {
 		return overallStopWatch.getElapsedTimeSecs();
