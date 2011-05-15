@@ -111,5 +111,10 @@
 			<artifactId>jcuda-native</artifactId>
 			<version>0.3.2a</version>
 		</dependency>
+		<dependency>
+			<groupId>org.jocl</groupId>
+			<artifactId>jocl</artifactId>
+			<version>0.1.6</version>
+		</dependency>
 	</dependencies>
 </project>

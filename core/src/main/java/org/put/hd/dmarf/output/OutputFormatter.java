@@ -22,6 +22,7 @@ public class OutputFormatter {
 
 	private final char lineSeparator = '\n';
 	private StringBuilder builder;
+	private long totalTime;
 
 	/**
 	 * Get the formatted output from the passed values.
@@ -46,7 +47,7 @@ public class OutputFormatter {
 		append("No of rules: " + rules.size());
 
 		append("Pamiec: " + "PPP");
-		append("Calkowity czas: " + "TTT");
+		append("Calkowity czas: " + totalTime);
 		append("Czas bez we/wy: " + algorithm.getElapsedTimeOverall());
 		append("Czas gen. zb. czestych: "
 				+ algorithm.getElapsedTimeGeneration());
@@ -77,7 +78,7 @@ public class OutputFormatter {
 		List<Integer> itemsExecutive = rule.getExecutivePart();
 		appendItems(itemsExecutive);
 
-		builder.append(" )");
+		builder.append(")");
 		builder.append(lineSeparator);
 		
 
@@ -118,6 +119,10 @@ public class OutputFormatter {
 	public void setAlgorithm(IAlgorithm algorithm) {
 		this.algorithm = algorithm;
 
+	}
+
+	public void setTotalTime(long elapsedTimeSecs) {
+		this.totalTime = elapsedTimeSecs;
 	}
 
 }

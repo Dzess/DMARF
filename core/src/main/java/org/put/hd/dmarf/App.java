@@ -1,5 +1,9 @@
 package org.put.hd.dmarf;
 
+import java.io.BufferedWriter;
+import java.io.FileWriter;
+import java.io.IOException;
+
 import org.put.hd.dmarf.algorithms.IAlgorithm;
 import org.put.hd.dmarf.algorithms.factories.IAlgorithmFactory;
 import org.put.hd.dmarf.algorithms.factories.ProductionAlgorithmFactory;
@@ -11,6 +15,8 @@ import org.put.hd.dmarf.data.formatters.SimpleDataFormatter;
 import org.put.hd.dmarf.data.loaders.IDataLoader;
 import org.put.hd.dmarf.data.loaders.SimpleDataLoader;
 import org.put.hd.dmarf.output.OutputFormatter;
+import org.put.hd.dmarf.stopwatches.IStopWatch;
+import org.put.hd.dmarf.stopwatches.StopWatch;
 
 /**
  * Entry point for DMARF application.
@@ -18,7 +24,9 @@ import org.put.hd.dmarf.output.OutputFormatter;
 public class App {
 	public static void main(String[] args) {
 		
-		// TODO: add stopwatch element here
+		// stopwatch element here
+		IStopWatch stopWatch = new StopWatch();
+		stopWatch.start();
 		
 		// get some algorithm factory (use stable production factory)
 		IAlgorithmFactory algorithmFactory = new ProductionAlgorithmFactory();
@@ -45,18 +53,29 @@ public class App {
 		algorithm.start(data, parser.getMinSupport(),
 				parser.getMinCredibility());
 
+		// FIXME: get the wait lock here for the MT implementations
+		stopWatch.stop();
+		
 		// saving the output
 		OutputFormatter outputFormatter = new OutputFormatter();
 		outputFormatter.setMinSupport(parser.getMinSupport());
 		outputFormatter.setMinCredibility(parser.getMinCredibility());
 		outputFormatter.setInputFileName(parser.getInputFileName());
 		outputFormatter.setAlgorithm(algorithm);
+		outputFormatter.setTotalTime(stopWatch.getElapsedTimeSecs());
 
 		String outputString = outputFormatter.getFormattedOutputString();
 
 		// write the output to the standard output
 		System.out.println(outputString);
 		
-		// TODO: write saving this into file
+		// write the output the file name
+		try {
+		    BufferedWriter out = new BufferedWriter(new FileWriter(parser.getOutputFileName()));
+		    out.write(outputString);
+		    out.close();
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
 	}
 }
