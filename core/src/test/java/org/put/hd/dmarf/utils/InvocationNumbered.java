@@ -15,11 +15,11 @@ import org.mockito.verification.VerificationMode;
  * @author Piotr
  * 
  */
-public class InvocatinoNumbered implements VerificationMode {
+public class InvocationNumbered implements VerificationMode {
 
 	private final int number;
 
-	public InvocatinoNumbered(int number) {
+	public InvocationNumbered(int number) {
 		this.number = number;
 	}
 

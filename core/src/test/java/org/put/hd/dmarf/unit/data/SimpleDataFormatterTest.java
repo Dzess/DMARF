@@ -10,7 +10,7 @@ import org.mockito.Mockito;
 import org.mockito.MockitoAnnotations;
 import org.put.hd.dmarf.data.builders.IDataReprsentatinoBuilder;
 import org.put.hd.dmarf.data.formatters.SimpleDataFormatter;
-import org.put.hd.dmarf.utils.InvocatinoNumbered;
+import org.put.hd.dmarf.utils.InvocationNumbered;
 
 /**
  * Loads the trail data set defined in resources to test the if the simple data
@@ -47,10 +47,10 @@ public class SimpleDataFormatterTest {
 		fomratter.getFormattedData(someReader);
 		
 		// verify that 3 items have appeared in this sequence
-		Mockito.verify(builderMock, new InvocatinoNumbered(0)).addTransaction(0);
-		Mockito.verify(builderMock, new InvocatinoNumbered(1)).addItemInTransaction(1);
-		Mockito.verify(builderMock, new InvocatinoNumbered(2)).addItemInTransaction(2);
-		Mockito.verify(builderMock, new InvocatinoNumbered(3)).addItemInTransaction(3);
+		Mockito.verify(builderMock, new InvocationNumbered(0)).addTransaction(0);
+		Mockito.verify(builderMock, new InvocationNumbered(1)).addItemInTransaction(1);
+		Mockito.verify(builderMock, new InvocationNumbered(2)).addItemInTransaction(2);
+		Mockito.verify(builderMock, new InvocationNumbered(3)).addItemInTransaction(3);
 		Mockito.verify(builderMock,Mockito.times(1)).getDataRepresentation();
 	}
 	
@@ -63,9 +63,9 @@ public class SimpleDataFormatterTest {
 		fomratter.getFormattedData(someReader);
 		
 		// verify that 3 items have appeared in this sequence
-		Mockito.verify(builderMock, new InvocatinoNumbered(0)).addTransaction(0);
-		Mockito.verify(builderMock, new InvocatinoNumbered(1)).addItemInTransaction(2);
-		Mockito.verify(builderMock, new InvocatinoNumbered(2)).addItemInTransaction(3);
+		Mockito.verify(builderMock, new InvocationNumbered(0)).addTransaction(0);
+		Mockito.verify(builderMock, new InvocationNumbered(1)).addItemInTransaction(2);
+		Mockito.verify(builderMock, new InvocationNumbered(2)).addItemInTransaction(3);
 		Mockito.verify(builderMock,Mockito.times(1)).getDataRepresentation();
 	}
 	
@@ -80,12 +80,12 @@ public class SimpleDataFormatterTest {
 		fomratter.getFormattedData(someReader);
 		
 		// verify that 3 items have appeared in this sequence
-		Mockito.verify(builderMock, new InvocatinoNumbered(0)).addTransaction(0);
-		Mockito.verify(builderMock, new InvocatinoNumbered(1)).addItemInTransaction(2);
-		Mockito.verify(builderMock, new InvocatinoNumbered(2)).addItemInTransaction(3);
-		Mockito.verify(builderMock, new InvocatinoNumbered(3)).addTransaction(1);
-		Mockito.verify(builderMock, new InvocatinoNumbered(4)).addItemInTransaction(100);
-		Mockito.verify(builderMock, new InvocatinoNumbered(5)).addItemInTransaction(255);
+		Mockito.verify(builderMock, new InvocationNumbered(0)).addTransaction(0);
+		Mockito.verify(builderMock, new InvocationNumbered(1)).addItemInTransaction(2);
+		Mockito.verify(builderMock, new InvocationNumbered(2)).addItemInTransaction(3);
+		Mockito.verify(builderMock, new InvocationNumbered(3)).addTransaction(1);
+		Mockito.verify(builderMock, new InvocationNumbered(4)).addItemInTransaction(100);
+		Mockito.verify(builderMock, new InvocationNumbered(5)).addItemInTransaction(255);
 		Mockito.verify(builderMock,Mockito.times(1)).getDataRepresentation();
 	}
 }
