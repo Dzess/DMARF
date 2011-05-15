@@ -9,7 +9,12 @@ import java.util.Map;
  * attributes must have value, thus table will have some nulls.
  * 
  * This is only the interface for the data representation using other interfaces
- * like {@link Map} or {@link List}.
+ * like {@link Map} or {@link List}. 
+ * 
+ * <i>
+ * Not all the get like methods must have values or be implemented in a proper way. This depends on
+ * the representation under this class.
+ * </i>
  * 
  * @author Piotr
  */
@@ -32,11 +37,29 @@ public abstract class DataRepresentationBase {
 	 */
 	protected List<List<Integer>> TransactionsList;
 
+	/**
+	 * The simple string like transaction representation
+	 */
+	protected List<List<String>> Transactions;
+
+	/**
+	 * The simple string like attribute representation
+	 */
+	protected Map<String, Integer> Attributes;
+
+	public Map<String, Integer> getAttributes() {
+		return Attributes;
+	}
+	
+	public List<List<String>> getTransactions(){
+		return Transactions;
+	}
+
 	public Map<Integer, Integer> getAttributesCounter() {
 		return AttributesCounter;
 	}
 
-	public Map<Integer, List<Integer>> getTransactions() {
+	public Map<Integer, List<Integer>> getTransactionsMap() {
 		return TransactionsMap;
 	}
 

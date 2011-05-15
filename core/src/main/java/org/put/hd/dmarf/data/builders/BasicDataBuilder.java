@@ -28,6 +28,10 @@ public class BasicDataBuilder implements IDataReprsentatinoBuilder {
 	private List<List<Integer>> transactionsList;
 
 	private LinkedList<Integer> lastTransaction;
+	
+	private LinkedList<String> lastTransactionString;
+	private LinkedList<List<String>> transactionsString;
+	private Map<String,Integer> attributesString;
 
 	public BasicDataBuilder() {
 
@@ -40,6 +44,11 @@ public class BasicDataBuilder implements IDataReprsentatinoBuilder {
 		transactionsMap = new LinkedHashMap<Integer, List<Integer>>(
 				initialCapacity, loadFactor);
 		transactionsList = new LinkedList<List<Integer>>();
+		
+		// string version of representation (bigger bit ;)
+		lastTransactionString = new LinkedList<String>();
+		transactionsString = new LinkedList<List<String>>();
+		attributesString = new LinkedHashMap<String, Integer>();
 	}
 
 	public void addItemInTransaction(Integer itemIdentifier) {
@@ -52,16 +61,19 @@ public class BasicDataBuilder implements IDataReprsentatinoBuilder {
 
 		// update the element on the list
 		lastTransaction.add(itemIdentifier);
+		lastTransactionString.add(itemIdentifier.toString());
 	}
 
 	private void updateAttributeCounter(Integer itemIdentifier) {
 
 		if (!attributesCounter.containsKey(itemIdentifier)) {
 			attributesCounter.put(itemIdentifier, 1);
+			attributesString.put(itemIdentifier.toString(),1);
 		} else {
 			Integer element = attributesCounter.get(itemIdentifier);
 			element += 1;
 			attributesCounter.put(itemIdentifier, element);
+			attributesString.put(itemIdentifier.toString(),element);
 		}
 	}
 
@@ -70,15 +82,20 @@ public class BasicDataBuilder implements IDataReprsentatinoBuilder {
 		// code responsible for creating new list within the maps
 		// they point to the SAME list for memory efficiency
 		lastTransaction = new LinkedList<Integer>();
+		lastTransactionString = new LinkedList<String>();
+		
 		transactionsMap.put(transactionIdentifier, lastTransaction);
+		
+		
 		transactionsList.add(lastTransaction);
+		transactionsString.add(lastTransactionString);
 	}
 
 	public DataRepresentationBase getDataRepresentation() {
 
 		// produce the data representation
 		data = new InjectableDataRepresentation(attributesCounter,
-				transactionsList, transactionsMap);
+				transactionsList, transactionsMap,transactionsString,attributesString);
 		return data;
 	}
 }
