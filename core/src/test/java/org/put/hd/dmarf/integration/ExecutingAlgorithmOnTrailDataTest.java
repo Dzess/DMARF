@@ -58,7 +58,7 @@ public class ExecutingAlgorithmOnTrailDataTest {
 		wekaProvider = new WekaAlgorithm();
 		
 		// set the parameters of the algorithms
-		minSupport = 0.6;
+		minSupport = 0.6; // meaning 3 item must support
 		minConfidance = 0.75;
 	}
 	
@@ -124,17 +124,39 @@ public class ExecutingAlgorithmOnTrailDataTest {
 
 		// check the sizes - must be the same
 		if(result.size() != expectedRules.size())
+		{
+			showRulesDifferences(result, expectedRules);
 			Assert.fail("The both result rules should be of equal lenght");
+		}
 		
 		
 		// for each rule in the rule set search it in the output rule set
 		for (Rule rule : result) {
 				
 			if(!expectedRules.contains(rule))
+			{
+				showRulesDifferences(result, expectedRules);
 				Assert.fail("The rule" + rule + "could not be found in expected rule set.");
+			}
+			
+			// TODO: write checking for the vaid
 		}
 		
 	}
 
-	// TODO: another files with some nice input for validation
+	private void showRulesDifferences(List<Rule> result,
+			List<Rule> expectedRules) {
+		// Show what went wring
+		System.err.println("OutCome: ");
+		for (Rule r : result) {
+			System.out.println(r);
+		}
+		
+		System.err.println("Expected outcome: ");
+		for (Rule r : expectedRules) {
+			System.out.println(r);
+		}
+		
+		System.err.flush();
+	}
 }
