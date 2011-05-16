@@ -202,7 +202,6 @@ public class AprioriNST extends AlgorithmBase {
 			DataRepresentationBase data, double minCredibility) {
 
 		List<Rule> itemSetRules = new LinkedList<Rule>();
-		// TODO: make this counter global or something
 
 		// all rule item set support (FOR THE WHOLE RULE)
 		int suportXY = frequentSet.get(itemSet);
