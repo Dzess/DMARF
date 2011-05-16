@@ -217,21 +217,34 @@ public class JOCLSample_1_1
      */
     private static void defaultInitialization()
     {
+        // Obtain the number of platforms
+        int numPlatforms[] = new int[1];
+        clGetPlatformIDs(0, null, numPlatforms);
+        
         // Obtain the platform IDs and initialize the context properties
-        cl_platform_id platforms[] = new cl_platform_id[2];
+        System.out.println("Number of platforms: "+numPlatforms[0]);        
+        
+        System.out.println("Obtaining platform...");
+        cl_platform_id platforms[] = new cl_platform_id[numPlatforms[0]];
         clGetPlatformIDs(platforms.length, platforms, null);
         cl_context_properties contextProperties = new cl_context_properties();
-        contextProperties.addProperty(CL_CONTEXT_PLATFORM, platforms[1]);
         
-        // Create an OpenCL context on a GPU device
+        //trying for CPU device only
+        if (numPlatforms[0] == 2)
+            contextProperties.addProperty(CL_CONTEXT_PLATFORM, platforms[1]);
+        else
+            contextProperties.addProperty(CL_CONTEXT_PLATFORM, platforms[0]);
+        
+        // Create an OpenCL context on a CPU device
         context = clCreateContextFromType(
-            contextProperties, CL_DEVICE_TYPE_GPU, null, null, null);
+                contextProperties, CL_DEVICE_TYPE_CPU, null, null, null);
+
         if (context == null)
         {
-            // If no context for a GPU device could be created,
-            // try to create one for a CPU device.
+            // If no context for a CPU device could be created,
+            // try to create one for a GPU device.
             context = clCreateContextFromType(
-                contextProperties, CL_DEVICE_TYPE_CPU, null, null, null);
+                    contextProperties, CL_DEVICE_TYPE_GPU, null, null, null);            
             
             if (context == null)
             {

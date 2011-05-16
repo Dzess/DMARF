@@ -9,12 +9,10 @@ import java.util.Map;
  * attributes must have value, thus table will have some nulls.
  * 
  * This is only the interface for the data representation using other interfaces
- * like {@link Map} or {@link List}. 
+ * like {@link Map} or {@link List}.
  * 
- * <i>
- * Not all the get like methods must have values or be implemented in a proper way. This depends on
- * the representation under this class.
- * </i>
+ * <i> Not all the get like methods must have values or be implemented in a
+ * proper way. This depends on the representation under this class. </i>
  * 
  * @author Piotr
  */
@@ -47,11 +45,22 @@ public abstract class DataRepresentationBase {
 	 */
 	protected Map<String, Integer> Attributes;
 
+	/**
+	 * Clustered map of attributes into byte numbers. Each atribute is treated
+	 * index only based. Assumming we have 16 attributes a0-15 the first 8 are
+	 * converted as first byte and the latter as second;
+	 */
+	protected Byte[][] TransactionsByteMap;
+
+	public Byte[][] getTransactionsByteMap() {
+		return TransactionsByteMap;
+	}
+
 	public Map<String, Integer> getAttributes() {
 		return Attributes;
 	}
-	
-	public List<List<String>> getTransactions(){
+
+	public List<List<String>> getTransactions() {
 		return Transactions;
 	}
 

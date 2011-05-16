@@ -9,7 +9,7 @@ import org.put.hd.dmarf.algorithms.factories.IAlgorithmFactory;
 import org.put.hd.dmarf.algorithms.factories.ProductionAlgorithmFactory;
 import org.put.hd.dmarf.data.DataRepresentationBase;
 import org.put.hd.dmarf.data.builders.BasicDataBuilder;
-import org.put.hd.dmarf.data.builders.IDataReprsentatinoBuilder;
+import org.put.hd.dmarf.data.builders.IDataRepresentationBuilder;
 import org.put.hd.dmarf.data.formatters.IDataFormatter;
 import org.put.hd.dmarf.data.formatters.SimpleDataFormatter;
 import org.put.hd.dmarf.data.loaders.IDataLoader;
@@ -42,7 +42,7 @@ public class App {
 		}
 
 		// loading data phase
-		IDataReprsentatinoBuilder builder = new BasicDataBuilder();
+		IDataRepresentationBuilder builder = new BasicDataBuilder();
 		IDataFormatter fomratter = new SimpleDataFormatter(builder);
 		IDataLoader loader = new SimpleDataLoader(fomratter);
 		loader.setInputFileName(parser.getInputFileName());

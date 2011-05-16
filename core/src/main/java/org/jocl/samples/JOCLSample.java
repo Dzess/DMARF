@@ -52,9 +52,15 @@ public class JOCLSample
         Pointer srcB = Pointer.to(srcArrayB);
         Pointer dst = Pointer.to(dstArray);
 
+        // Obtain the number of platforms
+        int numPlatforms[] = new int[1];
+        clGetPlatformIDs(0, null, numPlatforms);
+        
         // Obtain the platform IDs and initialize the context properties
+        System.out.println("Number of platforms: "+numPlatforms[0]);        
+        
         System.out.println("Obtaining platform...");
-        cl_platform_id platforms[] = new cl_platform_id[1];
+        cl_platform_id platforms[] = new cl_platform_id[numPlatforms[0]];
         clGetPlatformIDs(platforms.length, platforms, null);
         cl_context_properties contextProperties = new cl_context_properties();
         contextProperties.addProperty(CL_CONTEXT_PLATFORM, platforms[0]);

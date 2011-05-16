@@ -16,13 +16,13 @@ import org.put.hd.dmarf.data.formatters.IDataFormatter;
 public class SimpleDataLoader implements IDataLoader {
 
 	private File inputFile;
-	private final IDataFormatter fomratter;
+	private final IDataFormatter formatter;
 
 	public SimpleDataLoader(IDataFormatter fomratter) {
 		if (fomratter == null)
 			throw new NullPointerException("formatter parameter cannot be null");
 
-		this.fomratter = fomratter;
+		this.formatter = fomratter;
 	}
 
 	public void setInputFileName(String name) {
@@ -46,7 +46,7 @@ public class SimpleDataLoader implements IDataLoader {
 		DataRepresentationBase data = null;
 		try {
 			fileReader = new FileReader(inputFile);
-			data = fomratter.getFormattedData(fileReader);
+			data = formatter.getFormattedData(fileReader);
 			fileReader.close();
 		} catch (Exception e)
 		{
