@@ -58,8 +58,33 @@ public class ExecutingAlgorithmOnTrailDataTest {
 		wekaProvider = new WekaAlgorithm();
 		
 		// set the parameters of the algorithms
-		minSupport = 0.8;
+		minSupport = 0.6;
 		minConfidance = 0.75;
+	}
+	
+	@Test
+	public void run_all_test_on_sample_data_from_lectures(){
+		// path to the resources data
+		String fileName = "resources/data/lecture.dat";
+
+		// get data
+		loader.setInputFileName(fileName);
+		DataRepresentationBase data = loader.loadData();
+		
+		wekaProvider.start(data, 0.5, 0.5);
+		List<Rule> wekaRules = wekaProvider.getRules();
+		for (Rule rule : wekaRules) {
+			System.out.println(rule);
+		}
+		
+		// get standard apriori working
+		IAlgorithm algorithm = factory.getAlgorithm(1);
+		
+		algorithm.start(data, 0.5, 0.5);
+		List<Rule> aprioriRules = algorithm.getRules();
+		for (Rule rule : aprioriRules) {
+			System.out.println(rule);
+		}
 	}
 
 	@Test

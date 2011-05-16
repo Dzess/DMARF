@@ -73,7 +73,7 @@ public class OutputFormatter {
 		List<Integer> itemsConditional = rule.getConditionalPart();
 		appendItems(itemsConditional);
 
-		builder.append(" ) => ( ");
+		builder.append(") => ( ");
 
 		List<Integer> itemsExecutive = rule.getExecutivePart();
 		appendItems(itemsExecutive);

@@ -9,6 +9,7 @@ import jcuda.runtime.*;
 import org.put.hd.dmarf.algorithms.IAlgorithm;
 import org.put.hd.dmarf.algorithms.WekaAlgorithm;
 import org.put.hd.dmarf.algorithms.apriori.AprioriCudaAlgorithm;
+import org.put.hd.dmarf.algorithms.apriori.StandardApriori;
 
 /**
  * Production factory for code. NOTE: each algorithm in this factory will be
@@ -27,13 +28,9 @@ public class ProductionAlgorithmFactory implements IAlgorithmFactory {
 		// Weka algorithm is the first one to be implemented in production
 		// phase.
 		algorithms.add(new WekaAlgorithm());
-
-		// verifying that hardware is CUDA enabled
-		// int count[] = new int[1];
-		// if (JCuda.cudaGetDeviceCount(count) == cudaError.cudaSuccess
-		// && count[0] > 0) {
-		// algorithms.add(new AprioriCudaAlgorithm());
-		// }
+		
+		// Standard non optimized algorithm for apriori with quite inefficient implementation
+		algorithms.add(new StandardApriori());
 
 	}
 

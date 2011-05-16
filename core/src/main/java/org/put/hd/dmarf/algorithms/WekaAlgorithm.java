@@ -15,6 +15,7 @@ import weka.associations.AssociationRule;
 import weka.associations.AssociationRules;
 import weka.associations.Item;
 import weka.core.Attribute;
+import weka.core.DenseInstance;
 import weka.core.FastVector;
 import weka.core.Instance;
 import weka.core.Instances;
@@ -103,7 +104,7 @@ public class WekaAlgorithm implements IAlgorithm {
 				}
 			}
 
-			Instance instance = new SparseInstance(1.0, values);
+			Instance instance = new DenseInstance(1.0, values);
 			wekaData.add(instance);
 
 		}
