@@ -45,15 +45,13 @@ public class StandardApriori extends AlgorithmBase {
 		for (Map.Entry<ItemSet, Integer> entry : frequentSet.entrySet()) {
 
 			// one element sets are bad ;) so avoid them
-			if( entry.getKey().getElements().size() < 2)
+			if (entry.getKey().getElements().size() < 2)
 				continue;
-			
+
 			// generate possible rules for this frequent set
-			List<Rule> frequentSetRules = getRulesFromItemSet(
-					entry.getKey(),
-					data,
-					minCredibility);
-			
+			List<Rule> frequentSetRules = getRulesFromItemSet(entry.getKey(),
+					data, minCredibility);
+
 			rules.addAll(frequentSetRules);
 		}
 
@@ -83,9 +81,10 @@ public class StandardApriori extends AlgorithmBase {
 				boolean hasTransactionItems = true;
 
 				for (String string : candidate.getElements()) {
-					if (!transaction.contains(string))
+					if (!transaction.contains(string)) {
 						hasTransactionItems = false;
-					break;
+						break;
+					}
 				}
 				if (hasTransactionItems)
 					supportInData++;
@@ -124,9 +123,8 @@ public class StandardApriori extends AlgorithmBase {
 					.entrySet()) {
 
 				if (!entry.getKey().equals(secondEntry.getKey())) {
-					ItemSet itemSet = new ItemSet(
-												entry.getKey(),
-												secondEntry.getKey());
+					ItemSet itemSet = new ItemSet(entry.getKey(),
+							secondEntry.getKey());
 
 					candidateKeys.add(itemSet);
 				}
@@ -182,7 +180,8 @@ public class StandardApriori extends AlgorithmBase {
 					frequentSuppMap, 1);
 
 			// verify all the elements in the candidate set
-			verifyCandidatesForFrequentSets(data, frequentSuppMap,candidateKeys);
+			verifyCandidatesForFrequentSets(data, frequentSuppMap,
+					candidateKeys);
 		}
 
 		// make the frequent set visible to the other part of algorithm
@@ -255,12 +254,12 @@ public class StandardApriori extends AlgorithmBase {
 
 					// mark the set as the one to further rule implications
 					List<ItemSet> sets = getAllSets(currentSet.getElements());
-					if(sets != null)
+					if (sets != null)
 						nextSets.addAll(sets);
 				} else {
 					// add all n-1 sets created from this set to the veto guys,
 					// those wont be checked against the data
-					List<ItemSet> sets =getAllSets(currentSet.getElements());
+					List<ItemSet> sets = getAllSets(currentSet.getElements());
 					if (sets != null)
 						vetoSets.addAll(sets);
 				}
@@ -279,8 +278,7 @@ public class StandardApriori extends AlgorithmBase {
 	 */
 	private List<ItemSet> getAllSets(SortedSet<String> inputSet) {
 
-		if (inputSet.size() == 1)
-		{
+		if (inputSet.size() == 1) {
 			return null;
 		}
 

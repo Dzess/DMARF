@@ -42,7 +42,7 @@ public class WekaAlgorithm implements IAlgorithm {
 
 		// decision about the products
 		decisions = new FastVector<String>();
-		decisions.addElement("0");
+		//decisions.addElement("0")
 		decisions.addElement("1");
 
 		// create apriori
@@ -100,7 +100,8 @@ public class WekaAlgorithm implements IAlgorithm {
 				if (transaction.contains(j + 1)) {
 					values[j] = decisions.indexOf("1");
 				} else {
-					values[j] = decisions.indexOf("0");
+					//values[j] = decisions.indexOf("0");
+					values[j] = -1;
 				}
 			}
 
