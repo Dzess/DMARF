@@ -31,6 +31,13 @@ public class Rule {
 
 		builder.append(" )");
 
+		// print the support and confidance
+		builder.append("  Confidance: ");
+		builder.append(this.confidance);
+		
+		builder.append("  Support: ");
+		builder.append(this.support);
+		
 		return builder.toString();
 	}
 

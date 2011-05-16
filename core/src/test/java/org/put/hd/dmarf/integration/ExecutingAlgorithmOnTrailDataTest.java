@@ -71,17 +71,20 @@ public class ExecutingAlgorithmOnTrailDataTest {
 		loader.setInputFileName(fileName);
 		DataRepresentationBase data = loader.loadData();
 		
-		wekaProvider.start(data, 0.5, 0.5);
+		wekaProvider.start(data, 0.7, 0.5);
 		List<Rule> wekaRules = wekaProvider.getRules();
+		System.out.println("WEKAs in (" + wekaProvider.getElapsedTimeOverall() + ")");
 		for (Rule rule : wekaRules) {
 			System.out.println(rule);
 		}
 		
+		
 		// get standard apriori working
 		IAlgorithm algorithm = factory.getAlgorithm(1);
 		
-		algorithm.start(data, 0.5, 0.5);
+		algorithm.start(data, 0.7, 0.5);
 		List<Rule> aprioriRules = algorithm.getRules();
+		System.out.println("Apriori ST in (" + algorithm.getElapsedTimeOverall() + ")");
 		for (Rule rule : aprioriRules) {
 			System.out.println(rule);
 		}

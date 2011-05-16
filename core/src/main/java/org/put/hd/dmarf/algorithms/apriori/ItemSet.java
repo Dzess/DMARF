@@ -25,7 +25,8 @@ public class ItemSet implements Comparable<ItemSet> {
 	}
 
 	public ItemSet(ItemSet set1, ItemSet set2) {
-
+		elements = new TreeSet<String>(set1.getElements());
+		elements.addAll(set2.getElements());
 	}
 
 	public ItemSet(String string) {
@@ -34,7 +35,7 @@ public class ItemSet implements Comparable<ItemSet> {
 	}
 
 	public ItemSet(SortedSet<String> set) {
-		elements = set;
+		elements = new TreeSet<String>(set);
 	}
 
 	public int compareTo(ItemSet o) {
@@ -69,6 +70,8 @@ public class ItemSet implements Comparable<ItemSet> {
 		throw new AssertionError("This code should never been reach");
 			
 	}
+	
+	
 
 	@Override
 	public int hashCode() {
@@ -77,6 +80,11 @@ public class ItemSet implements Comparable<ItemSet> {
 		result = prime * result
 				+ ((elements == null) ? 0 : elements.hashCode());
 		return result;
+	}
+
+	@Override
+	public String toString() {
+		return elements.toString();		
 	}
 
 	@Override
