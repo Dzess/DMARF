@@ -9,7 +9,7 @@ import jcuda.runtime.*;
 import org.put.hd.dmarf.algorithms.IAlgorithm;
 import org.put.hd.dmarf.algorithms.WekaAlgorithm;
 import org.put.hd.dmarf.algorithms.apriori.AprioriCudaAlgorithm;
-import org.put.hd.dmarf.algorithms.apriori.StandardApriori;
+import org.put.hd.dmarf.algorithms.apriori.AprioriNST;
 
 /**
  * Production factory for code. NOTE: each algorithm in this factory will be
@@ -30,7 +30,7 @@ public class ProductionAlgorithmFactory implements IAlgorithmFactory {
 		algorithms.add(new WekaAlgorithm());
 		
 		// Standard non optimized algorithm for apriori with quite inefficient implementation
-		algorithms.add(new StandardApriori());
+		algorithms.add(new AprioriNST());
 
 	}
 

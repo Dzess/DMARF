@@ -27,7 +27,7 @@ import weka.associations.Item;
  * @author Piotr
  * 
  */
-public class StandardApriori extends AlgorithmBase {
+public class AprioriNST extends AlgorithmBase {
 
 	private List<Rule> rules;
 	private int supportThreshold;
