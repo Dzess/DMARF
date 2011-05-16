@@ -21,7 +21,6 @@ public class TestAlgorithmFactory implements IAlgorithmFactory {
 
 		algorithms = new LinkedList<IAlgorithm>();
 		algorithms.add(new RandomAlgorithm());
-		algorithms.add(new AprioriCudaAlgorithm());
 	}
 
 	public int getNumberOfAlgorithms() {

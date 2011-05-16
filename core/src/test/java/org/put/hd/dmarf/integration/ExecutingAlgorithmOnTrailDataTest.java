@@ -13,7 +13,7 @@ import org.put.hd.dmarf.algorithms.factories.ProductionAlgorithmFactory;
 import org.put.hd.dmarf.algorithms.factories.TestAlgorithmFactory;
 import org.put.hd.dmarf.data.DataRepresentationBase;
 import org.put.hd.dmarf.data.builders.BasicDataBuilder;
-import org.put.hd.dmarf.data.builders.IDataReprsentatinoBuilder;
+import org.put.hd.dmarf.data.builders.IDataRepresentationBuilder;
 import org.put.hd.dmarf.data.formatters.IDataFormatter;
 import org.put.hd.dmarf.data.formatters.SimpleDataFormatter;
 import org.put.hd.dmarf.data.loaders.IDataLoader;
@@ -38,7 +38,7 @@ public class ExecutingAlgorithmOnTrailDataTest {
 	 */
 	private IDataLoader loader;
 	private IDataFormatter fomratter;
-	private IDataReprsentatinoBuilder builder;
+	private IDataRepresentationBuilder builder;
 	private IAlgorithmFactory factory;
 	private IAlgorithm wekaProvider;
 

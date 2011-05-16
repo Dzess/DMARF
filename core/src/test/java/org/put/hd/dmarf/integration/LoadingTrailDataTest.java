@@ -7,7 +7,7 @@ import org.junit.Before;
 import org.junit.Test;
 import org.put.hd.dmarf.data.DataRepresentationBase;
 import org.put.hd.dmarf.data.builders.BasicDataBuilder;
-import org.put.hd.dmarf.data.builders.IDataReprsentatinoBuilder;
+import org.put.hd.dmarf.data.builders.IDataRepresentationBuilder;
 import org.put.hd.dmarf.data.formatters.IDataFormatter;
 import org.put.hd.dmarf.data.formatters.SimpleDataFormatter;
 import org.put.hd.dmarf.data.loaders.IDataLoader;
@@ -15,7 +15,7 @@ import org.put.hd.dmarf.data.loaders.SimpleDataLoader;
 
 /**
  * Integration level test for loading all data. Acceptance level of test for
- * data loading. Using the default {@link IDataReprsentatinoBuilder}
+ * data loading. Using the default {@link IDataRepresentationBuilder}
  * 
  * @author Piotr
  * 
@@ -24,7 +24,7 @@ public class LoadingTrailDataTest {
 
 	private IDataLoader dataloader;
 	private IDataFormatter formatter;
-	private IDataReprsentatinoBuilder builder;
+	private IDataRepresentationBuilder builder;
 
 	private DataRepresentationBase result;
 

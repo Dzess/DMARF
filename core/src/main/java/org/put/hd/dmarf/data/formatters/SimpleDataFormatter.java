@@ -6,7 +6,7 @@ import java.io.Reader;
 import java.util.StringTokenizer;
 
 import org.put.hd.dmarf.data.DataRepresentationBase;
-import org.put.hd.dmarf.data.builders.IDataReprsentatinoBuilder;
+import org.put.hd.dmarf.data.builders.IDataRepresentationBuilder;
 
 /**
  * Gets the data from stream and reads the input providing output in a nice
@@ -17,9 +17,9 @@ import org.put.hd.dmarf.data.builders.IDataReprsentatinoBuilder;
  */
 public class SimpleDataFormatter implements IDataFormatter {
 
-	private final IDataReprsentatinoBuilder builder;
+	private final IDataRepresentationBuilder builder;
 
-	public SimpleDataFormatter(IDataReprsentatinoBuilder builder) {
+	public SimpleDataFormatter(IDataRepresentationBuilder builder) {
 		this.builder = builder;
 
 	}

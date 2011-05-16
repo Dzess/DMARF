@@ -8,7 +8,7 @@ import org.put.hd.dmarf.data.DataRepresentationBase;
  * @author Piotr
  *
  */
-public interface IDataReprsentatinoBuilder {
+public interface IDataRepresentationBuilder {
 	/**
 	 * Invoke this method when you want builder to produce representation containing 
 	 * one more item.
