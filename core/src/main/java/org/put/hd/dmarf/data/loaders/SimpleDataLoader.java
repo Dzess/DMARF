@@ -10,49 +10,50 @@ import org.put.hd.dmarf.data.formatters.IDataFormatter;
 
 /**
  * Sample file data loader. Injected with IDataFormatter class.
- * @author Piotr 
+ * 
+ * @author Piotr
  */
 public class SimpleDataLoader implements IDataLoader {
 
 	private File inputFile;
 	private final IDataFormatter formatter;
-	
+
 	public SimpleDataLoader(IDataFormatter fomratter) {
-		if(fomratter == null)
+		if (fomratter == null)
 			throw new NullPointerException("formatter parameter cannot be null");
-		
+
 		this.formatter = fomratter;
 	}
 
-
 	public void setInputFileName(String name) {
-		
+
 		// constraints
-		 if(name == null)
-			 throw new NullPointerException("Name parameter cannot be null");
-		
-		 inputFile  = new File(name);
-		 
-		 if(!inputFile.exists())
-		 {
-			 inputFile = null;
-			 throw new UnsupportedOperationException("No such file exists");
-		 }
-			 
-		 
-		 
+		if (name == null)
+			throw new NullPointerException("Name parameter cannot be null");
+
+		inputFile = new File(name);
+
+		if (!inputFile.exists()) {
+			inputFile = null;
+			throw new UnsupportedOperationException("No such file exists");
+		}
+
 	}
 
 	public DataRepresentationBase loadData() {
 		Reader fileReader = null;
-		
+
+		DataRepresentationBase data = null;
 		try {
 			fileReader = new FileReader(inputFile);
-		} catch (FileNotFoundException e) {
-			// this will not happen at all
+			data = formatter.getFormattedData(fileReader);
+			fileReader.close();
+		} catch (Exception e)
+		{
+			e.printStackTrace();
 		}
-		
-		return formatter.getFormattedData(fileReader);
+
+		return data;
 	}
 
 }

@@ -56,37 +56,40 @@ public class ExecutingAlgorithmOnTrailDataTest {
 
 		// get the Weka provider
 		wekaProvider = new WekaAlgorithm();
-		
+
 		// set the parameters of the algorithms
-		minSupport = 0.6; // meaning 3 item must support
+		minSupport = 0.6; // meaning 3 item must support (0*6 * 4 = 2,4 -> 3 rules i guess)
 		minConfidance = 0.75;
 	}
-	
+
 	@Test
-	public void run_all_test_on_sample_data_from_lectures(){
+	public void run_all_tests_from_simple_algorithm_factory_trial_2() {
 		// path to the resources data
 		String fileName = "resources/data/lecture.dat";
+
+		double confidance = 0.5;
+		double support = 0.7;
 
 		// get data
 		loader.setInputFileName(fileName);
 		DataRepresentationBase data = loader.loadData();
-		
-		wekaProvider.start(data, 0.7, 0.5);
-		List<Rule> wekaRules = wekaProvider.getRules();
-		System.out.println("WEKAs in (" + wekaProvider.getElapsedTimeOverall() + ")");
-		for (Rule rule : wekaRules) {
-			System.out.println(rule);
-		}
-		
-		
-		// get standard apriori working
-		IAlgorithm algorithm = factory.getAlgorithm(1);
-		
-		algorithm.start(data, 0.7, 0.5);
-		List<Rule> aprioriRules = algorithm.getRules();
-		System.out.println("Apriori ST in (" + algorithm.getElapsedTimeOverall() + ")");
-		for (Rule rule : aprioriRules) {
-			System.out.println(rule);
+
+		// get the weka results - expected ones
+		wekaProvider.start(data, support, confidance);
+		List<Rule> wekaResults = wekaProvider.getRules();
+
+		// run the tests for each algorithm
+		for (int i = 0; i < factory.getNumberOfAlgorithms(); i++) {
+
+			// out part of algorithms
+			IAlgorithm algorithm = factory.getAlgorithm(i);
+			algorithm.start(data, support, confidance);
+
+			// ignore the time just get output
+			List<Rule> result = algorithm.getRules();
+
+			// verify that result is good
+			verifyOutput(result, wekaResults);
 		}
 	}
 
@@ -99,14 +102,14 @@ public class ExecutingAlgorithmOnTrailDataTest {
 		// get data
 		loader.setInputFileName(fileName);
 		DataRepresentationBase data = loader.loadData();
-		
+
 		// get the weka results - expected ones
 		wekaProvider.start(data, minSupport, minConfidance);
 		List<Rule> wekaResults = wekaProvider.getRules();
 
 		// run the tests for each algorithm
 		for (int i = 0; i < factory.getNumberOfAlgorithms(); i++) {
-			
+
 			// out part of algorithms
 			IAlgorithm algorithm = factory.getAlgorithm(i);
 			algorithm.start(data, minSupport, minConfidance);
@@ -123,25 +126,23 @@ public class ExecutingAlgorithmOnTrailDataTest {
 	private void verifyOutput(List<Rule> result, List<Rule> expectedRules) {
 
 		// check the sizes - must be the same
-		if(result.size() != expectedRules.size())
-		{
+		if (result.size() != expectedRules.size()) {
 			showRulesDifferences(result, expectedRules);
 			Assert.fail("The both result rules should be of equal lenght");
 		}
-		
-		
+
 		// for each rule in the rule set search it in the output rule set
 		for (Rule rule : result) {
-				
-			if(!expectedRules.contains(rule))
-			{
+
+			if (!expectedRules.contains(rule)) {
 				showRulesDifferences(result, expectedRules);
-				Assert.fail("The rule" + rule + "could not be found in expected rule set.");
+				Assert.fail("The rule" + rule
+						+ "could not be found in expected rule set.");
 			}
-			
+
 			// TODO: write checking for the vaid
 		}
-		
+
 	}
 
 	private void showRulesDifferences(List<Rule> result,
@@ -151,12 +152,12 @@ public class ExecutingAlgorithmOnTrailDataTest {
 		for (Rule r : result) {
 			System.out.println(r);
 		}
-		
+
 		System.err.println("Expected outcome: ");
 		for (Rule r : expectedRules) {
 			System.out.println(r);
 		}
-		
+
 		System.err.flush();
 	}
 }
