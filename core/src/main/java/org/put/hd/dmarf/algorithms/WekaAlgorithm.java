@@ -15,6 +15,7 @@ import weka.associations.AssociationRule;
 import weka.associations.AssociationRules;
 import weka.associations.Item;
 import weka.core.Attribute;
+import weka.core.DenseInstance;
 import weka.core.FastVector;
 import weka.core.Instance;
 import weka.core.Instances;
@@ -69,6 +70,8 @@ public class WekaAlgorithm implements IAlgorithm {
 		wekaData = generateData(data);
 
 		apriori.setLowerBoundMinSupport(minSupport);
+		apriori.setTreatZeroAsMissing(true);
+		//apriori.setVerbose(true);
 
 		// no upper bound for support
 		apriori.setUpperBoundMinSupport(1);
@@ -100,10 +103,11 @@ public class WekaAlgorithm implements IAlgorithm {
 					values[j] = decisions.indexOf("1");
 				} else {
 					values[j] = decisions.indexOf("0");
+					values[j] = -1;
 				}
 			}
 
-			Instance instance = new SparseInstance(1.0, values);
+			Instance instance = new DenseInstance(1.0, values);
 			wekaData.add(instance);
 
 		}

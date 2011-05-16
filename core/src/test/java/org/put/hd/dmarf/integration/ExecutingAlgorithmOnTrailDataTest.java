@@ -58,8 +58,36 @@ public class ExecutingAlgorithmOnTrailDataTest {
 		wekaProvider = new WekaAlgorithm();
 		
 		// set the parameters of the algorithms
-		minSupport = 0.8;
+		minSupport = 0.6; // meaning 3 item must support
 		minConfidance = 0.75;
+	}
+	
+	@Test
+	public void run_all_test_on_sample_data_from_lectures(){
+		// path to the resources data
+		String fileName = "resources/data/lecture.dat";
+
+		// get data
+		loader.setInputFileName(fileName);
+		DataRepresentationBase data = loader.loadData();
+		
+		wekaProvider.start(data, 0.7, 0.5);
+		List<Rule> wekaRules = wekaProvider.getRules();
+		System.out.println("WEKAs in (" + wekaProvider.getElapsedTimeOverall() + ")");
+		for (Rule rule : wekaRules) {
+			System.out.println(rule);
+		}
+		
+		
+		// get standard apriori working
+		IAlgorithm algorithm = factory.getAlgorithm(1);
+		
+		algorithm.start(data, 0.7, 0.5);
+		List<Rule> aprioriRules = algorithm.getRules();
+		System.out.println("Apriori ST in (" + algorithm.getElapsedTimeOverall() + ")");
+		for (Rule rule : aprioriRules) {
+			System.out.println(rule);
+		}
 	}
 
 	@Test
@@ -96,17 +124,39 @@ public class ExecutingAlgorithmOnTrailDataTest {
 
 		// check the sizes - must be the same
 		if(result.size() != expectedRules.size())
+		{
+			showRulesDifferences(result, expectedRules);
 			Assert.fail("The both result rules should be of equal lenght");
+		}
 		
 		
 		// for each rule in the rule set search it in the output rule set
 		for (Rule rule : result) {
 				
 			if(!expectedRules.contains(rule))
+			{
+				showRulesDifferences(result, expectedRules);
 				Assert.fail("The rule" + rule + "could not be found in expected rule set.");
+			}
+			
+			// TODO: write checking for the vaid
 		}
 		
 	}
 
-	// TODO: another files with some nice input for validation
+	private void showRulesDifferences(List<Rule> result,
+			List<Rule> expectedRules) {
+		// Show what went wring
+		System.err.println("OutCome: ");
+		for (Rule r : result) {
+			System.out.println(r);
+		}
+		
+		System.err.println("Expected outcome: ");
+		for (Rule r : expectedRules) {
+			System.out.println(r);
+		}
+		
+		System.err.flush();
+	}
 }

@@ -1,8 +1,12 @@
 package org.put.hd.dmarf.algorithms.apriori;
 
+import java.util.Collection;
+import java.util.Iterator;
+import java.util.LinkedHashSet;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 import java.util.SortedMap;
 import java.util.SortedSet;
 import java.util.TreeMap;
@@ -11,6 +15,8 @@ import java.util.TreeSet;
 import org.put.hd.dmarf.algorithms.AlgorithmBase;
 import org.put.hd.dmarf.algorithms.Rule;
 import org.put.hd.dmarf.data.DataRepresentationBase;
+
+import weka.associations.Item;
 
 /**
  * Classic implementation of the apriori algorithm. Single threaded, no
@@ -23,48 +29,10 @@ import org.put.hd.dmarf.data.DataRepresentationBase;
  */
 public class StandardApriori extends AlgorithmBase {
 
-	/**
-	 * Nested class for representing the frequent set. Used another class for
-	 * that because of the {@link Comparable} interface which is must have
-	 * feature for {@link SortedList}
-	 * 
-	 * @author Piotr
-	 * 
-	 */
-	class ItemSet implements Comparable<ItemSet> {
-		private SortedSet<String> elements;
-
-		public SortedSet<String> getElements() {
-			return elements;
-		}
-
-		public ItemSet() {
-			elements = new TreeSet<String>();
-		}
-
-		public ItemSet(ItemSet set1, ItemSet set2) {
-
-		}
-
-		public ItemSet(String string) {
-			elements = new TreeSet<String>();
-			elements.add(string);
-		}
-
-		public ItemSet(SortedSet<String> set) {
-			elements = set;
-		}
-
-		public int compareTo(ItemSet o) {
-			// TODO Auto-generated method stub
-			return 0;
-		}
-
-	}
-
 	private List<Rule> rules;
 	private int supportThreshold;
 	private SortedMap<ItemSet, Integer> frequentSet;
+	private int ruleCounter = 0;
 
 	@Override
 	protected void startRuleGeneration(DataRepresentationBase data,
@@ -72,13 +40,18 @@ public class StandardApriori extends AlgorithmBase {
 
 		rules = new LinkedList<Rule>();
 
-		// for each frequent set 
+		// for each frequent set
 		// MT: this can be paralyzed quite easy
 		for (Map.Entry<ItemSet, Integer> entry : frequentSet.entrySet()) {
+
+			// one element sets are bad ;) so avoid them
+			if (entry.getKey().getElements().size() < 2)
+				continue;
 
 			// generate possible rules for this frequent set
 			List<Rule> frequentSetRules = getRulesFromItemSet(entry.getKey(),
 					data, minCredibility);
+
 			rules.addAll(frequentSetRules);
 		}
 
@@ -94,10 +67,11 @@ public class StandardApriori extends AlgorithmBase {
 	 */
 	private void verifyCandidatesForFrequentSets(DataRepresentationBase data,
 			SortedMap<ItemSet, Integer> frequentSets,
-			List<ItemSet> candidateKeys) {
-		
+			Collection<ItemSet> candidateKeys) {
+
 		// FIXME: this can be fasten
-		// well how can this fasten ? - forgot the main idea behind it in ST version
+		// well how can this fasten ? - forgot the main idea behind it in ST
+		// version
 		// MT: each thread can verify totally independently without the others
 		for (ItemSet candidate : candidateKeys) {
 
@@ -107,9 +81,10 @@ public class StandardApriori extends AlgorithmBase {
 				boolean hasTransactionItems = true;
 
 				for (String string : candidate.getElements()) {
-					if (!transaction.contains(string))
+					if (!transaction.contains(string)) {
 						hasTransactionItems = false;
-					break;
+						break;
+					}
 				}
 				if (hasTransactionItems)
 					supportInData++;
@@ -135,17 +110,18 @@ public class StandardApriori extends AlgorithmBase {
 	 *            <i>generation + generations</i>.
 	 * @return candidates for frequent sets.
 	 */
-	private List<ItemSet> getCandidateFromFrequentSet(
+	private Set<ItemSet> getCandidateFromFrequentSet(
 			SortedMap<ItemSet, Integer> frequentSets, int generation) {
 
-		List<ItemSet> candidateKeys = new LinkedList<ItemSet>();
+		Set<ItemSet> candidateKeys = new LinkedHashSet<ItemSet>();
 		// FIXME: this can be fasten x2 (but still O(n^2))
-		// try generating the element not by two big for, but use tree like connecting,
+		// try generating the element not by two big for, but use tree like
+		// connecting,
 		// the number of candidates is crucial for the algorithms
 		for (Map.Entry<ItemSet, Integer> entry : frequentSets.entrySet()) {
 			for (Map.Entry<ItemSet, Integer> secondEntry : frequentSets
 					.entrySet()) {
-				
+
 				if (!entry.getKey().equals(secondEntry.getKey())) {
 					ItemSet itemSet = new ItemSet(entry.getKey(),
 							secondEntry.getKey());
@@ -168,13 +144,15 @@ public class StandardApriori extends AlgorithmBase {
 	 */
 	private SortedMap<ItemSet, Integer> getLevelOneFrequentSets(
 			DataRepresentationBase data) {
-		
+
 		// MT: get the each attribute independently
 		SortedMap<ItemSet, Integer> frequentSets = new TreeMap<ItemSet, Integer>();
 		for (Map.Entry<String, Integer> entry : data.getAttributes().entrySet()) {
 			Integer value = entry.getValue();
+			String key = entry.getKey();
 			if (value >= supportThreshold) {
-				frequentSets.put(new ItemSet(entry.getKey()), value);
+				ItemSet itemSet = new ItemSet(key);
+				frequentSets.put(itemSet, value);
 			}
 		}
 
@@ -198,10 +176,12 @@ public class StandardApriori extends AlgorithmBase {
 		// the map
 		for (int i = 0; i < frequentSuppMap.size(); i++) {
 			// build the candidates for the frequent sets
-			List<ItemSet> candidateKeys = getCandidateFromFrequentSet(frequentSuppMap, 1);
+			Set<ItemSet> candidateKeys = getCandidateFromFrequentSet(
+					frequentSuppMap, 1);
 
 			// verify all the elements in the candidate set
-			verifyCandidatesForFrequentSets(data, frequentSuppMap, candidateKeys);
+			verifyCandidatesForFrequentSets(data, frequentSuppMap,
+					candidateKeys);
 		}
 
 		// make the frequent set visible to the other part of algorithm
@@ -222,8 +202,7 @@ public class StandardApriori extends AlgorithmBase {
 			DataRepresentationBase data, double minCredibility) {
 
 		List<Rule> itemSetRules = new LinkedList<Rule>();
-		// TODO: make this counter global
-		int ruleCounter = 0;
+		// TODO: make this counter global or something
 
 		// all rule item set support (FOR THE WHOLE RULE)
 		int suportXY = frequentSet.get(itemSet);
@@ -231,12 +210,16 @@ public class StandardApriori extends AlgorithmBase {
 		// create the veto list of elements that can be placed in conditional
 		// part of the rule
 		List<ItemSet> vetoSets = new LinkedList<ItemSet>();
+		List<ItemSet> nextSets = getAllSets(itemSet.getElements());
 
-		// TODO: warp this code into loop - to search for all the combinations of the frequency sets
-		{
+		// to search for all the combinations of the frequency sets
+		// but only n-1 goes down is possible up to the two element sets
+		for (int i = 0; i < itemSet.getElements().size() - 1; i++) {
+			// get the all (n-1 elemented) sets, from the accepted set elements
+			List<ItemSet> smallerSets = new LinkedList<ItemSet>(nextSets);
 
-			// get the all (n-1 elemented) sets,
-			List<ItemSet> smallerSets = getAllSets(itemSet.getElements());
+			// checking if the set in the next is not in the veto list
+			// TODO: it is optimization possibility
 
 			// check if they are eligible from confidence measure point of view
 			// MT: this can also be parallel
@@ -251,7 +234,7 @@ public class StandardApriori extends AlgorithmBase {
 					List<Integer> exectuivePart = new LinkedList<Integer>();
 					List<Integer> conditionalPart = new LinkedList<Integer>();
 
-					// MT: can be parallel 
+					// MT: can be parallel
 					for (String attribute : itemSet.getElements()) {
 						// FIXME: this is super slow to integer parsing -
 						// totally senseless
@@ -268,10 +251,17 @@ public class StandardApriori extends AlgorithmBase {
 							exectuivePart, (int) (confidance * 100), supportX);
 
 					itemSetRules.add(rule);
+
+					// mark the set as the one to further rule implications
+					List<ItemSet> sets = getAllSets(currentSet.getElements());
+					if (sets != null)
+						nextSets.addAll(sets);
 				} else {
 					// add all n-1 sets created from this set to the veto guys,
 					// those wont be checked against the data
-					vetoSets.addAll(getAllSets(currentSet.getElements()));
+					List<ItemSet> sets = getAllSets(currentSet.getElements());
+					if (sets != null)
+						vetoSets.addAll(sets);
 				}
 			}
 		}
@@ -288,8 +278,9 @@ public class StandardApriori extends AlgorithmBase {
 	 */
 	private List<ItemSet> getAllSets(SortedSet<String> inputSet) {
 
-		if (inputSet.size() == 1)
-			throw new RuntimeException("Set must have at least two elements");
+		if (inputSet.size() == 1) {
+			return null;
+		}
 
 		List<ItemSet> outputSets = new LinkedList<ItemSet>();
 

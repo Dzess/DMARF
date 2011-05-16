@@ -128,7 +128,6 @@ public class JOCLSample_1_1
         // the read event reaches the status CL_COMPLETE
         EventCallbackFunction eventCallbackFunction = new EventCallbackFunction()
         {
-            @Override
             public void function(cl_event event, int type, Object user_data)
             {
                 System.out.println("Event "+event+" reached status "+
@@ -179,7 +178,6 @@ public class JOCLSample_1_1
             memObjectDestructorCallbackFunction = 
                 new MemObjectDestructorCallbackFunction()
         {
-            @Override
             public void function(cl_mem memobj, Object user_data)
             {
                 System.out.println("Memory object "+memobj+
