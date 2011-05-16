@@ -37,6 +37,8 @@ public class WekaAlgorithm implements IAlgorithm {
 	private Instances wekaData;
 
 	private IStopWatch stopWatch;
+	private double minSupport;
+	private double minCredibility;
 
 	public WekaAlgorithm() {
 
@@ -63,6 +65,10 @@ public class WekaAlgorithm implements IAlgorithm {
 			double minCredibility) {
 
 		stopWatch.start();
+		
+		// for future things
+		this.minSupport = Math.ceil( minSupport * data.getTransactions().size());
+		this.minCredibility = minCredibility;
 
 		generateAttributes(data);
 
@@ -71,6 +77,7 @@ public class WekaAlgorithm implements IAlgorithm {
 
 		apriori.setLowerBoundMinSupport(minSupport);
 		apriori.setTreatZeroAsMissing(true);
+		apriori.setNumRules(Integer.MAX_VALUE);
 		//apriori.setVerbose(true);
 
 		// no upper bound for support
@@ -144,6 +151,12 @@ public class WekaAlgorithm implements IAlgorithm {
 		int i = 0;
 		for (AssociationRule rule : rules.getRules()) {
 
+			// skip the rule if weka generates too many of them
+			if( rule.getTotalSupport() < this.minSupport )
+			{
+				continue;
+			}
+			
 			Collection<Item> premise = rule.getPremise();
 			List<Integer> conditional = new LinkedList<Integer>();
 			getRulePart(premise, conditional);
