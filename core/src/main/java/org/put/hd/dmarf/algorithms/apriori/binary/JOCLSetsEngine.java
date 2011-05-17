@@ -24,6 +24,8 @@ public class JOCLSetsEngine implements ISetsEngine {
 	private cl_command_queue commandQueue;
 	private cl_kernel kernel;
 	private cl_mem transCharMapMem;
+	private Pointer transCharMapPointer;
+	private char[] transCharMap;
 
 	private DataRepresentationBase data;
 
@@ -55,10 +57,11 @@ public class JOCLSetsEngine implements ISetsEngine {
 	/**
 	 * Initialize OpenCL: Create the context, the command queue and the kernel.
 	 */
-	private void initCL() {
+	public void initCL(DataRepresentationBase data) {
+
 		// Obtain the platform IDs and initialize the context properties
 		System.out.println("Obtaining platform...");
-		cl_platform_id platforms[] = new cl_platform_id[1];
+		cl_platform_id platforms[] = new cl_platform_id[2];
 		clGetPlatformIDs(platforms.length, platforms, null);
 		cl_context_properties contextProperties = new cl_context_properties();
 		contextProperties.addProperty(CL_CONTEXT_PLATFORM, platforms[0]);
@@ -94,38 +97,40 @@ public class JOCLSetsEngine implements ISetsEngine {
 		// Create a command-queue
 		commandQueue = clCreateCommandQueue(context, device, 0, null);
 
-		// Program Setup
-		String source = readFile("SimpleMandelbrot.cl");
-
-		// Create the program
-		cl_program cpProgram = clCreateProgramWithSource(context, 1,
-				new String[] { source }, null, null);
-
-		// Build the program
-		clBuildProgram(cpProgram, 0, null, "-cl-mad-enable", null, null);
-
-		// Create the kernel
-		kernel = clCreateKernel(cpProgram, "computeMandelbrot", null);
-
 		// Create the memory object which will be filled with the
 		// transactionsCharMap
-/*
-		transCharMapMem = clCreateBuffer(
-				context,
-				CL_MEM_READ_ONLY,
-				data.getNumberOfAttributesClusters()
-						* data.getNumberOfTransactions() * Sizeof.cl_ushort16,
-				null, null);
-		clEnqueueWriteBuffer(commandQueue, transCharMapMem, true, 0, cb, ptr, num_events_in_wait_list, event_wait_list, event)
+		transCharMap = data.getTransactionsCharMap();
+		transCharMapPointer = Pointer.to(transCharMap);
 
-		// Create and fill the memory object containing the color map
-		initColorMap(32, Color.RED, Color.GREEN, Color.BLUE);
-		colorMapMem = clCreateBuffer(context, CL_MEM_READ_WRITE,
-				colorMap.length * Sizeof.cl_uint, null, null);
-		clEnqueueWriteBuffer(commandQueue, colorMapMem, true, 0,
-				colorMap.length * Sizeof.cl_uint, Pointer.to(data.getTransactionsCharMap()[1]), 0,
-				null, null);
-	*/	
+		transCharMapMem = clCreateBuffer(context, CL_MEM_READ_ONLY,
+				transCharMap.length * Sizeof.cl_ushort16, transCharMapPointer,
+				null);
+
+		clEnqueueWriteBuffer(commandQueue, transCharMapMem, true, 0,
+				transCharMap.length * Sizeof.cl_ushort16,
+				transCharMapPointer, 0, null, null);
+
+		/*
+		try {
+			Thread.sleep(10000);
+		} catch (InterruptedException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		*/
+		/*
+		 * // Program Setup String source = readFile("SimpleMandelbrot.cl");
+		 * 
+		 * // Create the program cl_program cpProgram =
+		 * clCreateProgramWithSource(context, 1, new String[] { source }, null,
+		 * null);
+		 * 
+		 * // Build the program clBuildProgram(cpProgram, 0, null,
+		 * "-cl-mad-enable", null, null);
+		 * 
+		 * // Create the kernel kernel = clCreateKernel(cpProgram,
+		 * "computeMandelbrot", null);
+		 */
 	}
 
 	/**
