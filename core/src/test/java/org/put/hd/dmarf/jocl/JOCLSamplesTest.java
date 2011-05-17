@@ -4,20 +4,25 @@ import org.junit.Test;
 import org.jocl.samples.*;
 
 public class JOCLSamplesTest {
-/*
+
 	@Test
 	public void deviceQueryTest() {
-		JOCLDeviceQuery.runJOCLDeviceQuery();
+		//JOCLDeviceQuery.runJOCLDeviceQuery();
 	}
 
 	@Test
 	public void OpenCL_1_0_Test() {
-		JOCLSample.runJOCL_1_0_Sample();
+		//JOCLSample.runJOCL_1_0_Sample();
 	}
 
 	@Test
 	public void OpenCL_1_1_CPU_Test() {
-		JOCLSample_1_1.runJOCL_1_1_Sample();
+		//JOCLSample_1_1.runJOCL_1_1_Sample();
 	}
-*/
+	
+	@Test
+	public void jocl_Histogram() {
+		//HistogramNVIDIA.GoNvidiaHistogram(null);
+	}
+	
 }

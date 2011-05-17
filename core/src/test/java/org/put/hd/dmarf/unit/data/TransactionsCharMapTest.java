@@ -1,6 +1,8 @@
 package org.put.hd.dmarf.unit.data;
 
 import java.io.File;
+import java.util.LinkedList;
+import java.util.List;
 
 import org.junit.Assert;
 import org.junit.Before;
@@ -13,7 +15,7 @@ import org.put.hd.dmarf.data.formatters.SimpleDataFormatter;
 import org.put.hd.dmarf.data.loaders.IDataLoader;
 import org.put.hd.dmarf.data.loaders.SimpleDataLoader;
 
-public class TransactionsByteMapTest {
+public class TransactionsCharMapTest {
 
 	private IDataLoader dataloader;
 	private IDataFormatter formatter;
@@ -34,8 +36,8 @@ public class TransactionsByteMapTest {
 	public void empty_table() {
 
 		try {
-			Byte[][] emptyTable = builder.getDataRepresentation()
-					.getTransactionsByteMap();
+			char[][] emptyTable = builder.getDataRepresentation()
+					.getTransactionsCharMap();
 		} catch (RuntimeException e) {
 			return;
 		}
@@ -51,13 +53,18 @@ public class TransactionsByteMapTest {
 		dataloader.setInputFileName(pathToFile);
 		data = dataloader.loadData();
 
-		Byte[][] testByteMap = data.getTransactionsByteMap();
+		char[][] testCharMap = data.getTransactionsCharMap();
 
-		Byte[][] expectedByteMap = { { (byte) 137, 0, 0 },
-				{ (byte) 131, 0, 0 }, { (byte) 136, (byte) 128, 0 },
-				{ (byte) 139, (byte) 128, 0 }, { 0, 0, (byte)128 } };
+		char[][] expectedCharMap = { { 32905, 0, 0 }, { 32899, 0, 0 },
+				{ 32904, 32768, 0 }, { 32907, 32768, 0 }, { 0, 0, 32768 } };
 
-		Assert.assertArrayEquals(expectedByteMap, testByteMap);
+		/*
+		 * for (int i = 0; i < testCharMap.length; i++) { for (int j = 0; j <
+		 * testCharMap[i].length; j++) { System.out.println((int)
+		 * testCharMap[i][j] + " " + Integer.toBinaryString(testCharMap[i][j]));
+		 * } }
+		 */
+		Assert.assertArrayEquals(expectedCharMap, testCharMap);
 
 	}
 
@@ -70,13 +77,12 @@ public class TransactionsByteMapTest {
 		dataloader.setInputFileName(pathToFile);
 		data = dataloader.loadData();
 
-		Byte[][] testByteMap = data.getTransactionsByteMap();
+		char[][] testCharMap = data.getTransactionsCharMap();
 
-		Byte[][] expectedByteMap = { { (byte) 73, 0, 0 }, { (byte) 67, 0, 0 },
-				{ (byte) 72, (byte) 64, 0 }, { (byte) 75, (byte) 64, 0 },
-				{ 0, 0, 64 } };
+		char[][] expectedCharMap = { { 16393, 0, 0 }, { 16387, 0, 0 }, { 16392, 16384, 0 },
+				{ 16395, 16384, 0 }, { 0, 0, 16384 } };
 
-		Assert.assertArrayEquals(expectedByteMap, testByteMap);
+		Assert.assertArrayEquals(expectedCharMap, testCharMap);
 
 	}
 

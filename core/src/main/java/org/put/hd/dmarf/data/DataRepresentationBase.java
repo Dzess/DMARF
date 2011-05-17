@@ -46,11 +46,11 @@ public abstract class DataRepresentationBase {
 	protected Map<String, Integer> Attributes;
 
 	/**
-	 * Clustered map of attributes into byte numbers. Each atribute is treated
-	 * index only based. Assumming we have 16 attributes a0-15 the first 8 are
-	 * converted as first byte and the latter as second;
+	 * Clustered map of attributes into char numbers. Each atribute is treated
+	 * index only based. Assumming we have 32 attributes a0-31 the first 16 are
+	 * converted as first char and the latter as second;
 	 */
-	protected Byte[][] TransactionsByteMap;
+	protected char[][] TransactionsCharMap;
 
 	/**
 	 * Biggest attribute found in all transactions.
@@ -72,8 +72,8 @@ public abstract class DataRepresentationBase {
 	 */
 	protected int NumberOfTransactions;
 
-	public Byte[][] getTransactionsByteMap() {
-		return TransactionsByteMap;
+	public char[][] getTransactionsCharMap() {
+		return TransactionsCharMap;
 	}
 
 	public Map<String, Integer> getAttributes() {

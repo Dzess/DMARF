@@ -32,7 +32,7 @@ public class BasicDataBuilder implements IDataRepresentationBuilder {
 	private Map<Integer, Integer> attributesCounter;
 	private Map<Integer, List<Integer>> transactionsMap;
 	private List<List<Integer>> transactionsList;
-	private Byte[][] transactionsByteMap;
+	private char[][] transactionsCharMap;
 
 	private LinkedList<Integer> lastTransaction;
 
@@ -107,12 +107,12 @@ public class BasicDataBuilder implements IDataRepresentationBuilder {
 
 		generateDataSetParameters();
 
-		generateTransactionsByteMap();
+		generateTransactionsCharMap();
 
 		// produce the data representation
 		data = new InjectableDataRepresentation(attributesCounter,
 				transactionsList, transactionsMap, transactionsString,
-				attributesString, transactionsByteMap, maxAttIndex,
+				attributesString, transactionsCharMap, maxAttIndex,
 				maxAttAligned, numberOfAttributesClusters, numberOfTransactions);
 		return data;
 	}
@@ -142,38 +142,41 @@ public class BasicDataBuilder implements IDataRepresentationBuilder {
 		}
 
 		maxAttIndex = attsVector[attsVector.length - 1];
-		maxAttAligned = 8 * (int) (Math.ceil(maxAttIndex / 8.0));
-		numberOfAttributesClusters = (int) Math.ceil(maxAttIndex / 8.0);
+		numberOfAttributesClusters = (int) Math.ceil(maxAttIndex / 16.0);
+		maxAttAligned = 16 * numberOfAttributesClusters;
 		numberOfTransactions = transactionsList.size();
 
 	}
 
-	private void generateTransactionsByteMap() {
+	private void generateTransactionsCharMap() {
 
 		if (numberOfAttributesClusters == 0 || numberOfTransactions == 0)
 			throw new RuntimeException("Cannot work on empty transactions set.");
 
-		transactionsByteMap = new Byte[numberOfTransactions][numberOfAttributesClusters];
+		transactionsCharMap = new char[numberOfTransactions][numberOfAttributesClusters];
 
 		// here comes the TransactionsByteMap population magic
 		int transIdx = 0;
 		for (List<Integer> transaction : transactionsList) {
-			transactionsByteMap[transIdx] = generateByteArray(transaction);
+			transactionsCharMap[transIdx] = generateCharArray(transaction,
+					maxAttAligned);
 			transIdx++;
 		}
 	}
 
 	/**
-	 * Transforms a list of attributes into ByteBitMap representation.
+	 * Transforms a list of attributes into CharBitMap representation.
 	 * 
 	 * @param transaction
 	 *            Sorted list of attributes represented by integers.
-	 * @return Byte[] array with full length.
+	 * @param maxAttAligned
+	 *            Greatest attribute number aligned to char representation.
+	 * @return Char[] array with full length.
 	 */
-	public Byte[] generateByteArray(List<Integer> transaction) {
+	public char[] generateCharArray(List<Integer> transaction, int maxAttAligned) {
 
 		int[] transactionBitArray = new int[maxAttAligned];
-		Byte[] transactionByteArray = new Byte[numberOfAttributesClusters];
+		char[] transactionCharArray = new char[maxAttAligned / 16];
 		// add elements to instance from the transaction on the proper place
 		for (int j = 0; j < transactionBitArray.length; j++) {
 
@@ -185,15 +188,15 @@ public class BasicDataBuilder implements IDataRepresentationBuilder {
 			}
 
 			// populating ByteMap
-			if ((j + 1) % 8 == 0) { // we've got a cluster to save!
-				int clusterValue = 0;
-				for (int k = 0; k < 8; k++) {
+			if ((j + 1) % 16 == 0) { // we've got a cluster to save!
+				char clusterValue = 0;
+				for (int k = 0; k < 16; k++) {
 					clusterValue += Math.pow(2, k)
-							* transactionBitArray[j - 7 + k];
+							* transactionBitArray[j - 15 + k];
 				}
-				transactionByteArray[(j + 1) / 8 - 1] = (byte) clusterValue;
+				transactionCharArray[(j + 1) / 16 - 1] = clusterValue;
 			}
 		}
-		return transactionByteArray;
+		return transactionCharArray;
 	}
 }

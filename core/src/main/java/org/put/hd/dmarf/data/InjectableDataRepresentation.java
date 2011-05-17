@@ -18,7 +18,7 @@ public class InjectableDataRepresentation extends DataRepresentationBase {
 			List<List<Integer>> transactionList,
 			Map<Integer, List<Integer>> transactionMap,
 			List<List<String>> transactions, Map<String, Integer> attributes,
-			Byte[][] byteMap, int maxAttIndex, int maxAttAligned,
+			char[][] byteMap, int maxAttIndex, int maxAttAligned,
 			int numberOfAttributesClusters, int numberOfTransactions) {
 		this.AttributesCounter = attributeCounter;
 		this.TransactionsList = transactionList;
@@ -26,7 +26,7 @@ public class InjectableDataRepresentation extends DataRepresentationBase {
 
 		this.Transactions = transactions;
 		this.Attributes = attributes;
-		this.TransactionsByteMap = byteMap;
+		this.TransactionsCharMap = byteMap;
 
 		this.MaxAttIndex = maxAttIndex;
 		this.MaxAttAligned = maxAttAligned;
