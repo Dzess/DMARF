@@ -11,29 +11,27 @@ import org.put.hd.dmarf.data.DataRepresentationBase;
  * @author Piotr
  *
  */
-public class BinarySetsEngine {
+public class BinarySetsEngine implements ISetsEngine {
 
-	/**
-	 * Gets the data sets corresponding with the binary representation
-	 * @param data
-	 * @return
+	/* (non-Javadoc)
+	 * @see org.put.hd.dmarf.algorithms.apriori.binary.ISetsEngine#getSingleCandidateSets(org.put.hd.dmarf.data.DataRepresentationBase)
 	 */
 	public SortedMap<BinaryItemSet, Integer> getSingleCandidateSets(DataRepresentationBase data) {
 		// TODO Auto-generated method stub
 		return null;
 	}
 
+	/* (non-Javadoc)
+	 * @see org.put.hd.dmarf.algorithms.apriori.binary.ISetsEngine#getCandidateSets(java.util.SortedMap, int)
+	 */
 	public Set<BinaryItemSet> getCandidateSets(
 			SortedMap<BinaryItemSet, Integer> frequentSupportMap, int i) {
 		// TODO Auto-generated method stub
 		return null;
 	}
 
-	/**
-	 * Mines the support from the data.
-	 * @param data
-	 * @param candidates
-	 * @return
+	/* (non-Javadoc)
+	 * @see org.put.hd.dmarf.algorithms.apriori.binary.ISetsEngine#verifyCandidatesInData(org.put.hd.dmarf.data.DataRepresentationBase, java.util.Set)
 	 */
 	public Set<BinaryItemSet> verifyCandidatesInData(
 			DataRepresentationBase data, Set<BinaryItemSet> candidates) {

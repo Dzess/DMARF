@@ -27,7 +27,7 @@ public class BinaryApriori extends AlgorithmBase {
 	private double minCredibility;
 	private int supportThreshold;
 
-	private BinarySetsEngine binaryEngine;
+	private ISetsEngine binaryEngine;
 	private SortedMap<BinaryItemSet, Integer> frequentSet;
 	private BinaryRuleEngine binaryRuleEngine;
 
