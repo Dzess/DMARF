@@ -32,7 +32,7 @@ public class BasicDataBuilder implements IDataRepresentationBuilder {
 	private Map<Integer, Integer> attributesCounter;
 	private Map<Integer, List<Integer>> transactionsMap;
 	private List<List<Integer>> transactionsList;
-	private char[][] transactionsCharMap;
+	private char[] transactionsCharMap;
 
 	private LinkedList<Integer> lastTransaction;
 
@@ -42,7 +42,7 @@ public class BasicDataBuilder implements IDataRepresentationBuilder {
 
 	// data set parameters
 	private int maxAttIndex;
-	private int maxAttAligned;
+	private int alignedMaxAttIndex;
 	private int numberOfAttributesClusters;
 	private int numberOfTransactions;
 
@@ -114,7 +114,8 @@ public class BasicDataBuilder implements IDataRepresentationBuilder {
 		data = new InjectableDataRepresentation(attributesCounter,
 				transactionsList, transactionsMap, transactionsString,
 				attributesString, transactionsCharMap, maxAttIndex,
-				maxAttAligned, numberOfAttributesClusters, numberOfTransactions);
+				alignedMaxAttIndex, numberOfAttributesClusters,
+				numberOfTransactions);
 		return data;
 	}
 
@@ -143,8 +144,16 @@ public class BasicDataBuilder implements IDataRepresentationBuilder {
 		}
 
 		maxAttIndex = attsVector[attsVector.length - 1];
-		numberOfAttributesClusters = (int) Math.ceil(maxAttIndex / 16.0);
-		maxAttAligned = 16 * numberOfAttributesClusters;
+
+		// we need to align attributes to clusters
+		// numberOfAttributesClusters = (int) Math.ceil(maxAttIndex / 16.0);
+
+		// and align clusters to nice gpu access
+		numberOfAttributesClusters = (int) Math.pow(2, Math.ceil(Math.log(Math
+				.ceil(maxAttIndex / 16.0)) / Math.log(2)));
+
+		alignedMaxAttIndex = 16 * numberOfAttributesClusters;
+		
 		numberOfTransactions = transactionsList.size();
 
 	}
@@ -153,25 +162,30 @@ public class BasicDataBuilder implements IDataRepresentationBuilder {
 	 * Generates the whole CharMap for all transactions
 	 * 
 	 * @param transactions
-	 *            List<List<Integer>> of all transactions. These must not be empty.
+	 *            List<List<Integer>> of all transactions. These must not be
+	 *            empty.
 	 * @param numberOfAttributesClusters
 	 *            acquired from DataRepresentationBase. This must be >0
 	 * @return the charMap :)
 	 */
-	public static char[][] generateTransactionsCharMap(
+	public static char[] generateTransactionsCharMap(
 			List<List<Integer>> transactionsLists,
 			int numberOfAttributesClusters) {
 
 		if (numberOfAttributesClusters == 0 || transactionsLists.size() == 0)
 			throw new RuntimeException("Cannot work on empty transactions set.");
 
-		char[][] charMap = new char[transactionsLists.size()][numberOfAttributesClusters];
+		char[] charMap = new char[transactionsLists.size()
+				* numberOfAttributesClusters];
 
 		// here comes the TransactionsByteMap population magic
 		int transIdx = 0;
 		for (List<Integer> transaction : transactionsLists) {
-			charMap[transIdx] = generateCharArray(transaction,
-					numberOfAttributesClusters * 16);
+			System.arraycopy(
+					generateCharArray(transaction,
+							numberOfAttributesClusters * 16), 0, charMap,
+					transIdx * numberOfAttributesClusters,
+					numberOfAttributesClusters);
 			transIdx++;
 		}
 		return charMap;

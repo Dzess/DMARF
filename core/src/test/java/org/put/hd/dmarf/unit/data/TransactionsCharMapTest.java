@@ -36,7 +36,7 @@ public class TransactionsCharMapTest {
 	public void empty_table() {
 
 		try {
-			char[][] emptyTable = builder.getDataRepresentation()
+			char[] emptyTable = builder.getDataRepresentation()
 					.getTransactionsCharMap();
 		} catch (RuntimeException e) {
 			return;
@@ -53,10 +53,14 @@ public class TransactionsCharMapTest {
 		dataloader.setInputFileName(pathToFile);
 		data = dataloader.loadData();
 
-		char[][] testCharMap = data.getTransactionsCharMap();
+		char[] testCharMap = data.getTransactionsCharMap();
 
-		char[][] expectedCharMap = { { 32905, 0, 0 }, { 32899, 0, 0 },
-				{ 32904, 32768, 0 }, { 32907, 32768, 0 }, { 0, 0, 32768 } };
+		char[] expectedCharMap = { 
+				32905, 0, 0, 0,
+				32899, 0, 0, 0,
+				32904, 32768, 0, 0,
+				32907, 32768, 0, 0,
+				0, 0, 32768, 0};
 
 		/*
 		 * for (int i = 0; i < testCharMap.length; i++) { for (int j = 0; j <
@@ -77,10 +81,14 @@ public class TransactionsCharMapTest {
 		dataloader.setInputFileName(pathToFile);
 		data = dataloader.loadData();
 
-		char[][] testCharMap = data.getTransactionsCharMap();
+		char[] testCharMap = data.getTransactionsCharMap();
 
-		char[][] expectedCharMap = { { 16393, 0, 0 }, { 16387, 0, 0 }, { 16392, 16384, 0 },
-				{ 16395, 16384, 0 }, { 0, 0, 16384 } };
+		char[] expectedCharMap = { 
+				16393, 0, 0, 0,
+				16387, 0, 0, 0,
+				16392, 16384, 0, 0,
+				16395, 16384, 0, 0,
+				0, 0, 16384, 0 };
 
 		Assert.assertArrayEquals(expectedCharMap, testCharMap);
 

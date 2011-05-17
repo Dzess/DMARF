@@ -50,7 +50,7 @@ public abstract class DataRepresentationBase {
 	 * index only based. Assumming we have 32 attributes a0-31 the first 16 are
 	 * converted as first char and the latter as second;
 	 */
-	protected char[][] TransactionsCharMap;
+	protected char[] TransactionsCharMap;
 
 	/**
 	 * Biggest attribute found in all transactions.
@@ -72,7 +72,7 @@ public abstract class DataRepresentationBase {
 	 */
 	protected int NumberOfTransactions;
 
-	public char[][] getTransactionsCharMap() {
+	public char[] getTransactionsCharMap() {
 		return TransactionsCharMap;
 	}
 
