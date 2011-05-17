@@ -158,8 +158,6 @@ public class BasicDataBuilder implements IDataRepresentationBuilder {
 		// here comes the TransactionsByteMap population magic
 		int transIdx = 0;
 		for (List<Integer> transaction : transactionsList) {
-			// does it have to be sorted?
-			Collections.sort(transaction);
 			transactionsByteMap[transIdx] = generateByteArray(transaction);
 			transIdx++;
 		}
