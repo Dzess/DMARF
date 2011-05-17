@@ -107,7 +107,8 @@ public class BasicDataBuilder implements IDataRepresentationBuilder {
 
 		generateDataSetParameters();
 
-		generateTransactionsCharMap();
+		transactionsCharMap = generateTransactionsCharMap(transactionsList,
+				numberOfAttributesClusters);
 
 		// produce the data representation
 		data = new InjectableDataRepresentation(attributesCounter,
@@ -148,20 +149,32 @@ public class BasicDataBuilder implements IDataRepresentationBuilder {
 
 	}
 
-	private void generateTransactionsCharMap() {
+	/**
+	 * Generates the whole CharMap for all transactions
+	 * 
+	 * @param transactions
+	 *            List<List<Integer>> of all transactions. These must not be empty.
+	 * @param numberOfAttributesClusters
+	 *            acquired from DataRepresentationBase. This must be >0
+	 * @return the charMap :)
+	 */
+	public static char[][] generateTransactionsCharMap(
+			List<List<Integer>> transactionsLists,
+			int numberOfAttributesClusters) {
 
-		if (numberOfAttributesClusters == 0 || numberOfTransactions == 0)
+		if (numberOfAttributesClusters == 0 || transactionsLists.size() == 0)
 			throw new RuntimeException("Cannot work on empty transactions set.");
 
-		transactionsCharMap = new char[numberOfTransactions][numberOfAttributesClusters];
+		char[][] charMap = new char[transactionsLists.size()][numberOfAttributesClusters];
 
 		// here comes the TransactionsByteMap population magic
 		int transIdx = 0;
-		for (List<Integer> transaction : transactionsList) {
-			transactionsCharMap[transIdx] = generateCharArray(transaction,
-					maxAttAligned);
+		for (List<Integer> transaction : transactionsLists) {
+			charMap[transIdx] = generateCharArray(transaction,
+					numberOfAttributesClusters * 16);
 			transIdx++;
 		}
+		return charMap;
 	}
 
 	/**
@@ -173,7 +186,8 @@ public class BasicDataBuilder implements IDataRepresentationBuilder {
 	 *            Greatest attribute number aligned to char representation.
 	 * @return Char[] array with full length.
 	 */
-	public char[] generateCharArray(List<Integer> transaction, int maxAttAligned) {
+	public static char[] generateCharArray(List<Integer> transaction,
+			int maxAttAligned) {
 
 		int[] transactionBitArray = new int[maxAttAligned];
 		char[] transactionCharArray = new char[maxAttAligned / 16];
