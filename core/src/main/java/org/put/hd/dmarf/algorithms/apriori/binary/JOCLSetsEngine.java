@@ -1,6 +1,7 @@
 package org.put.hd.dmarf.algorithms.apriori.binary;
 
 import static org.jocl.CL.*;
+
 import org.jocl.*;
 
 import java.io.BufferedReader;
@@ -99,25 +100,34 @@ public class JOCLSetsEngine implements ISetsEngine {
 
 		// Create the memory object which will be filled with the
 		// transactionsCharMap
+
+		System.out.println("Getting the charMap");
 		transCharMap = data.getTransactionsCharMap();
 		transCharMapPointer = Pointer.to(transCharMap);
 
+		System.out.println("Creating buffer");
 		transCharMapMem = clCreateBuffer(context, CL_MEM_READ_ONLY,
 				transCharMap.length * Sizeof.cl_ushort16, transCharMapPointer,
 				null);
 
-		clEnqueueWriteBuffer(commandQueue, transCharMapMem, true, 0,
-				transCharMap.length * Sizeof.cl_ushort16,
-				transCharMapPointer, 0, null, null);
+		System.out.println("Enqueueing the buffer");
+		clEnqueueWriteBuffer(commandQueue, transCharMapMem, false, 0,
+				transCharMap.length * Sizeof.cl_ushort16, transCharMapPointer,
+				0, null, null);
+
+		// Release kernel, program, and memory objects
+
+		System.out.println("Releasing objects.");
+		clReleaseMemObject(transCharMapMem);
+		// clReleaseKernel(kernel);
+		// clReleaseProgram(program);
+		clReleaseCommandQueue(commandQueue);
+		clReleaseContext(context);
 
 		/*
-		try {
-			Thread.sleep(10000);
-		} catch (InterruptedException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
-		*/
+		 * try { Thread.sleep(10000); } catch (InterruptedException e) { // TODO
+		 * Auto-generated catch block e.printStackTrace(); }
+		 */
 		/*
 		 * // Program Setup String source = readFile("SimpleMandelbrot.cl");
 		 * 

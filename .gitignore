@@ -8,3 +8,10 @@ mushroom.dat
 accidents.dat
 .class
 *~
+
+core/resources/data/chess.dat
+core/resources/data/connect.dat
+core/resources/data/pumsb.dat
+core/resources/data/pumsb_star.dat
+core/resources/data/T10I4D100K.dat
+core/resources/data/T40I10D100K.dat

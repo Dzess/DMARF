@@ -37,49 +37,13 @@ public class JOCLSetsEngineTest {
 	}
 
 	@Test
-	public void upload_sample_aligned_table() {
-
+	public void upload_real_set(){
 		// perform test
 		String pathToFile = "resources" + File.separator + "data"
-				+ File.separator + "alignedSet.data";
+				+ File.separator + "connect.dat";
 		dataloader.setInputFileName(pathToFile);
 		data = dataloader.loadData();
 
-		char[] testCharMap = data.getTransactionsCharMap();
-
-		char[] expectedCharMap = { 
-				32905, 0, 0, 0,
-				32899, 0, 0, 0,
-				32904, 32768, 0, 0,
-				32907, 32768, 0, 0,
-				0, 0, 32768, 0};
-
-		//joclEngine.initCL(data);
-		
-		Assert.assertArrayEquals(expectedCharMap, testCharMap);
-
+		joclEngine.initCL(data);
 	}
-
-	@Test
-	public void upload_sample_non_aligned_table() {
-
-		// perform test
-		String pathToFile = "resources" + File.separator + "data"
-				+ File.separator + "nonAlignedSet.data";
-		dataloader.setInputFileName(pathToFile);
-		data = dataloader.loadData();
-
-		char[] testCharMap = data.getTransactionsCharMap();
-
-		char[] expectedCharMap = { 
-				16393, 0, 0, 0,
-				16387, 0, 0, 0,
-				16392, 16384, 0, 0,
-				16395, 16384, 0, 0,
-				0, 0, 16384, 0 };
-
-		Assert.assertArrayEquals(expectedCharMap, testCharMap);
-
-	}
-
 }
