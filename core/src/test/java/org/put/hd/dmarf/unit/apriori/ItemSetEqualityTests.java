@@ -4,7 +4,7 @@ import java.util.SortedSet;
 import java.util.TreeSet;
 
 import org.junit.*;
-import org.put.hd.dmarf.algorithms.apriori.ItemSet;
+import org.put.hd.dmarf.algorithms.apriori.nst.ItemSet;
 
 public class ItemSetEqualityTests {
 
