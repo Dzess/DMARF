@@ -22,7 +22,7 @@ public class OutputFormatter {
 
 	private final char lineSeparator = '\n';
 	private StringBuilder builder;
-	private long totalTime;
+	private double totalTime;
 
 	/**
 	 * Get the formatted output from the passed values.
@@ -121,8 +121,8 @@ public class OutputFormatter {
 
 	}
 
-	public void setTotalTime(long elapsedTimeSecs) {
-		this.totalTime = elapsedTimeSecs;
+	public void setTotalTime(double d) {
+		this.totalTime = d;
 	}
 
 }

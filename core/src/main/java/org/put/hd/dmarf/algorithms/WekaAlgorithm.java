@@ -53,11 +53,11 @@ public class WekaAlgorithm implements IAlgorithm {
 		stopWatch = new StopWatch();
 	}
 
-	public long getElapsedTimeOverall() {
+	public double getElapsedTimeOverall() {
 		return stopWatch.getElapsedTimeSecs();
 	}
 
-	public long getElapsedTimeGeneration() {
+	public double getElapsedTimeGeneration() {
 		return stopWatch.getElapsedTimeSecs();
 	}
 

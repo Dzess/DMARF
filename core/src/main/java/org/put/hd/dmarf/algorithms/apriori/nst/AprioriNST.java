@@ -1,4 +1,4 @@
-package org.put.hd.dmarf.algorithms.apriori;
+package org.put.hd.dmarf.algorithms.apriori.nst;
 
 import java.util.Collection;
 import java.util.Iterator;

@@ -41,16 +41,15 @@ public class StopWatch implements IStopWatch {
 		return elapsed;
 	}
 
-	// Elapsed time in seconds
 	/* (non-Javadoc)
 	 * @see org.put.hd.dmarf.stopwatches.IStopWatch#getElapsedTimeSecs()
 	 */
-	public long getElapsedTimeSecs() {
-		long elapsed;
+	public double getElapsedTimeSecs() {
+		double elapsed;
 		if (running) {
-			elapsed = ((System.currentTimeMillis() - startTime) / 1000);
+			elapsed = ((System.currentTimeMillis() - startTime) / 1000.0);
 		} else {
-			elapsed = ((stopTime - startTime) / 1000);
+			elapsed = ((stopTime - startTime) / 1000.0);
 		}
 		return elapsed;
 	}

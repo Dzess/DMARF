@@ -9,7 +9,7 @@ import jcuda.runtime.*;
 import org.put.hd.dmarf.algorithms.IAlgorithm;
 import org.put.hd.dmarf.algorithms.WekaAlgorithm;
 import org.put.hd.dmarf.algorithms.apriori.AprioriCudaAlgorithm;
-import org.put.hd.dmarf.algorithms.apriori.AprioriNST;
+import org.put.hd.dmarf.algorithms.apriori.nst.AprioriNST;
 
 /**
  * Production factory for code. NOTE: each algorithm in this factory will be
