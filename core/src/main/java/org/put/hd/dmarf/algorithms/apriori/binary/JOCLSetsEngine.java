@@ -12,15 +12,6 @@ import org.put.hd.dmarf.data.DataRepresentationBase;
  */
 public class JOCLSetsEngine implements ISetsEngine {
 
-	public SortedMap<BinaryItemSet, Integer> getSingleCandidateSets(
-			DataRepresentationBase data) {
-
-		// TODO: write
-		// TUTAJ MO¯NA WRZUCIÆ ELEGANCKO WRZUCANIE DANYCH DO JOCLA
-		
-		return null;
-	}
-
 	public Set<BinaryItemSet> getCandidateSets(
 			SortedMap<BinaryItemSet, Integer> frequentSupportMap, int i) {
 		// TODO Auto-generated method stub
@@ -33,6 +24,16 @@ public class JOCLSetsEngine implements ISetsEngine {
 		// TODO Auto-generated method stub
 		
 		// TUTAJ PISZESZ KOD PRZESZUKUJ¥CY JOCLa
+		
+		return null;
+	}
+
+	public SortedMap<BinaryItemSet, Integer> getSingleCandidateSets(
+			DataRepresentationBase data, Integer support) {
+		
+		// TODO: write
+		// TUTAJ MO¯NA WRZUCIÆ ELEGANCKO WRZUCANIE DANYCH DO JOCLA
+
 		
 		return null;
 	}
