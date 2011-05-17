@@ -52,6 +52,26 @@ public abstract class DataRepresentationBase {
 	 */
 	protected Byte[][] TransactionsByteMap;
 
+	/**
+	 * Biggest attribute found in all transactions.
+	 */
+	protected int MaxAttIndex;
+
+	/**
+	 * Biggest (virtual) attribute in all transactions. Aligned to bytes.
+	 */
+	protected int MaxAttAligned;
+
+	/**
+	 * Also understood as number of bytes describing a set of attributes.
+	 */
+	protected int NumberOfAttributesClusters;
+
+	/**
+	 * Total number of transactions in data set.
+	 */
+	protected int NumberOfTransactions;
+
 	public Byte[][] getTransactionsByteMap() {
 		return TransactionsByteMap;
 	}
@@ -74,5 +94,21 @@ public abstract class DataRepresentationBase {
 
 	public List<List<Integer>> getTransactionsList() {
 		return TransactionsList;
+	}
+
+	public int getMaxAttIndex() {
+		return MaxAttIndex;
+	}
+
+	public int getMaxAttAligned() {
+		return MaxAttAligned;
+	}
+
+	public int getNumberOfAttributesClusters() {
+		return NumberOfAttributesClusters;
+	}
+
+	public int getNumberOfTransactions() {
+		return NumberOfTransactions;
 	}
 }

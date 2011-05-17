@@ -55,7 +55,7 @@ public class TransactionsByteMapTest {
 
 		Byte[][] expectedByteMap = { { (byte) 137, 0, 0 },
 				{ (byte) 131, 0, 0 }, { (byte) 136, (byte) 128, 0 },
-				{ (byte) 139, (byte) 128, (byte) 128 } };
+				{ (byte) 139, (byte) 128, 0 }, { 0, 0, (byte)128 } };
 
 		Assert.assertArrayEquals(expectedByteMap, testByteMap);
 

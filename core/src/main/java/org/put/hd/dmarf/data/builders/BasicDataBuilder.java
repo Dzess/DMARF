@@ -40,6 +40,12 @@ public class BasicDataBuilder implements IDataRepresentationBuilder {
 	private LinkedList<List<String>> transactionsString;
 	private Map<String, Integer> attributesString;
 
+	// data set parameters
+	private int maxAttIndex;
+	private int maxAttAligned;
+	private int numberOfAttributesClusters;
+	private int numberOfTransactions;
+
 	public BasicDataBuilder() {
 
 		// hash map settings
@@ -99,16 +105,24 @@ public class BasicDataBuilder implements IDataRepresentationBuilder {
 
 	public DataRepresentationBase getDataRepresentation() {
 
+		generateDataSetParameters();
+
 		generateTransactionsByteMap();
 
 		// produce the data representation
 		data = new InjectableDataRepresentation(attributesCounter,
 				transactionsList, transactionsMap, transactionsString,
-				attributesString, transactionsByteMap);
+				attributesString, transactionsByteMap, maxAttIndex,
+				maxAttAligned, numberOfAttributesClusters, numberOfTransactions);
 		return data;
 	}
 
-	private void generateTransactionsByteMap() {
+	/**
+	 * Generates greatest attribute index, it's corresponding aligned index,
+	 * number of attributes byte clusters, number of transactions in whole data
+	 * set.
+	 */
+	private void generateDataSetParameters() {
 
 		// finding the biggest attribute number
 		// pretty damn odd way
@@ -127,10 +141,14 @@ public class BasicDataBuilder implements IDataRepresentationBuilder {
 			throw new RuntimeException("No attributes found in data set.");
 		}
 
-		int maxAttIndex = attsVector[attsVector.length - 1];
-		int maxAttAligned =  8* (int)(Math.ceil(maxAttIndex / 8.0));
-		int numberOfAttributesClusters = (int) Math.ceil(maxAttIndex / 8.0);
-		int numberOfTransactions = transactionsList.size();
+		maxAttIndex = attsVector[attsVector.length - 1];
+		maxAttAligned = 8 * (int) (Math.ceil(maxAttIndex / 8.0));
+		numberOfAttributesClusters = (int) Math.ceil(maxAttIndex / 8.0);
+		numberOfTransactions = transactionsList.size();
+
+	}
+
+	private void generateTransactionsByteMap() {
 
 		if (numberOfAttributesClusters == 0 || numberOfTransactions == 0)
 			throw new RuntimeException("Cannot work on empty transactions set.");
@@ -142,29 +160,42 @@ public class BasicDataBuilder implements IDataRepresentationBuilder {
 		for (List<Integer> transaction : transactionsList) {
 			// does it have to be sorted?
 			Collections.sort(transaction);
-
-			int[] transactionBitArray = new int[maxAttAligned];
-			// add elements to instance from the transaction on the proper place
-			for (int j = 0; j < transactionBitArray.length; j++) {
-
-				// populating with bits
-				if (transaction.contains(j + 1)) {
-					transactionBitArray[j] = 1;
-				} else {
-					transactionBitArray[j] = 0;
-				}
-
-				// populating ByteMap
-				if ((j + 1) % 8 == 0) { // we've got a cluster to save!
-					int clusterValue = 0;
-					for (int k = 0; k < 8; k++) {
-						clusterValue += Math.pow(2, k)
-								* transactionBitArray[j - 7 + k];
-					}
-					transactionsByteMap[transIdx][(j + 1) / 8 - 1] = (byte) clusterValue;
-				}
-			}
+			transactionsByteMap[transIdx] = generateByteArray(transaction);
 			transIdx++;
 		}
+	}
+
+	/**
+	 * Transforms a list of attributes into ByteBitMap representation.
+	 * 
+	 * @param transaction
+	 *            Sorted list of attributes represented by integers.
+	 * @return Byte[] array with full length.
+	 */
+	public Byte[] generateByteArray(List<Integer> transaction) {
+
+		int[] transactionBitArray = new int[maxAttAligned];
+		Byte[] transactionByteArray = new Byte[numberOfAttributesClusters];
+		// add elements to instance from the transaction on the proper place
+		for (int j = 0; j < transactionBitArray.length; j++) {
+
+			// populating with bits
+			if (transaction.contains(j + 1)) {
+				transactionBitArray[j] = 1;
+			} else {
+				transactionBitArray[j] = 0;
+			}
+
+			// populating ByteMap
+			if ((j + 1) % 8 == 0) { // we've got a cluster to save!
+				int clusterValue = 0;
+				for (int k = 0; k < 8; k++) {
+					clusterValue += Math.pow(2, k)
+							* transactionBitArray[j - 7 + k];
+				}
+				transactionByteArray[(j + 1) / 8 - 1] = (byte) clusterValue;
+			}
+		}
+		return transactionByteArray;
 	}
 }
