@@ -15,12 +15,12 @@ public interface IAlgorithm {
 	 * Gets the time of the all algorithm operations without  the I/O operations.
 	 * @return time of algorithm operations in seconds.
 	 */
-	public long getElapsedTimeOverall();
+	public double getElapsedTimeOverall();
 	/**
 	 * Gets the time of the algorithm operation concerning frequent sets (?) generation. 
 	 * @return time of algorithm operations in seconds.
 	 */
-	public long getElapsedTimeGeneration();
+	public double getElapsedTimeGeneration();
 	
 	/**
 	 * Starts the algorithm using the passed data.

@@ -19,11 +19,11 @@ public abstract class AlgorithmBase implements IAlgorithm {
 	private IStopWatch overallStopWatch = new StopWatch();
 	protected IStopWatch generationStopWatch = new StopWatch();
 
-	public long getElapsedTimeOverall() {
+	public double getElapsedTimeOverall() {
 		return overallStopWatch.getElapsedTimeSecs();
 	}
 
-	public long getElapsedTimeGeneration() {
+	public double getElapsedTimeGeneration() {
 		return generationStopWatch.getElapsedTimeSecs();
 	}
 

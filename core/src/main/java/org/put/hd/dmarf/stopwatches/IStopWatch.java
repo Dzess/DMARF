@@ -16,6 +16,6 @@ public interface IStopWatch {
 	 * Returns the elapsed time in seconds.
 	 * @return Elapsed time since start in seconds.
 	 */
-	public long getElapsedTimeSecs();
+	public double getElapsedTimeSecs();
 
 }
