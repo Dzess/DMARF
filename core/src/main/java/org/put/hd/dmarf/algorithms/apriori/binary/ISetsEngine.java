@@ -13,7 +13,7 @@ public interface ISetsEngine {
 	 * @return
 	 */
 	public SortedMap<BinaryItemSet, Integer> getSingleCandidateSets(
-			DataRepresentationBase data);
+			DataRepresentationBase data, Integer support);
 
 	public Set<BinaryItemSet> getCandidateSets(
 			SortedMap<BinaryItemSet, Integer> frequentSupportMap, int i);

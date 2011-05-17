@@ -56,7 +56,7 @@ public class BinaryApriori extends AlgorithmBase {
 
 			// generate possible rules for this frequent set
 			List<Rule> frequentSetRules = this.binaryRuleEngine.getRules(
-					entry.getKey(), data, minCredibility);
+					entry.getKey(), data, minCredibility, frequentSet);
 
 			rules.addAll(frequentSetRules);
 		}
@@ -78,7 +78,7 @@ public class BinaryApriori extends AlgorithmBase {
 
 		// first level frequent sets (based on the maps) - quite a nice feature
 		SortedMap<BinaryItemSet, Integer> frequentSuppMap = this.binaryEngine
-				.getSingleCandidateSets(data);
+				.getSingleCandidateSets(data, supportThreshold);
 
 		// generate the frequent sets
 		int generation = 0;
