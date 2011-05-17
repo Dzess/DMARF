@@ -123,9 +123,17 @@ public class BasicDataBuilder implements IDataRepresentationBuilder {
 		// elements in the vector must be sorted !
 		Arrays.sort(attsVector);
 
+		if (attsVector.length == 0) {
+			throw new RuntimeException("No attributes found in data set.");
+		}
+
 		int maxAttIndex = attsVector[attsVector.length - 1];
+		int maxAttAligned =  8* (int)(Math.ceil(maxAttIndex / 8.0));
 		int numberOfAttributesClusters = (int) Math.ceil(maxAttIndex / 8.0);
 		int numberOfTransactions = transactionsList.size();
+
+		if (numberOfAttributesClusters == 0 || numberOfTransactions == 0)
+			throw new RuntimeException("Cannot work on empty transactions set.");
 
 		transactionsByteMap = new Byte[numberOfTransactions][numberOfAttributesClusters];
 
@@ -135,7 +143,7 @@ public class BasicDataBuilder implements IDataRepresentationBuilder {
 			// does it have to be sorted?
 			Collections.sort(transaction);
 
-			int[] transactionBitArray = new int[numberOfAttributesClusters];
+			int[] transactionBitArray = new int[maxAttAligned];
 			// add elements to instance from the transaction on the proper place
 			for (int j = 0; j < transactionBitArray.length; j++) {
 
@@ -148,12 +156,12 @@ public class BasicDataBuilder implements IDataRepresentationBuilder {
 
 				// populating ByteMap
 				if ((j + 1) % 8 == 0) { // we've got a cluster to save!
-					byte clusterValue = 0;
-					for (int k = 0; k < 7; k++) {
+					int clusterValue = 0;
+					for (int k = 0; k < 8; k++) {
 						clusterValue += Math.pow(2, k)
 								* transactionBitArray[j - 7 + k];
 					}
-					transactionsByteMap[transIdx][(j + 1) / 8 - 1] = clusterValue;
+					transactionsByteMap[transIdx][(j + 1) / 8 - 1] = (byte) clusterValue;
 				}
 			}
 			transIdx++;
