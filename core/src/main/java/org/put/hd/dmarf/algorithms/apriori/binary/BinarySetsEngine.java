@@ -1,11 +1,14 @@
 package org.put.hd.dmarf.algorithms.apriori.binary;
 
+import java.util.LinkedList;
+import java.util.List;
 import java.util.Map;
 import java.util.Set;
 import java.util.SortedMap;
 import java.util.TreeMap;
 
 import org.put.hd.dmarf.data.DataRepresentationBase;
+import org.put.hd.dmarf.data.builders.BasicDataBuilder;
 
 /**
  * Encapsulates all operations for the generating, growing the
@@ -41,7 +44,9 @@ public class BinarySetsEngine implements ISetsEngine {
 				
 				// smart ass generation of vectors like
 				// 00000100000, 0000000000001000,10000000,0000001 or something like that
-				char[] vector = getVectorForKey(key);
+				List<Integer> attributeList = new LinkedList<Integer>();
+				attributeList.add(key);
+				char[] vector = BasicDataBuilder.generateCharArray(attributeList, data.getMaxAttAligned());
 				
 				// just make the item set
 				BinaryItemSet itemSet = new BinaryItemSet(vector);
@@ -51,10 +56,6 @@ public class BinarySetsEngine implements ISetsEngine {
 		return frequentSets;
 	}
 
-	private char[] getVectorForKey(Integer key) {
-		// TODO use generate byte array here to get the proper vector for key. 
-		return null;
-	}
 
 	/*
 	 * (non-Javadoc)

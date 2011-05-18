@@ -45,6 +45,41 @@ public class TransactionsCharMapTest {
 	}
 
 	@Test
+	public void dzess_want_test_0() {
+		// 1000 0000 0000 0000 => 32768
+		char[] vectorMine = new char[] { 32768 };
+		List<Integer> list = new LinkedList<Integer>();
+		list.add(1);
+		char[] mikiVector = BasicDataBuilder.generateCharArray(list, 16);
+
+		Assert.assertArrayEquals(vectorMine, mikiVector);
+	}
+	
+	@Test
+	public void dzess_want_test_1() {
+		// 0000 0001 0000 0000 => 256
+		char[] vectorMine = new char[] { 256 };
+		List<Integer> list = new LinkedList<Integer>();
+		list.add(8);
+		char[] mikiVector = BasicDataBuilder.generateCharArray(list, 16);
+
+		Assert.assertArrayEquals(vectorMine, mikiVector);
+	}
+	
+	@Test
+	public void dzess_want_test_2() {
+		// 0000 0000 0000 0001 => 1
+		char[] vectorMine = new char[] { 1 };
+		List<Integer> list = new LinkedList<Integer>();
+		list.add(16);
+		char[] mikiVector = BasicDataBuilder.generateCharArray(list, 16);
+
+		Assert.assertArrayEquals(vectorMine, mikiVector);
+	}
+	
+	// TODO: write the same in the way for TWO chunks
+
+	@Test
 	public void sample_aligned_table() {
 
 		// perform test
@@ -55,12 +90,8 @@ public class TransactionsCharMapTest {
 
 		char[] testCharMap = data.getTransactionsCharMap();
 
-		char[] expectedCharMap = { 
-				32905, 0, 0, 0,
-				32899, 0, 0, 0,
-				32904, 32768, 0, 0,
-				32907, 32768, 0, 0,
-				0, 0, 32768, 0};
+		char[] expectedCharMap = { 32905, 0, 0, 0, 32899, 0, 0, 0, 32904,
+				32768, 0, 0, 32907, 32768, 0, 0, 0, 0, 32768, 0 };
 
 		/*
 		 * for (int i = 0; i < testCharMap.length; i++) { for (int j = 0; j <
@@ -83,12 +114,8 @@ public class TransactionsCharMapTest {
 
 		char[] testCharMap = data.getTransactionsCharMap();
 
-		char[] expectedCharMap = { 
-				16393, 0, 0, 0,
-				16387, 0, 0, 0,
-				16392, 16384, 0, 0,
-				16395, 16384, 0, 0,
-				0, 0, 16384, 0 };
+		char[] expectedCharMap = { 16393, 0, 0, 0, 16387, 0, 0, 0, 16392,
+				16384, 0, 0, 16395, 16384, 0, 0, 0, 0, 16384, 0 };
 
 		Assert.assertArrayEquals(expectedCharMap, testCharMap);
 
