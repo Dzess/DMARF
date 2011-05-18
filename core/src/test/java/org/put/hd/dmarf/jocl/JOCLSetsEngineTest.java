@@ -33,25 +33,32 @@ public class JOCLSetsEngineTest {
 		builder = new BasicDataBuilder();
 		formatter = new SimpleDataFormatter(builder);
 		dataloader = new SimpleDataLoader(formatter);
-		
+
 		joclEngine = new JOCLSetsEngine();
 
 	}
 
 	@Test
-	public void upload_real_set(){
+	public void upload_real_set() {
 
 		// perform test
 		String pathToFile = "resources" + File.separator + "data"
-				+ File.separator + "mushroom.dat";
+				+ File.separator + "alignedSet.data";
 		dataloader.setInputFileName(pathToFile);
 		data = dataloader.loadData();
-		
-		/*
+
 		joclEngine.initCL(data);
-		joclEngine.runCL();
-		joclEngine.cleanupCL();
-		joclEngine.verifyOutputCL();
+
+		/*
+		 * for (int i = 0; i < 10000; i++) { joclEngine.runCL(); }
 		 */
+
+		char[] candidateSet = { 32768, 0, 0, 0 };
+		int supp = joclEngine.getSupport(candidateSet);
+
+		System.out.println(supp);
+		joclEngine.cleanupCL();
+		// joclEngine.verifyOutputCL();
+
 	}
 }
