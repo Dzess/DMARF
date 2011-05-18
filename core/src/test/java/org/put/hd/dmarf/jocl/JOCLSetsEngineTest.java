@@ -3,6 +3,7 @@ package org.put.hd.dmarf.jocl;
 import java.io.File;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Random;
 
 import org.junit.Assert;
 import org.junit.Before;
@@ -49,14 +50,20 @@ public class JOCLSetsEngineTest {
 
 		// perform test
 		String pathToFile = "resources" + File.separator + "data"
-				+ File.separator + "pumsb.dat";
+				+ File.separator + "mushroom.dat";
 		dataloader.setInputFileName(pathToFile);
 		data = dataloader.loadData();
-
-		int howMany = 1000;
+		int maxAtt = 10 % (data.getMaxAttAligned());
+		Random r = new Random();
+		// >>>
+		int howMany = 100;
+		// >>>
 		List<Integer> set = new LinkedList<Integer>();
-		set.add(2);
-		char[] candidateSet = builder.generateCharArray(set,
+
+		for (int l = 0; l <1; l++) {
+			set.add(r.nextInt(maxAtt)+1);
+		}	
+		char[] candidateSet = BasicDataBuilder.generateCharArray(set,
 				data.getMaxAttAligned());
 
 		System.out.println("CPU ST Test");
@@ -64,6 +71,7 @@ public class JOCLSetsEngineTest {
 		int supportInData = 0;
 		sw.start();
 		for (int k = 0; k < howMany; k++) {
+		
 			supportInData = 0;
 			char[] transactionsMap = data.getTransactionsCharMap();
 			for (int i = 0; i < data.getNumberOfTransactions(); i++) {
@@ -82,12 +90,12 @@ public class JOCLSetsEngineTest {
 				+ supportInData);
 		System.out.println("CPU running time: " + sw.getElapsedTime() / 1000.0);
 
+		
 		System.out.println("GPU Test");
 
 		sw.start();
 		joclEngine.initCL(data);
 		sw.stop();
-
 		System.out.println(sw.getElapsedTime() / 1000.0
 				+ " <- Time to initialize and upload transactions Matrix.");
 
