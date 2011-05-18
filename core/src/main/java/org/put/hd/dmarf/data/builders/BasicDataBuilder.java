@@ -220,7 +220,7 @@ public class BasicDataBuilder implements IDataRepresentationBuilder {
 				char clusterValue = 0;
 				for (int k = 0; k < 16; k++) {
 					clusterValue += Math.pow(2, k)
-							* transactionBitArray[j - 15 + k];
+							* transactionBitArray[j - k];
 				}
 				transactionCharArray[(j + 1) / 16 - 1] = clusterValue;
 			}

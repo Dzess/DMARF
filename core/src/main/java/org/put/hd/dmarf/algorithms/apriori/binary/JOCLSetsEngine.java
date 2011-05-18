@@ -16,7 +16,7 @@ import org.put.hd.dmarf.data.DataRepresentationBase;
 /**
  * JOCLs implementation of the {@link ISetsEngine} mostly for data mining.
  * 
- * @author Piotr
+ * @author Miki & Piotr
  * 
  */
 public class JOCLSetsEngine implements ISetsEngine {
@@ -24,6 +24,7 @@ public class JOCLSetsEngine implements ISetsEngine {
 	private cl_context context;
 	private cl_command_queue commandQueue;
 	private cl_kernel kernel;
+	private cl_program program;
 	private cl_mem transCharMapMem;
 	private Pointer transCharMapPointer;
 	private char[] transCharMap;
@@ -54,6 +55,14 @@ public class JOCLSetsEngine implements ISetsEngine {
 
 		return null;
 	}
+
+	/**
+	 * The source code of the OpenCL program to execute
+	 */
+	private static String programSource = "__kernel void "
+			+ "sampleKernel(__global float *a)" + "{"
+			+ "    int gid = get_global_id(0);" + "    a[gid] = a[gid] + 1;"
+			+ "}";
 
 	/**
 	 * Initialize OpenCL: Create the context, the command queue and the kernel.
@@ -101,12 +110,13 @@ public class JOCLSetsEngine implements ISetsEngine {
 		// Create the memory object which will be filled with the
 		// transactionsCharMap
 
+		this.data = data;
 		System.out.println("Getting the charMap");
 		transCharMap = data.getTransactionsCharMap();
 		transCharMapPointer = Pointer.to(transCharMap);
 
 		System.out.println("Creating buffer");
-		transCharMapMem = clCreateBuffer(context, CL_MEM_READ_ONLY,
+		transCharMapMem = clCreateBuffer(context, CL_MEM_READ_WRITE,
 				transCharMap.length * Sizeof.cl_ushort16, transCharMapPointer,
 				null);
 
@@ -115,32 +125,48 @@ public class JOCLSetsEngine implements ISetsEngine {
 				transCharMap.length * Sizeof.cl_ushort16, transCharMapPointer,
 				0, null, null);
 
+		// we read the program from string
+		// Program Setup String source = readFile("SimpleMandelbrot.cl");
+
+		// Create the program from the source code
+		cl_program program = clCreateProgramWithSource(context, 1,
+				new String[] { programSource }, null, null);
+
+		// Build the program
+		clBuildProgram(program, 0, null, null, null, null);
+
+		kernel = clCreateKernel(program, "sampleKernel", null);
+
+		// Set the arguments for the kernel
+		clSetKernelArg(kernel, 0, Sizeof.cl_mem, Pointer.to(transCharMapMem));
+
+	}
+
+	public void runCL() {
+		// Set the work-item dimensions
+		long global_work_size[] = new long[] { transCharMap.length };
+		long local_work_size[] = new long[] { data.getNumberOfAttributesClusters() };
+
+		// Execute the kernel
+		clEnqueueNDRangeKernel(commandQueue, kernel, 1, null, global_work_size,
+				local_work_size, 0, null, null);
+
+		// Read the output data
+		/*
+		 * clEnqueueReadBuffer(commandQueue, memObjects[2], CL_TRUE, 0, n *
+		 * Sizeof.cl_float, dst, 0, null, null);
+		 */
+	}
+
+	public void cleanupCL() {
 		// Release kernel, program, and memory objects
 
 		System.out.println("Releasing objects.");
 		clReleaseMemObject(transCharMapMem);
-		// clReleaseKernel(kernel);
-		// clReleaseProgram(program);
+		clReleaseKernel(kernel);
+		clReleaseProgram(program);
 		clReleaseCommandQueue(commandQueue);
 		clReleaseContext(context);
-
-		/*
-		 * try { Thread.sleep(10000); } catch (InterruptedException e) { // TODO
-		 * Auto-generated catch block e.printStackTrace(); }
-		 */
-		/*
-		 * // Program Setup String source = readFile("SimpleMandelbrot.cl");
-		 * 
-		 * // Create the program cl_program cpProgram =
-		 * clCreateProgramWithSource(context, 1, new String[] { source }, null,
-		 * null);
-		 * 
-		 * // Build the program clBuildProgram(cpProgram, 0, null,
-		 * "-cl-mad-enable", null, null);
-		 * 
-		 * // Create the kernel kernel = clCreateKernel(cpProgram,
-		 * "computeMandelbrot", null);
-		 */
 	}
 
 	/**
