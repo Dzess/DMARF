@@ -43,7 +43,7 @@ public class BinaryItemSet implements Comparable<BinaryItemSet> {
 	}
 
 	/**
-	 * Gets the vector describing the attributes in binary format, using 8 bit
+	 * Gets the vector describing the attributes in binary format, using 16 bit
 	 * chunks of data.
 	 * 
 	 * @return

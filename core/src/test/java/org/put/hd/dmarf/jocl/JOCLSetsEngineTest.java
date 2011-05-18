@@ -49,14 +49,14 @@ public class JOCLSetsEngineTest {
 
 		// perform test
 		String pathToFile = "resources" + File.separator + "data"
-				+ File.separator + "pumsb.dat";
+				+ File.separator + "mushroom.dat";
 		dataloader.setInputFileName(pathToFile);
 		data = dataloader.loadData();
 
-		int howMany = 1000;
+		int howMany = 1;
 		List<Integer> set = new LinkedList<Integer>();
 		set.add(2);
-		char[] candidateSet = builder.generateCharArray(set,
+		char[] candidateSet = BasicDataBuilder.generateCharArray(set,
 				data.getMaxAttAligned());
 
 		System.out.println("CPU ST Test");
@@ -82,12 +82,12 @@ public class JOCLSetsEngineTest {
 				+ supportInData);
 		System.out.println("CPU running time: " + sw.getElapsedTime() / 1000.0);
 
+		
 		System.out.println("GPU Test");
 
 		sw.start();
 		joclEngine.initCL(data);
 		sw.stop();
-
 		System.out.println(sw.getElapsedTime() / 1000.0
 				+ " <- Time to initialize and upload transactions Matrix.");
 
