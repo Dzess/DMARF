@@ -40,7 +40,7 @@ public class JOCLSetsEngineTest {
 	public void upload_real_set(){
 		// perform test
 		String pathToFile = "resources" + File.separator + "data"
-				+ File.separator + "connect.dat";
+				+ File.separator + "mushroom.dat";
 		dataloader.setInputFileName(pathToFile);
 		data = dataloader.loadData();
 
