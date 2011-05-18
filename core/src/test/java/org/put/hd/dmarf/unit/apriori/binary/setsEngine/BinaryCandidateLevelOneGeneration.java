@@ -1,7 +1,5 @@
-package org.put.hd.dmarf.unit.apriori.binary;
+package org.put.hd.dmarf.unit.apriori.binary.setsEngine;
 
-import java.io.Reader;
-import java.io.StringReader;
 import java.util.SortedMap;
 import java.util.TreeMap;
 
@@ -11,12 +9,8 @@ import org.junit.Test;
 import org.put.hd.dmarf.algorithms.apriori.binary.BinaryItemSet;
 import org.put.hd.dmarf.algorithms.apriori.binary.BinarySetsEngine;
 import org.put.hd.dmarf.data.DataRepresentationBase;
-import org.put.hd.dmarf.data.builders.BasicDataBuilder;
-import org.put.hd.dmarf.data.formatters.SimpleDataFormatter;
 
-public class BinaryCandidateLevelOneGeneration {
-
-	private BinarySetsEngine engine;
+public class BinaryCandidateLevelOneGeneration extends BinarySetsEngineTestBase {
 
 	@Before
 	public void set_up() {
@@ -124,13 +118,5 @@ public class BinaryCandidateLevelOneGeneration {
 		// assert results (the equality of empty maps)
 		Assert.assertTrue(expetedCandidates.equals(result));
 
-	}
-
-	private DataRepresentationBase getDataFromString(String dataString) {
-		Reader stringReader = new StringReader(dataString);
-		SimpleDataFormatter formatter = new SimpleDataFormatter(
-				new BasicDataBuilder());
-		DataRepresentationBase data = formatter.getFormattedData(stringReader);
-		return data;
 	}
 }

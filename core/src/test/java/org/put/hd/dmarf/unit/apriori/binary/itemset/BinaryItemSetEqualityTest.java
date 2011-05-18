@@ -1,4 +1,4 @@
-package org.put.hd.dmarf.unit.apriori.binary;
+package org.put.hd.dmarf.unit.apriori.binary.itemset;
 
 import org.junit.Assert;
 import org.junit.Test;
