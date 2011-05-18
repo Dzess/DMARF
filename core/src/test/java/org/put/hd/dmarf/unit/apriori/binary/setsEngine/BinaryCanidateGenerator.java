@@ -1,5 +1,8 @@
 package org.put.hd.dmarf.unit.apriori.binary.setsEngine;
 
+import java.util.Collection;
+import java.util.LinkedList;
+import java.util.List;
 import java.util.Set;
 import java.util.SortedMap;
 import java.util.TreeMap;
@@ -30,6 +33,54 @@ public class BinaryCanidateGenerator extends BinarySetsEngineTestBase {
 		expecetCandidates = new TreeSet<BinaryItemSet>();
 	}
 
+	@Test
+	public void set_partition(){
+		
+		// input data
+		// 1000 0000 0000 0001 chunk 1 => 32769
+		// 0000 0000 0000 0001 chunk 2 => 1
+		char chunk1 = 32769;
+		char chunk2 = 1;
+		BinaryItemSet inputSet = new BinaryItemSet(new char[]{chunk1,chunk2},3);
+		
+		// expected output (3 sets with 2 chunks)
+		List<BinaryItemSet> expected = new LinkedList<BinaryItemSet>();
+		
+		// set 1
+		// 0000 0000 0000 0001 => C1
+		// 0000 0000 0000 0001 => C2
+		chunk1 = 1;
+		chunk2 = 1;
+		BinaryItemSet set1 = new BinaryItemSet(new char[]{chunk1,chunk2},2);
+		
+		// set 2
+		// 1000 0000 0000 0000 => C1
+		// 0000 0000 0000 0001 => C2
+		chunk1 = 32768;
+		chunk2 = 1;
+		BinaryItemSet set2 = new BinaryItemSet(new char[]{chunk1,chunk2},2);
+		
+		// set 3
+		// 1000 0000 0000 0001 chunk 1 => 32769
+		// 0000 0000 0000 0000 chunk 2 => 0
+		chunk1 = 32769;
+		chunk2 = 0;
+		BinaryItemSet set3 = new BinaryItemSet(new char[]{chunk1,chunk2},2);
+		
+		expected.add(set3);
+		expected.add(set2);
+		expected.add(set1);
+		
+		// use this feature from BinaryItemSet
+		Collection<BinaryItemSet> result = BinaryItemSet.divideSet(inputSet);
+		
+		// assert the output
+		for (BinaryItemSet binaryItemSet : result) {
+			if(!expected.contains(binaryItemSet))
+				Assert.fail("The set should be found in the expected sets");
+		}
+	}
+	
 	@Test
 	public void generatin_level_two_sets_from_one_level_sets() {
 

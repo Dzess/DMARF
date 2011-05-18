@@ -1,6 +1,9 @@
 package org.put.hd.dmarf.algorithms.apriori.binary;
 
 import java.util.Arrays;
+import java.util.Collection;
+import java.util.LinkedHashSet;
+import java.util.Set;
 
 /**
  * Binary representation of the item set in java code. Low data representation
@@ -21,17 +24,17 @@ public class BinaryItemSet implements Comparable<BinaryItemSet> {
 		for (int i = 0; i < elements.length; i++) {
 			this.attributeVector[i] = elements[i];
 		}
-		
+
 		// FIXME is this really necessary
 		// get the number of attributes from the attribute vector ?
-		// in a smart way 
+		// in a smart way
 	}
 
 	public BinaryItemSet(char[] elements, int numberOfAttributes) {
-		
+
 		// set the number of attributes
 		this.numberOfAttributes = numberOfAttributes;
-		
+
 		// perform shallow copy
 		this.attributeVector = new char[elements.length];
 		for (int i = 0; i < elements.length; i++) {
@@ -95,5 +98,48 @@ public class BinaryItemSet implements Comparable<BinaryItemSet> {
 
 		// actually this code should never be achieved
 		return 0;
+	}
+
+	/**
+	 * Gets from {@link BinaryItemSet} with n attributes. N
+	 * {@link BinaryItemSet} objects each with <i>n -1</i> attributes.
+	 * 
+	 * @param inputSet
+	 *            : set to be divided.
+	 * @return Collection of sets with <i>n-1</i> attributes.
+	 */
+	public static Collection<BinaryItemSet> divideSet(BinaryItemSet inputSet) {
+
+		Set<BinaryItemSet> output = new LinkedHashSet<BinaryItemSet>();
+
+		char[] vector = inputSet.getAttributeVector();
+		int generation = inputSet.getNumberOfAttributes();
+		int newGeneration = generation - 1;
+
+		for (int i = 0; i < vector.length; i++) {
+			// 1000 0000 0000 0000
+			char mask = 32768;
+			for (int j = 0; j < 16; j++) {
+				// get the set with n-1 attributes
+				char invertedMask = (char) ~mask;
+				char outChunk = (char) (invertedMask & vector[i]);
+
+				// if same then 
+				// 0000 
+				// 0010 case was
+				if (outChunk != vector[i]) {
+					char[] newElements = vector.clone();
+					newElements[i] = outChunk;
+					BinaryItemSet set = new BinaryItemSet(newElements,
+							newGeneration);
+					output.add(set);
+					
+				}
+				// move to mask 0...1..00 to the end
+				mask = (char) (mask >>> 1);
+			}
+		}
+
+		return output;
 	}
 }

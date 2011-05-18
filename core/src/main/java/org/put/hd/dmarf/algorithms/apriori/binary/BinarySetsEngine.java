@@ -4,6 +4,7 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
+import java.util.Collection;
 import java.util.Set;
 import java.util.SortedMap;
 import java.util.SortedSet;
@@ -56,7 +57,7 @@ public class BinarySetsEngine implements ISetsEngine {
 						attributeList, data.getMaxAttAligned());
 
 				// just make the item set
-				BinaryItemSet itemSet = new BinaryItemSet(vector,1);
+				BinaryItemSet itemSet = new BinaryItemSet(vector, 1);
 				frequentSets.put(itemSet, value);
 				levelOneSet.add(itemSet);
 			}
@@ -77,14 +78,15 @@ public class BinarySetsEngine implements ISetsEngine {
 
 		// set up the candidate output
 		Set<BinaryItemSet> output = new TreeSet<BinaryItemSet>();
-		
-		// FIXME: this can be omitted if the input map or set is only generation-1 set
+
+		// FIXME: this can be omitted if the input map or set is only
+		// generation-1 set
 		// get only set with (generation - 1) attributes
 		List<BinaryItemSet> minuseOneSets = new LinkedList<BinaryItemSet>();
 		for (Map.Entry<BinaryItemSet, Integer> binaryItemSet : frequentSupportMap
 				.entrySet()) {
 			BinaryItemSet itemSet = binaryItemSet.getKey();
-			if(itemSet.getNumberOfAttributes() == generation){
+			if (itemSet.getNumberOfAttributes() == generation) {
 				minuseOneSets.add(itemSet);
 			}
 		}
@@ -93,39 +95,44 @@ public class BinarySetsEngine implements ISetsEngine {
 		// add elements from level one frequent sets
 		// in a smart way do this
 		for (BinaryItemSet itemSet : minuseOneSets) {
-			
+
 			// create the output set only if the order will be preserved
 			for (BinaryItemSet singleItemSet : this.levelOneSet) {
-				
+
 				// is earlier in collection
-				if(itemSet.compareTo(singleItemSet) < 0)
-				{
-					
+				if (itemSet.compareTo(singleItemSet) < 0) {
+
 					// create the attribute vector
 					char[] vector = itemSet.getAttributeVector();
 					char[] singleVector = singleItemSet.getAttributeVector();
 					int vectorLength = singleVector.length;
-					
+
 					char[] outputVector = new char[vectorLength];
-					for (int i = 0; i <  vectorLength; i++) {
+					for (int i = 0; i < vectorLength; i++) {
 						// hope it will work
 						outputVector[i] = (char) (vector[i] | singleVector[i]);
 					}
-					
-					// check this sets to throw out elements with (g-1) elements which are not marked frequent
+
+					// check this sets to throw out elements with (g-1) elements
+					// which are not marked frequent
 					// meaning cannot be find in the frequent support map
-					// TODO: write it
-					
-					// create candidate
-					BinaryItemSet candidate = new BinaryItemSet(vector,generation);
-					output.add(candidate);
+					boolean hasSupport = true;
+					Collection<BinaryItemSet> items = BinaryItemSet.divideSet(itemSet);
+					for (BinaryItemSet binaryItemSet : items) {
+						if (!frequentSupportMap.containsKey(binaryItemSet)) {
+							hasSupport = false;
+						}
+					}
+
+					if (hasSupport) {
+						// create candidate
+						BinaryItemSet candidate = new BinaryItemSet(vector,
+								generation);
+						output.add(candidate);
+					}
 				}
 			}
 		}
-		
-		
-		
-		
 		return output;
 	}
 
