@@ -44,6 +44,10 @@ public class JOCLSetsEngineTest {
 		dataloader.setInputFileName(pathToFile);
 		data = dataloader.loadData();
 
+		/*
 		joclEngine.initCL(data);
+		joclEngine.runCL();
+		joclEngine.cleanupCL();
+		*/
 	}
 }
