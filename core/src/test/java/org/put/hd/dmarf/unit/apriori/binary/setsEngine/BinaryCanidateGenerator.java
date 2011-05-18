@@ -110,7 +110,7 @@ public class BinaryCanidateGenerator extends BinarySetsEngineTestBase {
 		frequentSupportMap = engine.getSingleCandidateSets(data, support);
 
 		// go with test
-		Set<BinaryItemSet> result = engine.getCandidateSets(frequentSupportMap,1);
+		Set<BinaryItemSet> result = engine.getCandidateSets(frequentSupportMap.keySet(),1);
 
 		Assert.assertTrue(expecetCandidates.equals(result));
 	}
@@ -121,6 +121,12 @@ public class BinaryCanidateGenerator extends BinarySetsEngineTestBase {
 		// already generated frequent sets
 		frequentSupportMap = new TreeMap<BinaryItemSet, Integer>();
 		char setVector = 0;
+		
+		String dataString = "1 2 3";
+		Integer support = 0;
+		// mark the level one sets for the engine
+		DataRepresentationBase data = getDataFromString(dataString);
+		engine.getSingleCandidateSets(data, support);
 
 		// a1,a2
 		// 1100 0000 0000 0000 => 49152
@@ -144,7 +150,7 @@ public class BinaryCanidateGenerator extends BinarySetsEngineTestBase {
 		expecetCandidates.add(set1);
 
 		// go with test
-		Set<BinaryItemSet> result = engine.getCandidateSets(frequentSupportMap,1);
+		Set<BinaryItemSet> result = engine.getCandidateSets(frequentSupportMap.keySet(),1);
 
 		Assert.assertTrue(expecetCandidates.equals(result));
 	}
@@ -154,6 +160,12 @@ public class BinaryCanidateGenerator extends BinarySetsEngineTestBase {
 		// already generated frequent sets
 		frequentSupportMap = new TreeMap<BinaryItemSet, Integer>();
 		
+		String dataString = "1 2 3";
+		Integer support = 0;
+		// mark the level one sets for the engine
+		DataRepresentationBase data = getDataFromString(dataString);
+		engine.getSingleCandidateSets(data, support);
+		
 		// 1110 0000 0000 0000
 		char vector = 57344;
 		frequentSupportMap.put(new BinaryItemSet(new char[]{vector}), 1);
@@ -161,7 +173,7 @@ public class BinaryCanidateGenerator extends BinarySetsEngineTestBase {
 		// expected candidate: no candidates
 
 		// go with test
-		Set<BinaryItemSet> result = engine.getCandidateSets(frequentSupportMap,1);
+		Set<BinaryItemSet> result = engine.getCandidateSets(frequentSupportMap.keySet(),1);
 
 		Assert.assertTrue(expecetCandidates.equals(result));
 	}

@@ -80,6 +80,8 @@ public class BinaryApriori extends AlgorithmBase {
 		SortedMap<BinaryItemSet, Integer> frequentSuppMap = this.binaryEngine
 				.getSingleCandidateSets(data, supportThreshold);
 
+		Set<BinaryItemSet> approvedCandidates = frequentSuppMap.keySet();
+		
 		// generate the frequent sets
 		int generation = 0;
 		while (true) {
@@ -87,11 +89,12 @@ public class BinaryApriori extends AlgorithmBase {
 			// generate candidates with generation (with the generation)
 			// number of elements in them
 			Set<BinaryItemSet> candidates = this.binaryEngine.getCandidateSets(
-					frequentSuppMap, generation++);
+					approvedCandidates, generation++);
 
 			// verify that all elements in candidate set are eligible for
 			// being the frequent set
-			Set<BinaryItemSet> approvedCandidates = this.binaryEngine
+			 
+			approvedCandidates = this.binaryEngine
 					.verifyCandidatesInData(data, candidates);
 
 			// if zero then break the algorithm

@@ -58,7 +58,7 @@ public class JOCLSetsEngine implements ISetsEngine {
 	private StopWatch sw;
 
 	public Set<BinaryItemSet> getCandidateSets(
-			SortedMap<BinaryItemSet, Integer> frequentSupportMap, int i) {
+			Set<BinaryItemSet> frequentSupportMap, int i) {
 		// TODO Auto-generated method stub
 		// TEN KOD TE¯ MO¯E TRAFIÆ NA JOCLA - LATER
 		return null;

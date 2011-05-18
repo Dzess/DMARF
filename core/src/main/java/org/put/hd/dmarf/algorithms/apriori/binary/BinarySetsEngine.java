@@ -74,27 +74,27 @@ public class BinarySetsEngine implements ISetsEngine {
 	 * (java.util.SortedMap, int)
 	 */
 	public Set<BinaryItemSet> getCandidateSets(
-			SortedMap<BinaryItemSet, Integer> frequentSupportMap, int generation) {
+			Set<BinaryItemSet> frequentSupportMap, int generation) {
 
 		// set up the candidate output
 		Set<BinaryItemSet> output = new TreeSet<BinaryItemSet>();
 
-		// FIXME: this can be omitted if the input map or set is only
-		// generation-1 set
-		// get only set with (generation - 1) attributes
-		List<BinaryItemSet> minuseOneSets = new LinkedList<BinaryItemSet>();
-		for (Map.Entry<BinaryItemSet, Integer> binaryItemSet : frequentSupportMap
-				.entrySet()) {
-			BinaryItemSet itemSet = binaryItemSet.getKey();
-			if (itemSet.getNumberOfAttributes() == generation) {
-				minuseOneSets.add(itemSet);
-			}
-		}
+//		// FIXME: this can be omitted if the input map or set is only
+//		// generation-1 set
+//		// get only set with (generation - 1) attributes
+//		List<BinaryItemSet> minuseOneSets = new LinkedList<BinaryItemSet>();
+//		for (Map.Entry<BinaryItemSet, Integer> binaryItemSet : frequentSupportMap
+//				.entrySet()) {
+//			BinaryItemSet itemSet = binaryItemSet.getKey();
+//			if (itemSet.getNumberOfAttributes() == generation) {
+//				minuseOneSets.add(itemSet);
+//			}
+//		}
 
 		// for each set with (generation-1) elements
 		// add elements from level one frequent sets
 		// in a smart way do this
-		for (BinaryItemSet itemSet : minuseOneSets) {
+		for (BinaryItemSet itemSet : frequentSupportMap) {
 
 			// create the output set only if the order will be preserved
 			for (BinaryItemSet singleItemSet : this.levelOneSet) {
@@ -117,16 +117,18 @@ public class BinarySetsEngine implements ISetsEngine {
 					// which are not marked frequent
 					// meaning cannot be find in the frequent support map
 					boolean hasSupport = true;
-					Collection<BinaryItemSet> items = BinaryItemSet.divideSet(itemSet);
+					Collection<BinaryItemSet> items = BinaryItemSet.divideSet(
+							outputVector, generation);
+					
 					for (BinaryItemSet binaryItemSet : items) {
-						if (!frequentSupportMap.containsKey(binaryItemSet)) {
+						if (!frequentSupportMap.contains(binaryItemSet)) {
 							hasSupport = false;
 						}
 					}
 
 					if (hasSupport) {
 						// create candidate
-						BinaryItemSet candidate = new BinaryItemSet(vector,
+						BinaryItemSet candidate = new BinaryItemSet(outputVector,
 								generation);
 						output.add(candidate);
 					}

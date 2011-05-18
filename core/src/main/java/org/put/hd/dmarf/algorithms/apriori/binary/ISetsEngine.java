@@ -16,7 +16,7 @@ public interface ISetsEngine {
 			DataRepresentationBase data, Integer support);
 
 	public Set<BinaryItemSet> getCandidateSets(
-			SortedMap<BinaryItemSet, Integer> frequentSupportMap, int i);
+			Set<BinaryItemSet> approvedCandidates, int i);
 
 	/**
 	 * Mines the support from the data.
