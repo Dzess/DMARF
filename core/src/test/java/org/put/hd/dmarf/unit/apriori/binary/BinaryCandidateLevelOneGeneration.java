@@ -30,23 +30,37 @@ public class BinaryCandidateLevelOneGeneration {
 										// threshold
 		String dataString = "1 32" + '\n' + "22 8" + '\n';
 
-		// create expected data (the candidate sets for such elements) sic 16
+		// create expected data (the candidate sets for such elements) sic! 16
 		// bit integers
 		SortedMap<BinaryItemSet, Integer> expetedCandidates = new TreeMap<BinaryItemSet, Integer>();
-		
-		// Transaction: 1,32 => chunk 1 chunk 2
+
 		// 1000 0000 0000 0000 => 32768 (chunk 1)
+		// 0000 0000 0000 0000 => 0 (chunk 2)
 		char chunk1 = 32768;
+		char chunk2 = 0;
+		expetedCandidates.put(new BinaryItemSet(new char[] { chunk1, chunk2 }),
+				1);
+
+		// 0000 0000 0000 0000 => 0 (chunk 1)
 		// 0000 0000 0000 0001 => 1 (chunk 2)
-		char chunk2 = 1;
-		expetedCandidates.put(new BinaryItemSet(new char[] { chunk1,chunk2 }), 1);
-		
-		
+		chunk1 = 0;
+		chunk2 = 1;
+		expetedCandidates.put(new BinaryItemSet(new char[] { chunk1, chunk2 }),
+				1);
+
 		// 0000 0001 0000 0000 => 256 (chunk 1)
+		// 0000 0000 0000 0000 => 0 (chunk 2)
 		chunk1 = 256;
-		// 0000 0100 0000 0000 => 2048 (chunk 2)
-		chunk2 = 2048;
-		expetedCandidates.put(new BinaryItemSet(new char[] { chunk1,chunk2 }), 1);
+		chunk2 = 0;
+		expetedCandidates.put(new BinaryItemSet(new char[] { chunk1, chunk2 }),
+				1);
+
+		// 0000 0000 0000 0000 => 1024 (chunk 1)
+		// 0000 0100 0000 0000 => 1024 (chunk 2)
+		chunk1 = 0;
+		chunk2 = 1024;
+		expetedCandidates.put(new BinaryItemSet(new char[] { chunk1, chunk2 }),
+				1);
 
 		// get from string to the data representation base
 		DataRepresentationBase data = getDataFromString(dataString);
