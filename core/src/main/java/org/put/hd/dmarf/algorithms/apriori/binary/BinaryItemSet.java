@@ -105,15 +105,17 @@ public class BinaryItemSet implements Comparable<BinaryItemSet> {
 	 * {@link BinaryItemSet} objects each with <i>n -1</i> attributes.
 	 * 
 	 * @param inputSet
-	 *            : set to be divided.
+	 *            : the vector to be divided
+	 * @param numberOfAttributes
+	 *            : generation number
 	 * @return Collection of sets with <i>n-1</i> attributes.
 	 */
-	public static Collection<BinaryItemSet> divideSet(BinaryItemSet inputSet) {
-
+	public static Collection<BinaryItemSet> divideSet(char[] inputSet,
+			int numberOfAttributes) {
 		Set<BinaryItemSet> output = new LinkedHashSet<BinaryItemSet>();
 
-		char[] vector = inputSet.getAttributeVector();
-		int generation = inputSet.getNumberOfAttributes();
+		char[] vector = inputSet;
+		int generation = numberOfAttributes;
 		int newGeneration = generation - 1;
 
 		for (int i = 0; i < vector.length; i++) {
@@ -124,8 +126,8 @@ public class BinaryItemSet implements Comparable<BinaryItemSet> {
 				char invertedMask = (char) ~mask;
 				char outChunk = (char) (invertedMask & vector[i]);
 
-				// if same then 
-				// 0000 
+				// if same then
+				// 0000
 				// 0010 case was
 				if (outChunk != vector[i]) {
 					char[] newElements = vector.clone();
@@ -133,7 +135,7 @@ public class BinaryItemSet implements Comparable<BinaryItemSet> {
 					BinaryItemSet set = new BinaryItemSet(newElements,
 							newGeneration);
 					output.add(set);
-					
+
 				}
 				// move to mask 0...1..00 to the end
 				mask = (char) (mask >>> 1);
@@ -141,5 +143,18 @@ public class BinaryItemSet implements Comparable<BinaryItemSet> {
 		}
 
 		return output;
+	}
+
+	/**
+	 * Gets from {@link BinaryItemSet} with n attributes. N
+	 * {@link BinaryItemSet} objects each with <i>n -1</i> attributes.
+	 * 
+	 * @param inputSet
+	 *            : set to be divided.
+	 * @return Collection of sets with <i>n-1</i> attributes.
+	 */
+	public static Collection<BinaryItemSet> divideSet(BinaryItemSet inputSet) {
+		return divideSet(inputSet.getAttributeVector(),
+				inputSet.getNumberOfAttributes());
 	}
 }
