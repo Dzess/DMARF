@@ -22,17 +22,35 @@ import org.put.hd.dmarf.data.DataRepresentationBase;
  */
 public class JOCLSetsEngine implements ISetsEngine {
 
+	// OpenCL stuff
 	private cl_context context;
 	private cl_command_queue commandQueue;
-	private cl_kernel kernel;
+	private cl_kernel kernel1;
+	private cl_kernel kernel2;
 	private cl_program program;
+
+	// transactions Map
 	private cl_mem transCharMapMem;
 	private Pointer transCharMapPointer;
 	private char[] transCharMap;
 
+	// ~support counting vector
+	private Pointer outSuppCharArrayPointer;
+	private cl_mem outSuppCharArrayMem;
+	private char[] outSuppCharArray;
+
+	// candidateSet Array
+	private cl_mem candSetMem;
+	private Pointer candSetPointer;
+	private char[] candSet;
+
+	// tmp Map
 	private Pointer outMapPointer;
 	private cl_mem outMapMem;
 	private char[] outTestCharMap;
+
+	private long global_work_size[];
+	private long local_work_size[];
 
 	private DataRepresentationBase data;
 
@@ -68,7 +86,7 @@ public class JOCLSetsEngine implements ISetsEngine {
 			+ "sampleKernel(__global const ushort *a,"
 			+ "             __global ushort *c)" + "{"
 			+ "    int gid = get_global_id(0);"
-			+ "    c[gid] =  a[gid]+get_group_id(0);" + "}";
+			+ "    c[gid] =  get_local_id(0) ^ get_group_id(0);" + "}";
 
 	/**
 	 * Initialize OpenCL: Create the context, the command queue and the kernel.
@@ -81,10 +99,7 @@ public class JOCLSetsEngine implements ISetsEngine {
 		this.data = data;
 		System.out.println("Getting the charMap");
 		transCharMap = data.getTransactionsCharMap();
-		outTestCharMap = new char[transCharMap.length];
-
 		transCharMapPointer = Pointer.to(transCharMap);
-		outMapPointer = Pointer.to(outTestCharMap);
 
 		// Obtain the number of platforms
 		int numPlatforms[] = new int[1];
@@ -133,40 +148,131 @@ public class JOCLSetsEngine implements ISetsEngine {
 		transCharMapMem = clCreateBuffer(context, CL_MEM_READ_ONLY
 				| CL_MEM_COPY_HOST_PTR, Sizeof.cl_short * transCharMap.length,
 				transCharMapPointer, null);
-		outMapMem = clCreateBuffer(context, CL_MEM_READ_WRITE, Sizeof.cl_short
-				* transCharMap.length, null, null);
+
+		/**
+		 * The source code of the OpenCL support verifying program to execute
+		 */
+		String supportKernelSource = "__kernel void "
+				+ "supportKernel1(__global const ushort *inMap,"
+				+ "             __global const ushort *inSet,"
+				+ "             __global ushort *outMap)" + "{"
+				+ "    int gid = get_global_id(0);"
+				+ "    int grid = get_group_id(0);"
+				+ "    int glid = get_local_id(0);"
+				+ "	   outMap[gid] = (inSet[glid] & inMap[gid]) ^ inSet[glid];"
+				+ "}" + "__kernel void "
+				+ "supportKernel2(__global const ushort *inTmpMap,"
+				+ "             __global ushort *outSupp)" + "{"
+				+ "    int gid = get_global_id(0);"
+				+ "    int grid = get_group_id(0);"
+				+ "    int glid = get_local_id(0);"
+				+ "    for (uint pos = 0; pos <"
+				+ data.getNumberOfAttributesClusters() + "; pos++) {"
+				+ "	       outSupp[gid] = outSupp[gid] | inTmpMap[gid * "
+				+ data.getNumberOfAttributesClusters() + "+ pos];" + "    };"
+				+ "}";
 
 		// Create the program from the source code
 		program = clCreateProgramWithSource(context, 1,
-				new String[] { programSource }, null, null);
+				new String[] { supportKernelSource }, null, null);
 
 		// Build the program
 		clBuildProgram(program, 0, null, null, null, null);
 
 		// Create the kernel
-		kernel = clCreateKernel(program, "sampleKernel", null);
+		kernel1 = clCreateKernel(program, "supportKernel1", null);
+		kernel2 = clCreateKernel(program, "supportKernel2", null);
 
+		// Set the arguments for the kernel
+		clSetKernelArg(kernel1, 0, Sizeof.cl_mem, Pointer.to(transCharMapMem));
+
+		global_work_size = new long[] { transCharMap.length };
+		local_work_size = new long[] { data.getNumberOfAttributesClusters() };
 	}
 
 	public void runCL() {
 
-		// Set the arguments for the kernel
-		clSetKernelArg(kernel, 0, Sizeof.cl_mem, Pointer.to(transCharMapMem));
-		clSetKernelArg(kernel, 1, Sizeof.cl_mem, Pointer.to(outMapMem));
-
-		// Set the work-item dimensions
-		long global_work_size[] = new long[] { transCharMap.length };
-		long local_work_size[] = new long[] { data
-				.getNumberOfAttributesClusters() };
-
 		// Execute the kernel
-		clEnqueueNDRangeKernel(commandQueue, kernel, 1, null, global_work_size,
-				local_work_size, 0, null, null);
+		clEnqueueNDRangeKernel(commandQueue, kernel1, 1, null,
+				global_work_size, local_work_size, 0, null, null);
 
 		// Read the output data
 		clEnqueueReadBuffer(commandQueue, outMapMem, CL_TRUE, 0,
 				transCharMap.length * Sizeof.cl_short, outMapPointer, 0, null,
 				null);
+	}
+
+	/**
+	 * Finds number of transactions supporting a given set.
+	 * 
+	 * @param candidateSet
+	 *            set to be tested
+	 * @return number of transactions supporting given set.
+	 */
+	public int getSupport(char[] candidateSet) {
+
+		// preparing candidateSet argument for kernel
+		candSet = candidateSet;
+		candSetPointer = Pointer.to(candSet);
+
+		candSetMem = clCreateBuffer(context, CL_MEM_READ_ONLY
+				| CL_MEM_COPY_HOST_PTR,
+				Sizeof.cl_short * data.getNumberOfAttributesClusters(),
+				candSetPointer, null);
+
+		// preparing tmpMap argument for kernels
+		outTestCharMap = new char[transCharMap.length];
+		outMapPointer = Pointer.to(outTestCharMap);
+
+		outMapMem = clCreateBuffer(context, CL_MEM_READ_WRITE, Sizeof.cl_short
+				* transCharMap.length, null, null);
+
+		clSetKernelArg(kernel1, 1, Sizeof.cl_mem, Pointer.to(candSetMem));
+		clSetKernelArg(kernel1, 2, Sizeof.cl_mem, Pointer.to(outMapMem));
+
+		// Execute kernel1
+		// We got a worker per each comparison
+		global_work_size = new long[] { transCharMap.length };
+		local_work_size = new long[] { data.getNumberOfAttributesClusters() };
+
+		clEnqueueNDRangeKernel(commandQueue, kernel1, 1, null,
+				global_work_size, local_work_size, 0, null, null);
+
+		// preparing data for reduction kernel2
+		outSuppCharArray = new char[data.getNumberOfTransactions()];
+		outSuppCharArrayPointer = Pointer.to(outSuppCharArray);
+
+		outSuppCharArrayMem = clCreateBuffer(context, CL_MEM_WRITE_ONLY,
+				Sizeof.cl_short * data.getNumberOfTransactions(), null, null);
+
+		clSetKernelArg(kernel2, 0, Sizeof.cl_mem, Pointer.to(outMapMem));
+		clSetKernelArg(kernel2, 1, Sizeof.cl_mem,
+				Pointer.to(outSuppCharArrayMem));
+
+		// Execute the reduction kernel with 1 worker per transaction
+		global_work_size = new long[] { data.getNumberOfTransactions() };
+		local_work_size = new long[] { 1 };
+
+		clEnqueueNDRangeKernel(commandQueue, kernel2, 1, null,
+				global_work_size, local_work_size, 0, null, null);
+
+		// Read the output data
+		clEnqueueReadBuffer(commandQueue, outSuppCharArrayMem, CL_TRUE, 0,
+				data.getNumberOfTransactions() * Sizeof.cl_short,
+				outSuppCharArrayPointer, 0, null, null);
+
+		int supp = 0;
+		for (int i = 0; i < outSuppCharArray.length; i++) {
+			//System.out.println((int) outSuppCharArray[i] + " ");
+			if (outSuppCharArray[i] == 0)
+				supp++;
+		}
+
+		// cleaning gpuMem
+		clReleaseMemObject(candSetMem);
+		clReleaseMemObject(outMapMem);
+		clReleaseMemObject(outSuppCharArrayMem);
+		return supp;
 	}
 
 	public void verifyOutputCL() {
@@ -177,14 +283,16 @@ public class JOCLSetsEngine implements ISetsEngine {
 				if (transCharMap[i * data.getNumberOfAttributesClusters() + j] != (outTestCharMap[i
 						* data.getNumberOfAttributesClusters() + j] - i))
 					diff++;
-				/*
-				 * System.out.print((int) transCharMap[i
-				 * data.getNumberOfAttributesClusters() + j] + " " + (int)
-				 * outTestCharMap[i data.getNumberOfAttributesClusters() + j] +
-				 * " | ");
-				 */
+
+				System.out.print((int) transCharMap[i
+						* data.getNumberOfAttributesClusters() + j]
+						+ " "
+						+ (int) outTestCharMap[i
+								* data.getNumberOfAttributesClusters() + j]
+						+ " | ");
+
 			}
-			// System.out.println("");
+			System.out.println("");
 
 		}
 		if (diff > 0)
@@ -198,8 +306,8 @@ public class JOCLSetsEngine implements ISetsEngine {
 		// Release kernel, program, and memory objects
 		System.out.println("Releasing objects.");
 		clReleaseMemObject(transCharMapMem);
-		clReleaseMemObject(outMapMem);
-		clReleaseKernel(kernel);
+		clReleaseKernel(kernel1);
+		clReleaseKernel(kernel2);
 		clReleaseProgram(program);
 		clReleaseCommandQueue(commandQueue);
 		clReleaseContext(context);
