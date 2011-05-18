@@ -13,6 +13,7 @@ import java.util.Set;
 import java.util.SortedMap;
 
 import org.put.hd.dmarf.data.DataRepresentationBase;
+import org.put.hd.dmarf.stopwatches.StopWatch;
 
 /**
  * JOCLs implementation of the {@link ISetsEngine} mostly for data mining.
@@ -53,6 +54,8 @@ public class JOCLSetsEngine implements ISetsEngine {
 	private long local_work_size[];
 
 	private DataRepresentationBase data;
+	
+	private StopWatch sw;
 
 	public Set<BinaryItemSet> getCandidateSets(
 			SortedMap<BinaryItemSet, Integer> frequentSupportMap, int i) {
@@ -78,15 +81,6 @@ public class JOCLSetsEngine implements ISetsEngine {
 
 		return null;
 	}
-
-	/**
-	 * The source code of the OpenCL program to execute
-	 */
-	private String programSource = "__kernel void "
-			+ "sampleKernel(__global const ushort *a,"
-			+ "             __global ushort *c)" + "{"
-			+ "    int gid = get_global_id(0);"
-			+ "    c[gid] =  get_local_id(0) ^ get_group_id(0);" + "}";
 
 	/**
 	 * Initialize OpenCL: Create the context, the command queue and the kernel.
@@ -190,18 +184,6 @@ public class JOCLSetsEngine implements ISetsEngine {
 		local_work_size = new long[] { data.getNumberOfAttributesClusters() };
 	}
 
-	public void runCL() {
-
-		// Execute the kernel
-		clEnqueueNDRangeKernel(commandQueue, kernel1, 1, null,
-				global_work_size, local_work_size, 0, null, null);
-
-		// Read the output data
-		clEnqueueReadBuffer(commandQueue, outMapMem, CL_TRUE, 0,
-				transCharMap.length * Sizeof.cl_short, outMapPointer, 0, null,
-				null);
-	}
-
 	/**
 	 * Finds number of transactions supporting a given set.
 	 * 
@@ -273,32 +255,6 @@ public class JOCLSetsEngine implements ISetsEngine {
 		clReleaseMemObject(outMapMem);
 		clReleaseMemObject(outSuppCharArrayMem);
 		return supp;
-	}
-
-	public void verifyOutputCL() {
-		System.out.println("Verifying output.");
-		int diff = 0;
-		for (int i = 0; i < data.getNumberOfTransactions(); i++) {
-			for (int j = 0; j < data.getNumberOfAttributesClusters(); j++) {
-				if (transCharMap[i * data.getNumberOfAttributesClusters() + j] != (outTestCharMap[i
-						* data.getNumberOfAttributesClusters() + j] - i))
-					diff++;
-
-				System.out.print((int) transCharMap[i
-						* data.getNumberOfAttributesClusters() + j]
-						+ " "
-						+ (int) outTestCharMap[i
-								* data.getNumberOfAttributesClusters() + j]
-						+ " | ");
-
-			}
-			System.out.println("");
-
-		}
-		if (diff > 0)
-			System.out.println("Arrays differ :/");
-		else
-			System.out.println("Arrays are ok");
 	}
 
 	public void cleanupCL() {
