@@ -8,6 +8,7 @@ import java.io.BufferedReader;
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStreamReader;
+import java.util.Arrays;
 import java.util.Set;
 import java.util.SortedMap;
 
@@ -28,6 +29,10 @@ public class JOCLSetsEngine implements ISetsEngine {
 	private cl_mem transCharMapMem;
 	private Pointer transCharMapPointer;
 	private char[] transCharMap;
+
+	private Pointer outMapPointer;
+	private cl_mem outMapMem;
+	private char[] outTestCharMap;
 
 	private DataRepresentationBase data;
 
@@ -59,19 +64,37 @@ public class JOCLSetsEngine implements ISetsEngine {
 	/**
 	 * The source code of the OpenCL program to execute
 	 */
-	private static String programSource = "__kernel void "
-			+ "sampleKernel(__global float *a)" + "{"
-			+ "    int gid = get_global_id(0);" + "    a[gid] = a[gid] + 1;"
-			+ "}";
+	private String programSource = "__kernel void "
+			+ "sampleKernel(__global const ushort *a,"
+			+ "             __global ushort *c)" + "{"
+			+ "    int gid = get_global_id(0);"
+			+ "    c[gid] =  a[gid]+get_group_id(0);" + "}";
 
 	/**
 	 * Initialize OpenCL: Create the context, the command queue and the kernel.
 	 */
 	public void initCL(DataRepresentationBase data) {
 
+		long numBytes[] = new long[1];
+
+		// Create input- and output data
+		this.data = data;
+		System.out.println("Getting the charMap");
+		transCharMap = data.getTransactionsCharMap();
+		outTestCharMap = new char[transCharMap.length];
+
+		transCharMapPointer = Pointer.to(transCharMap);
+		outMapPointer = Pointer.to(outTestCharMap);
+
+		// Obtain the number of platforms
+		int numPlatforms[] = new int[1];
+		clGetPlatformIDs(0, null, numPlatforms);
+
 		// Obtain the platform IDs and initialize the context properties
+		System.out.println("Number of platforms: " + numPlatforms[0]);
+
 		System.out.println("Obtaining platform...");
-		cl_platform_id platforms[] = new cl_platform_id[2];
+		cl_platform_id platforms[] = new cl_platform_id[numPlatforms[0]];
 		clGetPlatformIDs(platforms.length, platforms, null);
 		cl_context_properties contextProperties = new cl_context_properties();
 		contextProperties.addProperty(CL_CONTEXT_PLATFORM, platforms[0]);
@@ -87,115 +110,99 @@ public class JOCLSetsEngine implements ISetsEngine {
 
 			if (context == null) {
 				System.out.println("Unable to create a context");
-				System.exit(1);
 				return;
 			}
 		}
 
 		// Enable exceptions and subsequently omit error checks in this sample
-		setExceptionsEnabled(true);
+		CL.setExceptionsEnabled(true);
 
-		// Get the list of GPU devices associated with context
-		long numBytes[] = new long[1];
+		// Get the list of GPU devices associated with the context
 		clGetContextInfo(context, CL_CONTEXT_DEVICES, 0, null, numBytes);
+
+		// Obtain the cl_device_id for the first device
 		int numDevices = (int) numBytes[0] / Sizeof.cl_device_id;
 		cl_device_id devices[] = new cl_device_id[numDevices];
 		clGetContextInfo(context, CL_CONTEXT_DEVICES, numBytes[0],
 				Pointer.to(devices), null);
-		cl_device_id device = devices[0];
 
 		// Create a command-queue
-		commandQueue = clCreateCommandQueue(context, device, 0, null);
+		commandQueue = clCreateCommandQueue(context, devices[0], 0, null);
 
-		// Create the memory object which will be filled with the
-		// transactionsCharMap
-
-		this.data = data;
-		System.out.println("Getting the charMap");
-		transCharMap = data.getTransactionsCharMap();
-		transCharMapPointer = Pointer.to(transCharMap);
-
-		System.out.println("Creating buffer");
-		transCharMapMem = clCreateBuffer(context, CL_MEM_READ_WRITE,
-				transCharMap.length * Sizeof.cl_ushort16, transCharMapPointer,
-				null);
-
-		System.out.println("Enqueueing the buffer");
-		clEnqueueWriteBuffer(commandQueue, transCharMapMem, false, 0,
-				transCharMap.length * Sizeof.cl_ushort16, transCharMapPointer,
-				0, null, null);
-
-		// we read the program from string
-		// Program Setup String source = readFile("SimpleMandelbrot.cl");
+		// Allocate the memory objects for the input- and output data
+		transCharMapMem = clCreateBuffer(context, CL_MEM_READ_ONLY
+				| CL_MEM_COPY_HOST_PTR, Sizeof.cl_short * transCharMap.length,
+				transCharMapPointer, null);
+		outMapMem = clCreateBuffer(context, CL_MEM_READ_WRITE, Sizeof.cl_short
+				* transCharMap.length, null, null);
 
 		// Create the program from the source code
-		cl_program program = clCreateProgramWithSource(context, 1,
+		program = clCreateProgramWithSource(context, 1,
 				new String[] { programSource }, null, null);
 
 		// Build the program
 		clBuildProgram(program, 0, null, null, null, null);
 
+		// Create the kernel
 		kernel = clCreateKernel(program, "sampleKernel", null);
-
-		// Set the arguments for the kernel
-		clSetKernelArg(kernel, 0, Sizeof.cl_mem, Pointer.to(transCharMapMem));
 
 	}
 
 	public void runCL() {
+
+		// Set the arguments for the kernel
+		clSetKernelArg(kernel, 0, Sizeof.cl_mem, Pointer.to(transCharMapMem));
+		clSetKernelArg(kernel, 1, Sizeof.cl_mem, Pointer.to(outMapMem));
+
 		// Set the work-item dimensions
 		long global_work_size[] = new long[] { transCharMap.length };
-		long local_work_size[] = new long[] { data.getNumberOfAttributesClusters() };
+		long local_work_size[] = new long[] { data
+				.getNumberOfAttributesClusters() };
 
 		// Execute the kernel
 		clEnqueueNDRangeKernel(commandQueue, kernel, 1, null, global_work_size,
 				local_work_size, 0, null, null);
 
 		// Read the output data
-		/*
-		 * clEnqueueReadBuffer(commandQueue, memObjects[2], CL_TRUE, 0, n *
-		 * Sizeof.cl_float, dst, 0, null, null);
-		 */
+		clEnqueueReadBuffer(commandQueue, outMapMem, CL_TRUE, 0,
+				transCharMap.length * Sizeof.cl_short, outMapPointer, 0, null,
+				null);
+	}
+
+	public void verifyOutputCL() {
+		System.out.println("Verifying output.");
+		int diff = 0;
+		for (int i = 0; i < data.getNumberOfTransactions(); i++) {
+			for (int j = 0; j < data.getNumberOfAttributesClusters(); j++) {
+				if (transCharMap[i * data.getNumberOfAttributesClusters() + j] != (outTestCharMap[i
+						* data.getNumberOfAttributesClusters() + j] - i))
+					diff++;
+				/*
+				 * System.out.print((int) transCharMap[i
+				 * data.getNumberOfAttributesClusters() + j] + " " + (int)
+				 * outTestCharMap[i data.getNumberOfAttributesClusters() + j] +
+				 * " | ");
+				 */
+			}
+			// System.out.println("");
+
+		}
+		if (diff > 0)
+			System.out.println("Arrays differ :/");
+		else
+			System.out.println("Arrays are ok");
 	}
 
 	public void cleanupCL() {
-		// Release kernel, program, and memory objects
 
+		// Release kernel, program, and memory objects
 		System.out.println("Releasing objects.");
 		clReleaseMemObject(transCharMapMem);
+		clReleaseMemObject(outMapMem);
 		clReleaseKernel(kernel);
 		clReleaseProgram(program);
 		clReleaseCommandQueue(commandQueue);
 		clReleaseContext(context);
 	}
 
-	/**
-	 * Helper function which reads the file with the given name and returns the
-	 * contents of this file as a String. Will exit the application if the file
-	 * can not be read.
-	 * 
-	 * @param fileName
-	 *            The name of the file to read.
-	 * @return The contents of the file
-	 */
-	private String readFile(String fileName) {
-		try {
-			BufferedReader br = new BufferedReader(new InputStreamReader(
-					new FileInputStream(fileName)));
-			StringBuffer sb = new StringBuffer();
-			String line = null;
-			while (true) {
-				line = br.readLine();
-				if (line == null) {
-					break;
-				}
-				sb.append(line).append("\n");
-			}
-			return sb.toString();
-		} catch (IOException e) {
-			e.printStackTrace();
-			System.exit(1);
-			return null;
-		}
-	}
 }

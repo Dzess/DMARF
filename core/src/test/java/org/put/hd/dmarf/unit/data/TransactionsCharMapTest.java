@@ -123,11 +123,12 @@ public class TransactionsCharMapTest {
 		char[] expectedCharMap = { 36866, 0, 0, 0, 49154, 0, 0, 0, 4098,
 				2, 0, 0, 53250, 2, 0, 0, 0, 0, 2, 0 };
 
+		/*
 		for (int i = 0; i < testCharMap.length; i++) {
 			System.out.println((int) testCharMap[i] + " "
 					+ Integer.toBinaryString(testCharMap[i]));
 		}		
-		
+		*/
 		Assert.assertArrayEquals(expectedCharMap, testCharMap);
 
 	}

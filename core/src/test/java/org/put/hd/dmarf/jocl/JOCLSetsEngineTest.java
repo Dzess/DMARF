@@ -6,6 +6,7 @@ import java.util.List;
 
 import org.junit.Assert;
 import org.junit.Before;
+import org.junit.BeforeClass;
 import org.junit.Test;
 import org.put.hd.dmarf.algorithms.apriori.binary.JOCLSetsEngine;
 import org.put.hd.dmarf.data.DataRepresentationBase;
@@ -34,20 +35,23 @@ public class JOCLSetsEngineTest {
 		dataloader = new SimpleDataLoader(formatter);
 		
 		joclEngine = new JOCLSetsEngine();
+
 	}
 
 	@Test
 	public void upload_real_set(){
+
 		// perform test
 		String pathToFile = "resources" + File.separator + "data"
 				+ File.separator + "mushroom.dat";
 		dataloader.setInputFileName(pathToFile);
 		data = dataloader.loadData();
-
+		
 		/*
 		joclEngine.initCL(data);
 		joclEngine.runCL();
 		joclEngine.cleanupCL();
-		*/
+		joclEngine.verifyOutputCL();
+		 */
 	}
 }
