@@ -3,6 +3,7 @@ package org.put.hd.dmarf.jocl;
 import java.io.File;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Random;
 
 import org.junit.Assert;
 import org.junit.Before;
@@ -52,10 +53,16 @@ public class JOCLSetsEngineTest {
 				+ File.separator + "mushroom.dat";
 		dataloader.setInputFileName(pathToFile);
 		data = dataloader.loadData();
-
-		int howMany = 1;
+		int maxAtt = 10 % (data.getMaxAttAligned());
+		Random r = new Random();
+		// >>>
+		int howMany = 100;
+		// >>>
 		List<Integer> set = new LinkedList<Integer>();
-		set.add(2);
+
+		for (int l = 0; l <1; l++) {
+			set.add(r.nextInt(maxAtt)+1);
+		}	
 		char[] candidateSet = BasicDataBuilder.generateCharArray(set,
 				data.getMaxAttAligned());
 
@@ -64,6 +71,7 @@ public class JOCLSetsEngineTest {
 		int supportInData = 0;
 		sw.start();
 		for (int k = 0; k < howMany; k++) {
+		
 			supportInData = 0;
 			char[] transactionsMap = data.getTransactionsCharMap();
 			for (int i = 0; i < data.getNumberOfTransactions(); i++) {
