@@ -3,9 +3,12 @@ package org.put.hd.dmarf.algorithms.apriori.binary;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
+import java.util.Map.Entry;
 import java.util.Set;
 import java.util.SortedMap;
+import java.util.SortedSet;
 import java.util.TreeMap;
+import java.util.TreeSet;
 
 import org.put.hd.dmarf.data.DataRepresentationBase;
 import org.put.hd.dmarf.data.builders.BasicDataBuilder;
@@ -19,6 +22,8 @@ import org.put.hd.dmarf.data.builders.BasicDataBuilder;
  */
 public class BinarySetsEngine implements ISetsEngine {
 
+	private SortedSet<BinaryItemSet> levelOneSet;
+
 	/*
 	 * (non-Javadoc)
 	 * 
@@ -28,11 +33,11 @@ public class BinarySetsEngine implements ISetsEngine {
 	 */
 	public SortedMap<BinaryItemSet, Integer> getSingleCandidateSets(
 			DataRepresentationBase data, Integer supportThreshold) {
-		
-		
+
 		// MT: get the each attribute independently
+		levelOneSet = new TreeSet<BinaryItemSet>();
 		SortedMap<BinaryItemSet, Integer> frequentSets = new TreeMap<BinaryItemSet, Integer>();
-		
+
 		for (Map.Entry<Integer, Integer> entry : data.getAttributesCounter()
 				.entrySet()) {
 
@@ -41,21 +46,24 @@ public class BinarySetsEngine implements ISetsEngine {
 
 			// add elements only with proper support
 			if (value >= supportThreshold) {
-				
+
 				// smart ass generation of vectors like
-				// 00000100000, 0000000000001000,10000000,0000001 or something like that
+				// 00000100000, 0000000000001000,10000000,0000001 or something
+				// like that
 				List<Integer> attributeList = new LinkedList<Integer>();
 				attributeList.add(key);
-				char[] vector = BasicDataBuilder.generateCharArray(attributeList, data.getMaxAttAligned());
-				
+				char[] vector = BasicDataBuilder.generateCharArray(
+						attributeList, data.getMaxAttAligned());
+
 				// just make the item set
-				BinaryItemSet itemSet = new BinaryItemSet(vector);
+				BinaryItemSet itemSet = new BinaryItemSet(vector,1);
 				frequentSets.put(itemSet, value);
+				levelOneSet.add(itemSet);
 			}
 		}
+
 		return frequentSets;
 	}
-
 
 	/*
 	 * (non-Javadoc)
@@ -65,11 +73,60 @@ public class BinarySetsEngine implements ISetsEngine {
 	 * (java.util.SortedMap, int)
 	 */
 	public Set<BinaryItemSet> getCandidateSets(
-			SortedMap<BinaryItemSet, Integer> frequentSupportMap, int i) {
-		// TODO Auto-generated method stub
-		// NA RAZIE MO¯EMY NAPISAÆ GENEROWANIE NIE BITOWE ALE OD RAZU ZACZA£BYM
-		// OD BITOWEGO
-		return null;
+			SortedMap<BinaryItemSet, Integer> frequentSupportMap, int generation) {
+
+		// set up the candidate output
+		Set<BinaryItemSet> output = new TreeSet<BinaryItemSet>();
+		
+		// FIXME: this can be omitted if the input map or set is only generation-1 set
+		// get only set with (generation - 1) attributes
+		List<BinaryItemSet> minuseOneSets = new LinkedList<BinaryItemSet>();
+		for (Map.Entry<BinaryItemSet, Integer> binaryItemSet : frequentSupportMap
+				.entrySet()) {
+			BinaryItemSet itemSet = binaryItemSet.getKey();
+			if(itemSet.getNumberOfAttributes() == generation){
+				minuseOneSets.add(itemSet);
+			}
+		}
+
+		// for each set with (generation-1) elements
+		// add elements from level one frequent sets
+		// in a smart way do this
+		for (BinaryItemSet itemSet : minuseOneSets) {
+			
+			// create the output set only if the order will be preserved
+			for (BinaryItemSet singleItemSet : this.levelOneSet) {
+				
+				// is earlier in collection
+				if(itemSet.compareTo(singleItemSet) < 0)
+				{
+					
+					// create the attribute vector
+					char[] vector = itemSet.getAttributeVector();
+					char[] singleVector = singleItemSet.getAttributeVector();
+					int vectorLength = singleVector.length;
+					
+					char[] outputVector = new char[vectorLength];
+					for (int i = 0; i <  vectorLength; i++) {
+						// hope it will work
+						outputVector[i] = (char) (vector[i] | singleVector[i]);
+					}
+					
+					// check this sets to throw out elements with (g-1) elements which are not marked frequent
+					// meaning cannot be find in the frequent support map
+					// TODO: write it
+					
+					// create candidate
+					BinaryItemSet candidate = new BinaryItemSet(vector,generation);
+					output.add(candidate);
+				}
+			}
+		}
+		
+		
+		
+		
+		return output;
 	}
 
 	/*
