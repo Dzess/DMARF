@@ -93,9 +93,14 @@ public class BinaryApriori extends AlgorithmBase {
 
 			// verify that all elements in candidate set are eligible for
 			// being the frequent set
-			 
-			approvedCandidates = this.binaryEngine
+			SortedMap<BinaryItemSet, Integer> candidatesAccepted = this.binaryEngine
 					.verifyCandidatesInData(data, candidates);
+			
+			// mark for the next elements
+			approvedCandidates = candidatesAccepted.keySet();
+			
+			// add to frequent sets
+			frequentSuppMap.putAll(candidatesAccepted);
 
 			// if zero then break the algorithm
 			if (approvedCandidates.size() == 0)

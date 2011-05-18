@@ -145,7 +145,7 @@ public class BinarySetsEngine implements ISetsEngine {
 	 * org.put.hd.dmarf.algorithms.apriori.binary.ISetsEngine#verifyCandidatesInData
 	 * (org.put.hd.dmarf.data.DataRepresentationBase, java.util.Set)
 	 */
-	public Set<BinaryItemSet> verifyCandidatesInData(
+	public SortedMap<BinaryItemSet,Integer> verifyCandidatesInData(
 			DataRepresentationBase data, Set<BinaryItemSet> candidates) {
 		// TODO Auto-generated method stub
 		// TUTAJ SPRAWDZANIE MINIG SUPPORT KTORY MA WYLECIEC NA GPU

@@ -64,7 +64,7 @@ public class JOCLSetsEngine implements ISetsEngine {
 		return null;
 	}
 
-	public Set<BinaryItemSet> verifyCandidatesInData(
+	public SortedMap<BinaryItemSet,Integer> verifyCandidatesInData(
 			DataRepresentationBase data, Set<BinaryItemSet> candidates) {
 		// TODO Auto-generated method stub
 

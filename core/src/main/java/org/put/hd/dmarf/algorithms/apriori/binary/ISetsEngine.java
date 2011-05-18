@@ -2,6 +2,7 @@ package org.put.hd.dmarf.algorithms.apriori.binary;
 
 import java.util.Set;
 import java.util.SortedMap;
+import java.util.SortedSet;
 
 import org.put.hd.dmarf.data.DataRepresentationBase;
 
@@ -24,7 +25,7 @@ public interface ISetsEngine {
 	 * @param candidates
 	 * @return
 	 */
-	public Set<BinaryItemSet> verifyCandidatesInData(
+	public SortedMap<BinaryItemSet,Integer> verifyCandidatesInData(
 			DataRepresentationBase data, Set<BinaryItemSet> candidates);
 
 }
