@@ -13,9 +13,8 @@ import org.put.hd.dmarf.data.DataRepresentationBase;
 /**
  * Apriori working on the nice features using bit level optimization and
  * lightweight collections. Main use here are classes: {@link BinaryItemSet} and
- * engines for various operations. 
- * Engine for sets creations: {@link BinarySetsEngine}
- * Engine for rule generation: {@link BinaryRuleEngine}
+ * engines for various operations. Engine for sets creations:
+ * {@link BinarySetsEngine} Engine for rule generation: {@link BinaryRuleEngine}
  * 
  * @author Piotr
  * 
@@ -34,10 +33,17 @@ public class BinaryApriori extends AlgorithmBase {
 	/**
 	 * Constructor. Initializes the default engines for data mining. Mainly
 	 * support mining and structures for mining the data sets.
+	 * 
+	 * @param binaryRuleEngine
+	 *            :engine that will be used for creating rules
+	 * 
+	 * @param binaryEngine
+	 *            : engine that will be used for creating sets
 	 */
-	public BinaryApriori() {
-		binaryEngine = new BinarySetsEngine();
-		binaryRuleEngine = new BinaryRuleEngine();
+	public BinaryApriori(BinaryRuleEngine binaryRuleEngine,
+			ISetsEngine binaryEngine) {
+		this.binaryEngine = binaryEngine;
+		this.binaryRuleEngine = binaryRuleEngine;
 	}
 
 	@Override
@@ -81,7 +87,7 @@ public class BinaryApriori extends AlgorithmBase {
 				.getSingleCandidateSets(data, supportThreshold);
 
 		Set<BinaryItemSet> approvedCandidates = frequentSuppMap.keySet();
-		
+
 		// generate the frequent sets
 		int generation = 0;
 		while (true) {
@@ -94,11 +100,11 @@ public class BinaryApriori extends AlgorithmBase {
 			// verify that all elements in candidate set are eligible for
 			// being the frequent set
 			SortedMap<BinaryItemSet, Integer> candidatesAccepted = this.binaryEngine
-					.verifyCandidatesInData(data, candidates);
-			
+					.verifyCandidatesInData(data, candidates, supportThreshold);
+
 			// mark for the next elements
 			approvedCandidates = candidatesAccepted.keySet();
-			
+
 			// add to frequent sets
 			frequentSuppMap.putAll(candidatesAccepted);
 

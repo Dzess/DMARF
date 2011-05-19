@@ -45,8 +45,7 @@ public class ExecutingAlgorithmOnTrailDataTest {
 	@Before
 	public void set_up() {
 
-		// TODO: change into production factory
-		// place here factory to be used
+		// factory to be used - target: production level factory
 		factory = new ProductionAlgorithmFactory();
 
 		// set the loaders for the algorithms

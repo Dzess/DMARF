@@ -11,6 +11,7 @@ import java.io.InputStreamReader;
 import java.util.Arrays;
 import java.util.Set;
 import java.util.SortedMap;
+import java.util.TreeMap;
 
 import org.put.hd.dmarf.data.DataRepresentationBase;
 import org.put.hd.dmarf.stopwatches.StopWatch;
@@ -56,6 +57,7 @@ public class JOCLSetsEngine implements ISetsEngine {
 	private DataRepresentationBase data;
 	
 	private StopWatch sw;
+	private boolean hasRun = false;
 
 	public Set<BinaryItemSet> getCandidateSets(
 			Set<BinaryItemSet> frequentSupportMap, int i) {
@@ -65,20 +67,31 @@ public class JOCLSetsEngine implements ISetsEngine {
 	}
 
 	public SortedMap<BinaryItemSet,Integer> verifyCandidatesInData(
-			DataRepresentationBase data, Set<BinaryItemSet> candidates) {
-		// TODO Auto-generated method stub
-
-		// TUTAJ PISZESZ KOD PRZESZUKUJ¥CY JOCLa
-
-		return null;
+			DataRepresentationBase data, Set<BinaryItemSet> candidates, Integer supportThreshold) {
+		
+		// initialize the output map
+		SortedMap<BinaryItemSet, Integer> outputSM = new TreeMap<BinaryItemSet, Integer>();
+		
+		// do not upload data before each mining
+		if(!hasRun)
+			initCL(data);
+		
+		for (BinaryItemSet item : candidates) {
+			
+			// get support for item and add if bigger than support minimal value
+			int value = getSupport(item.getAttributeVector());
+			if(value >= supportThreshold)
+			{
+				outputSM.put(item, value);
+			}
+		}
+		
+		hasRun = true;
+		return outputSM;
 	}
 
 	public SortedMap<BinaryItemSet, Integer> getSingleCandidateSets(
 			DataRepresentationBase data, Integer support) {
-
-		// TODO: write
-		// TUTAJ MO¯NA WRZUCIÆ ELEGANCKO WRZUCANIE DANYCH DO JOCLA
-
 		return null;
 	}
 

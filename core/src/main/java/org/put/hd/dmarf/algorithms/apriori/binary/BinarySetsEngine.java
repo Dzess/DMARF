@@ -18,12 +18,22 @@ import org.put.hd.dmarf.data.builders.BasicDataBuilder;
  * Encapsulates all operations for the generating, growing the
  * {@link BinaryItemSet} in the apriori algorithm.
  * 
+ * Has support for generating candidates. Has NO support for support data
+ * mining.
+ * 
  * @author Piotr
  * 
  */
 public class BinarySetsEngine implements ISetsEngine {
 
 	private SortedSet<BinaryItemSet> levelOneSet;
+
+	/**
+	 * Constructor. Creates the the underling components. Uses the default
+	 * version in code for data verifying support.
+	 */
+	public BinarySetsEngine() {
+	}
 
 	/*
 	 * (non-Javadoc)
@@ -79,17 +89,18 @@ public class BinarySetsEngine implements ISetsEngine {
 		// set up the candidate output
 		Set<BinaryItemSet> output = new TreeSet<BinaryItemSet>();
 
-//		// FIXME: this can be omitted if the input map or set is only
-//		// generation-1 set
-//		// get only set with (generation - 1) attributes
-//		List<BinaryItemSet> minuseOneSets = new LinkedList<BinaryItemSet>();
-//		for (Map.Entry<BinaryItemSet, Integer> binaryItemSet : frequentSupportMap
-//				.entrySet()) {
-//			BinaryItemSet itemSet = binaryItemSet.getKey();
-//			if (itemSet.getNumberOfAttributes() == generation) {
-//				minuseOneSets.add(itemSet);
-//			}
-//		}
+		// // FIXME: this can be omitted if the input map or set is only
+		// // generation-1 set
+		// // get only set with (generation - 1) attributes
+		// List<BinaryItemSet> minuseOneSets = new LinkedList<BinaryItemSet>();
+		// for (Map.Entry<BinaryItemSet, Integer> binaryItemSet :
+		// frequentSupportMap
+		// .entrySet()) {
+		// BinaryItemSet itemSet = binaryItemSet.getKey();
+		// if (itemSet.getNumberOfAttributes() == generation) {
+		// minuseOneSets.add(itemSet);
+		// }
+		// }
 
 		// for each set with (generation-1) elements
 		// add elements from level one frequent sets
@@ -119,7 +130,7 @@ public class BinarySetsEngine implements ISetsEngine {
 					boolean hasSupport = true;
 					Collection<BinaryItemSet> items = BinaryItemSet.divideSet(
 							outputVector, generation);
-					
+
 					for (BinaryItemSet binaryItemSet : items) {
 						if (!frequentSupportMap.contains(binaryItemSet)) {
 							hasSupport = false;
@@ -128,8 +139,8 @@ public class BinarySetsEngine implements ISetsEngine {
 
 					if (hasSupport) {
 						// create candidate
-						BinaryItemSet candidate = new BinaryItemSet(outputVector,
-								generation);
+						BinaryItemSet candidate = new BinaryItemSet(
+								outputVector, generation);
 						output.add(candidate);
 					}
 				}
@@ -145,11 +156,40 @@ public class BinarySetsEngine implements ISetsEngine {
 	 * org.put.hd.dmarf.algorithms.apriori.binary.ISetsEngine#verifyCandidatesInData
 	 * (org.put.hd.dmarf.data.DataRepresentationBase, java.util.Set)
 	 */
-	public SortedMap<BinaryItemSet,Integer> verifyCandidatesInData(
-			DataRepresentationBase data, Set<BinaryItemSet> candidates) {
-		// TODO Auto-generated method stub
-		// TUTAJ SPRAWDZANIE MINIG SUPPORT KTORY MA WYLECIEC NA GPU
-		return null;
+	public SortedMap<BinaryItemSet, Integer> verifyCandidatesInData(
+			DataRepresentationBase data, Set<BinaryItemSet> candidates,
+			Integer support) {
+
+		// initialize the output map
+		SortedMap<BinaryItemSet, Integer> outputSM = new TreeMap<BinaryItemSet, Integer>();
+
+		for (BinaryItemSet item : candidates) {
+
+			// get support for item and add if bigger than support minimal value
+			int value = getSupport(data, item.getAttributeVector());
+			if (value >= support) {
+				outputSM.put(item, value);
+			}
+		}
+		return outputSM;
+	}
+
+	private int getSupport(DataRepresentationBase data, char[] candidateSet) {
+		int numberOfAttClusters = data.getNumberOfAttributesClusters();
+		int supportInData = 0;
+
+		char[] transactionsMap = data.getTransactionsCharMap();
+		for (int i = 0; i < data.getNumberOfTransactions(); i++) {
+			char flag = 0;
+			for (int j = 0; j < numberOfAttClusters; j++) {
+				flag = (char) (flag | (((candidateSet[j] & transactionsMap[i
+						* numberOfAttClusters + j]) ^ candidateSet[j])));
+			}
+			if (flag == 0) {
+				supportInData++;
+			}
+		}
+		return supportInData;
 	}
 
 }

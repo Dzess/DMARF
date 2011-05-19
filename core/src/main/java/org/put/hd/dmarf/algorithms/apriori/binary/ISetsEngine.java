@@ -26,6 +26,6 @@ public interface ISetsEngine {
 	 * @return
 	 */
 	public SortedMap<BinaryItemSet,Integer> verifyCandidatesInData(
-			DataRepresentationBase data, Set<BinaryItemSet> candidates);
+			DataRepresentationBase data, Set<BinaryItemSet> candidates, Integer support);
 
 }

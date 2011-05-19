@@ -1,5 +1,6 @@
 package org.put.hd.dmarf.algorithms.apriori.binary;
 
+import java.util.Collection;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.SortedMap;
@@ -38,8 +39,8 @@ public class BinaryRuleEngine {
 
 		// create the veto list of elements that can be placed in conditional
 		// part of the rule
-		List<BinaryItemSet> vetoSets = new LinkedList<BinaryItemSet>();
-		List<BinaryItemSet> nextSets = getAllSets(itemSet.getAttributeVector());
+		Collection<BinaryItemSet> vetoSets = new LinkedList<BinaryItemSet>();
+		Collection<BinaryItemSet> nextSets =  BinaryItemSet.divideSet(itemSet);
 
 		// to search for all the combinations of the frequency sets
 		// but only n-1 goes down is possible up to the two element sets
@@ -48,8 +49,7 @@ public class BinaryRuleEngine {
 
 			// FIXME: this can be faster here i guess
 			// get the all (n-1 elemented) sets, from the accepted set elements
-			List<BinaryItemSet> smallerSets = new LinkedList<BinaryItemSet>(
-					nextSets);
+			List<BinaryItemSet> smallerSets = new LinkedList<BinaryItemSet>(nextSets);
 
 			// checking if the set in the next is not in the veto list
 			// FIXME: it is optimization possibility
@@ -70,16 +70,14 @@ public class BinaryRuleEngine {
 					itemSetRules.add(rule);
 
 					// mark the set as the one to further rule implications
-					List<BinaryItemSet> sets = getAllSets(currentSet
-							.getAttributeVector());
+					Collection<BinaryItemSet> sets = BinaryItemSet.divideSet(currentSet);
 					if (sets != null)
 						nextSets.addAll(sets);
 				} else {
 
 					// add all n-1 sets created from this set to the veto guys,
 					// those wont be checked against the data
-					List<BinaryItemSet> sets = getAllSets(currentSet
-							.getAttributeVector());
+					Collection<BinaryItemSet> sets = BinaryItemSet.divideSet(currentSet);
 
 					if (sets != null)
 						vetoSets.addAll(sets);
@@ -130,11 +128,5 @@ public class BinaryRuleEngine {
 		return rule;
 	}
 
-	private List<BinaryItemSet> getAllSets(char[] attributeVector) {
-		// TODO Auto-generated method stub
-		// TO JEST JAKIŒ HARDCORE DO ZAKODZENIA NORMALNIE ;)
-		// BO TEGO SIÊ NIE DA JAKOŒ £ATWO OKDRÊCIÆ
-		return null;
-	}
 
 }
