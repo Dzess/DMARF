@@ -95,7 +95,6 @@ public class JOCLSetsEngine implements ISetsEngine {
 		return null;
 	}
 
-	@Override
 	public void initEngine(DataRepresentationBase data) {
 
 		long numBytes[] = new long[1];

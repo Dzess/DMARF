@@ -42,6 +42,22 @@ public class BinaryItemSet implements Comparable<BinaryItemSet> {
 		}
 	}
 
+	@Override
+	public String toString() {
+		StringBuilder builder = new StringBuilder();
+
+		builder.append("\nItem Set\n");
+		builder.append("Attribute vector: \n");
+		for (int i = 0; i < this.numberOfAttributes; i++) {
+			String chunk = Integer.toBinaryString(this.attributeVector[i]);
+			builder.append("Chunk" + i);
+			builder.append(chunk);
+			builder.append('\n');
+		}
+
+		return builder.toString();
+	}
+
 	/**
 	 * Gets the vector describing the attributes in binary format, using 16 bit
 	 * chunks of data.

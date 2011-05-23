@@ -28,7 +28,7 @@ public class BinaryApriori extends AlgorithmBase {
 
 	private ISetsEngine binaryEngine;
 	private SortedMap<BinaryItemSet, Integer> frequentSet;
-	private BinaryRuleEngine binaryRuleEngine;
+	private IRulesEngine binaryRuleEngine;
 
 	/**
 	 * Constructor. Initializes the default engines for data mining. Mainly
@@ -40,7 +40,7 @@ public class BinaryApriori extends AlgorithmBase {
 	 * @param binaryEngine
 	 *            : engine that will be used for creating sets
 	 */
-	public BinaryApriori(BinaryRuleEngine binaryRuleEngine,
+	public BinaryApriori(IRulesEngine binaryRuleEngine,
 			ISetsEngine binaryEngine) {
 		this.binaryEngine = binaryEngine;
 		this.binaryRuleEngine = binaryRuleEngine;
@@ -55,10 +55,6 @@ public class BinaryApriori extends AlgorithmBase {
 		// for each frequent set
 		// MT: this can be paralyzed quite easy
 		for (Map.Entry<BinaryItemSet, Integer> entry : frequentSet.entrySet()) {
-
-			// one element sets are bad ;) so avoid them
-			// if (entry.getKey().getAttributeVector()().size() < 2)
-			// continue;
 
 			// generate possible rules for this frequent set
 			List<Rule> frequentSetRules = this.binaryRuleEngine.getRules(

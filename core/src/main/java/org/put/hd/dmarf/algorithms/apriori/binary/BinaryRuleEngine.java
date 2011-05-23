@@ -15,7 +15,7 @@ import org.put.hd.dmarf.data.DataRepresentationBase;
  * @author Piotr
  * 
  */
-public class BinaryRuleEngine {
+public class BinaryRuleEngine implements IRulesEngine {
 
 	private int ruleCounter = 0;
 	private double minCredibility;
@@ -26,6 +26,15 @@ public class BinaryRuleEngine {
 	 */
 	private final int bitsFactor = 16;
 
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see
+	 * org.put.hd.dmarf.algorithms.apriori.binary.IRulesEngine#getRules(org.
+	 * put.hd.dmarf.algorithms.apriori.binary.BinaryItemSet,
+	 * org.put.hd.dmarf.data.DataRepresentationBase, double,
+	 * java.util.SortedMap)
+	 */
 	public List<Rule> getRules(BinaryItemSet itemSet,
 			DataRepresentationBase data, double minCredibility,
 			SortedMap<BinaryItemSet, Integer> frequentSet) {
@@ -40,7 +49,7 @@ public class BinaryRuleEngine {
 		// create the veto list of elements that can be placed in conditional
 		// part of the rule
 		Collection<BinaryItemSet> vetoSets = new LinkedList<BinaryItemSet>();
-		Collection<BinaryItemSet> nextSets =  BinaryItemSet.divideSet(itemSet);
+		Collection<BinaryItemSet> nextSets = BinaryItemSet.divideSet(itemSet);
 
 		// to search for all the combinations of the frequency sets
 		// but only n-1 goes down is possible up to the two element sets
@@ -49,7 +58,8 @@ public class BinaryRuleEngine {
 
 			// FIXME: this can be faster here i guess
 			// get the all (n-1 elemented) sets, from the accepted set elements
-			List<BinaryItemSet> smallerSets = new LinkedList<BinaryItemSet>(nextSets);
+			List<BinaryItemSet> smallerSets = new LinkedList<BinaryItemSet>(
+					nextSets);
 
 			// checking if the set in the next is not in the veto list
 			// FIXME: it is optimization possibility
@@ -70,14 +80,16 @@ public class BinaryRuleEngine {
 					itemSetRules.add(rule);
 
 					// mark the set as the one to further rule implications
-					Collection<BinaryItemSet> sets = BinaryItemSet.divideSet(currentSet);
+					Collection<BinaryItemSet> sets = BinaryItemSet
+							.divideSet(currentSet);
 					if (sets != null)
 						nextSets.addAll(sets);
 				} else {
 
 					// add all n-1 sets created from this set to the veto guys,
 					// those wont be checked against the data
-					Collection<BinaryItemSet> sets = BinaryItemSet.divideSet(currentSet);
+					Collection<BinaryItemSet> sets = BinaryItemSet
+							.divideSet(currentSet);
 
 					if (sets != null)
 						vetoSets.addAll(sets);
@@ -88,7 +100,16 @@ public class BinaryRuleEngine {
 		return itemSetRules;
 	}
 
-	private Rule createRuleFromItemSet(BinaryItemSet itemSet,
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see
+	 * org.put.hd.dmarf.algorithms.apriori.binary.IRulesEngine#getRules(org.
+	 * put.hd.dmarf.algorithms.apriori.binary.BinaryItemSet,
+	 * org.put.hd.dmarf.data.DataRepresentationBase, double,
+	 * java.util.SortedMap)
+	 */
+	public Rule createRuleFromItemSet(BinaryItemSet itemSet,
 			BinaryItemSet currentSet, double confidance, int suportXY) {
 
 		List<Integer> condPart = new LinkedList<Integer>();
@@ -127,6 +148,5 @@ public class BinaryRuleEngine {
 
 		return rule;
 	}
-
 
 }

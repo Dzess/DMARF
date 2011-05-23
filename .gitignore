@@ -2,6 +2,7 @@
 .project
 .metadata/
 .settings/
+presentation/
 target/
 kosarak.dat
 mushroom.dat

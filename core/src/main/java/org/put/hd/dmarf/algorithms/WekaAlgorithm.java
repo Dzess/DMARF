@@ -61,19 +61,17 @@ public class WekaAlgorithm implements IAlgorithm {
 		return stopWatch.getElapsedTimeSecs();
 	}
 
-	@Override
 	public double getElapsedTimeInitialization() {
-		// TODO Auto-generated method stub
-		return 0;
-	}	
-	
+		return stopWatch.getElapsedTimeSecs();
+	}
+
 	public void start(DataRepresentationBase data, double minSupport,
 			double minCredibility) {
 
 		stopWatch.start();
-		
+
 		// for future things
-		this.minSupport = Math.ceil( minSupport * data.getTransactions().size());
+		this.minSupport = Math.ceil(minSupport * data.getTransactions().size());
 		this.minCredibility = minCredibility;
 
 		generateAttributes(data);
@@ -84,7 +82,7 @@ public class WekaAlgorithm implements IAlgorithm {
 		apriori.setLowerBoundMinSupport(minSupport);
 		apriori.setTreatZeroAsMissing(true);
 		apriori.setNumRules(Integer.MAX_VALUE);
-		//apriori.setVerbose(true);
+		// apriori.setVerbose(true);
 
 		// no upper bound for support
 		apriori.setUpperBoundMinSupport(1);
@@ -158,11 +156,10 @@ public class WekaAlgorithm implements IAlgorithm {
 		for (AssociationRule rule : rules.getRules()) {
 
 			// skip the rule if weka generates too many of them
-			if( rule.getTotalSupport() < this.minSupport )
-			{
+			if (rule.getTotalSupport() < this.minSupport) {
 				continue;
 			}
-			
+
 			Collection<Item> premise = rule.getPremise();
 			List<Integer> conditional = new LinkedList<Integer>();
 			getRulePart(premise, conditional);
@@ -196,7 +193,5 @@ public class WekaAlgorithm implements IAlgorithm {
 			conditional.add(element);
 		}
 	}
-
-
 
 }
