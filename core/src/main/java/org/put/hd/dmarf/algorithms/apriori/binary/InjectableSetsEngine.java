@@ -4,6 +4,7 @@ import java.util.Set;
 import java.util.SortedMap;
 
 import org.put.hd.dmarf.data.DataRepresentationBase;
+import org.put.hd.dmarf.data.InjectableDataRepresentation;
 
 /**
  * This class uses the various {@see ISetsEngine} to compose the one
@@ -50,6 +51,20 @@ public class InjectableSetsEngine implements ISetsEngine {
 		// pass to engine below
 		return this.verifierEngine.verifyCandidatesInData(data, candidates,
 				support);
+	}
+
+	@Override
+	public void initEngine(DataRepresentationBase data) {
+		this.candidateEngine.initEngine(data);
+		this.verifierEngine.initEngine(data);
+		
+	}
+
+	@Override
+	public void cleanupEngine() {
+		this.candidateEngine.cleanupEngine();
+		this.verifierEngine.cleanupEngine();
+		
 	}
 
 }

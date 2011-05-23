@@ -192,4 +192,16 @@ public class BinarySetsEngine implements ISetsEngine {
 		return supportInData;
 	}
 
+	@Override
+	public void initEngine(DataRepresentationBase data) {
+		// This Engine does not require init.
+
+	}
+
+	@Override
+	public void cleanupEngine() {
+		// This Engine does not require cleanup.
+		
+	}
+
 }

@@ -300,4 +300,16 @@ public class AprioriNST extends AlgorithmBase {
 		return rules;
 	}
 
+	@Override
+	protected void initMemory(DataRepresentationBase data) {
+		// This algorithm does not require init.
+		
+	}
+
+	@Override
+	protected void cleanupMemory() {
+		// This algorithm does not require cleanup.
+		
+	}
+
 }

@@ -6,7 +6,7 @@ public interface IStopWatch {
 	 * Starts the time counting.
 	 */
 	public void start();
-	
+
 	/**
 	 * Stops the time counting.
 	 */
@@ -14,6 +14,7 @@ public interface IStopWatch {
 
 	/**
 	 * Returns the elapsed time in seconds.
+	 * 
 	 * @return Elapsed time since start in seconds.
 	 */
 	public double getElapsedTimeSecs();

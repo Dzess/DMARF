@@ -44,6 +44,8 @@ public class JOCLSetsEngineTest {
 	@Test
 	public void jocl_speedup_test() {
 
+		System.out
+				.println("Loading data into 123456789 number of different representations in Java. Be patient...");
 		// perform test
 		String pathToFile = "resources" + File.separator + "data"
 				+ File.separator + "mushroom.dat";
@@ -56,9 +58,9 @@ public class JOCLSetsEngineTest {
 		// >>>
 		List<Integer> set = new LinkedList<Integer>();
 
-		for (int l = 0; l <1; l++) {
-			set.add(r.nextInt(maxAtt)+1);
-		}	
+		for (int l = 0; l < 1; l++) {
+			set.add(r.nextInt(maxAtt) + 1);
+		}
 		char[] candidateSet = BasicDataBuilder.generateCharArray(set,
 				data.getMaxAttAligned());
 
@@ -67,7 +69,7 @@ public class JOCLSetsEngineTest {
 		int supportInData = 0;
 		sw.start();
 		for (int k = 0; k < howMany; k++) {
-		
+
 			supportInData = 0;
 			char[] transactionsMap = data.getTransactionsCharMap();
 			for (int i = 0; i < data.getNumberOfTransactions(); i++) {
@@ -86,11 +88,10 @@ public class JOCLSetsEngineTest {
 				+ supportInData);
 		System.out.println("CPU running time: " + sw.getElapsedTime() / 1000.0);
 
-		
 		System.out.println("GPU Test");
 
 		sw.start();
-		joclEngine.initCL(data);
+		joclEngine.initEngine(data);
 		sw.stop();
 		System.out.println(sw.getElapsedTime() / 1000.0
 				+ " <- Time to initialize and upload transactions Matrix.");
@@ -104,7 +105,7 @@ public class JOCLSetsEngineTest {
 		System.out.println(sw.getElapsedTime() / 1000.0
 				+ " <- Time to find support " + howMany + " times.");
 		System.out.println("Supporting transactions = " + supp);
-		joclEngine.cleanupCL();
+		joclEngine.cleanupEngine();
 
 	}
 }

@@ -33,5 +33,17 @@ public class RandomAlgorithm extends AlgorithmBase {
 		// NOTE: in this method there is no such step
 	}
 
+	@Override
+	protected void initMemory(DataRepresentationBase data) {
+		// Auto-generated method stub
+		
+	}
+
+	@Override
+	protected void cleanupMemory() {
+		// Auto-generated method stub
+		
+	}
+
 
 }

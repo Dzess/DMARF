@@ -23,6 +23,12 @@ public interface IAlgorithm {
 	public double getElapsedTimeGeneration();
 	
 	/**
+	 * Gets the time of loading data into relevant memory. 
+	 * @return time of algorithm operations in seconds.
+	 */
+	public double getElapsedTimeInitialization();	
+	
+	/**
 	 * Starts the algorithm using the passed data.
 	 * @param data. Data representation
 	 * @param minSupport. Minimal support.

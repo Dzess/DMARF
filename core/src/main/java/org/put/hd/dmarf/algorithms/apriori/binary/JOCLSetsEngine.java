@@ -55,7 +55,7 @@ public class JOCLSetsEngine implements ISetsEngine {
 	private long local_work_size[];
 
 	private DataRepresentationBase data;
-	
+
 	private StopWatch sw;
 	private boolean hasRun = false;
 
@@ -66,26 +66,26 @@ public class JOCLSetsEngine implements ISetsEngine {
 		return null;
 	}
 
-	public SortedMap<BinaryItemSet,Integer> verifyCandidatesInData(
-			DataRepresentationBase data, Set<BinaryItemSet> candidates, Integer supportThreshold) {
-		
+	public SortedMap<BinaryItemSet, Integer> verifyCandidatesInData(
+			DataRepresentationBase data, Set<BinaryItemSet> candidates,
+			Integer supportThreshold) {
+
 		// initialize the output map
 		SortedMap<BinaryItemSet, Integer> outputSM = new TreeMap<BinaryItemSet, Integer>();
-		
+
 		// do not upload data before each mining
-		if(!hasRun)
-			initCL(data);
-		
+		if (!hasRun)
+			initEngine(data);
+
 		for (BinaryItemSet item : candidates) {
-			
+
 			// get support for item and add if bigger than support minimal value
 			int value = getSupport(item.getAttributeVector());
-			if(value >= supportThreshold)
-			{
+			if (value >= supportThreshold) {
 				outputSM.put(item, value);
 			}
 		}
-		
+
 		hasRun = true;
 		return outputSM;
 	}
@@ -95,10 +95,8 @@ public class JOCLSetsEngine implements ISetsEngine {
 		return null;
 	}
 
-	/**
-	 * Initialize OpenCL: Create the context, the command queue and the kernel.
-	 */
-	public void initCL(DataRepresentationBase data) {
+	@Override
+	public void initEngine(DataRepresentationBase data) {
 
 		long numBytes[] = new long[1];
 
@@ -195,6 +193,7 @@ public class JOCLSetsEngine implements ISetsEngine {
 
 		global_work_size = new long[] { transCharMap.length };
 		local_work_size = new long[] { data.getNumberOfAttributesClusters() };
+
 	}
 
 	/**
@@ -258,7 +257,7 @@ public class JOCLSetsEngine implements ISetsEngine {
 
 		int supp = 0;
 		for (int i = 0; i < outSuppCharArray.length; i++) {
-			//System.out.println((int) outSuppCharArray[i] + " ");
+			// System.out.println((int) outSuppCharArray[i] + " ");
 			if (outSuppCharArray[i] == 0)
 				supp++;
 		}
@@ -270,7 +269,7 @@ public class JOCLSetsEngine implements ISetsEngine {
 		return supp;
 	}
 
-	public void cleanupCL() {
+	public void cleanupEngine() {
 
 		// Release kernel, program, and memory objects
 		System.out.println("Releasing objects.");

@@ -122,4 +122,17 @@ public class BinaryApriori extends AlgorithmBase {
 		return rules;
 	}
 
+	@Override
+	protected void initMemory(DataRepresentationBase data) {
+		binaryEngine.initEngine(data);
+		
+	}
+
+	@Override
+	protected void cleanupMemory() {
+		binaryEngine.cleanupEngine();
+		
+	}
+
+
 }

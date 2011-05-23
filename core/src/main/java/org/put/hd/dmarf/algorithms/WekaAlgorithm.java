@@ -61,6 +61,12 @@ public class WekaAlgorithm implements IAlgorithm {
 		return stopWatch.getElapsedTimeSecs();
 	}
 
+	@Override
+	public double getElapsedTimeInitialization() {
+		// TODO Auto-generated method stub
+		return 0;
+	}	
+	
 	public void start(DataRepresentationBase data, double minSupport,
 			double minCredibility) {
 
@@ -190,5 +196,7 @@ public class WekaAlgorithm implements IAlgorithm {
 			conditional.add(element);
 		}
 	}
+
+
 
 }

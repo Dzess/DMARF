@@ -36,8 +36,8 @@ public class ProductionAlgorithmFactory implements IAlgorithmFactory {
 		algorithms.add(new AprioriNST());
 
 		// Standard CPU implementation of binary apriori
-		algorithms.add(new BinaryApriori(new BinaryRuleEngine(),
-				new BinarySetsEngine()));
+		// TODO: Fix this!
+		algorithms.add(new BinaryApriori(new BinaryRuleEngine(),new BinarySetsEngine()));
 
 		// CPU based apriori with support mining on GPU
 //		 setsEngine = new InjectableSetsEngine(
