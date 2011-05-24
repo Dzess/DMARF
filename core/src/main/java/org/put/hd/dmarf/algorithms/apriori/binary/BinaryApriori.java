@@ -40,8 +40,7 @@ public class BinaryApriori extends AlgorithmBase {
 	 * @param binaryEngine
 	 *            : engine that will be used for creating sets
 	 */
-	public BinaryApriori(IRulesEngine binaryRuleEngine,
-			ISetsEngine binaryEngine) {
+	public BinaryApriori(IRulesEngine binaryRuleEngine, ISetsEngine binaryEngine) {
 		this.binaryEngine = binaryEngine;
 		this.binaryRuleEngine = binaryRuleEngine;
 	}
@@ -58,7 +57,7 @@ public class BinaryApriori extends AlgorithmBase {
 
 			// generate possible rules for this frequent set
 			List<Rule> frequentSetRules = this.binaryRuleEngine.getRules(
-					entry.getKey(), data, minCredibility, frequentSet);
+					entry.getKey(), minCredibility, frequentSet);
 
 			rules.addAll(frequentSetRules);
 		}
@@ -121,14 +120,13 @@ public class BinaryApriori extends AlgorithmBase {
 	@Override
 	protected void initMemory(DataRepresentationBase data) {
 		binaryEngine.initEngine(data);
-		
+
 	}
 
 	@Override
 	protected void cleanupMemory() {
 		binaryEngine.cleanupEngine();
-		
-	}
 
+	}
 
 }

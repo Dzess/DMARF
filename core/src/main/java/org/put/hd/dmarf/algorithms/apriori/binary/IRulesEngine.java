@@ -13,8 +13,6 @@ public interface IRulesEngine {
 	 * 
 	 * @param itemSet
 	 *            : the frequent set from which the rule has to be inferred.
-	 * @param data
-	 *            : data used to mine the rule.
 	 * @param minCredibility
 	 *            : Metrics of the rule, in our case also named
 	 *            <i>Confidence</i>.
@@ -22,8 +20,7 @@ public interface IRulesEngine {
 	 *            : {@link SortedMap} used for storing frequent set values.
 	 * @return list of rules inferred from this frequent set.
 	 */
-	public List<Rule> getRules(BinaryItemSet itemSet,
-			DataRepresentationBase data, double minCredibility,
+	public List<Rule> getRules(BinaryItemSet itemSet, double minCredibility,
 			SortedMap<BinaryItemSet, Integer> frequentSet);
 
 	/**

@@ -18,7 +18,6 @@ import org.put.hd.dmarf.data.DataRepresentationBase;
 public class BinaryRuleEngine implements IRulesEngine {
 
 	private int ruleCounter = 0;
-	private double minCredibility;
 
 	/**
 	 * Number of bits per chunk. Using the datatype {@link Character} the number
@@ -35,16 +34,22 @@ public class BinaryRuleEngine implements IRulesEngine {
 	 * org.put.hd.dmarf.data.DataRepresentationBase, double,
 	 * java.util.SortedMap)
 	 */
-	public List<Rule> getRules(BinaryItemSet itemSet,
-			DataRepresentationBase data, double minCredibility,
+	public List<Rule> getRules(BinaryItemSet itemSet, double minCredibility,
 			SortedMap<BinaryItemSet, Integer> frequentSet) {
 
-		// save some of the features
-		this.minCredibility = minCredibility;
 		List<Rule> itemSetRules = new LinkedList<Rule>();
 
 		// all rule item set support (FOR THE WHOLE RULE)
 		int suportXY = frequentSet.get(itemSet);
+
+		// check if the set passed is the at least two element set
+		for (char elements : itemSet.getAttributeVector()) {
+			int count = bitcount(elements);
+
+			// for one and two element sets return the empty list
+			if (count == 0 || count == 1)
+				return itemSetRules;
+		}
 
 		// create the veto list of elements that can be placed in conditional
 		// part of the rule
@@ -112,32 +117,40 @@ public class BinaryRuleEngine implements IRulesEngine {
 	public Rule createRuleFromItemSet(BinaryItemSet itemSet,
 			BinaryItemSet currentSet, double confidance, int suportXY) {
 
+		if (itemSet.getNumberOfAttributes() == 0
+				|| currentSet.getNumberOfAttributes() == 0)
+			throw new RuntimeException("The empty set cannot be passed");
+
 		List<Integer> condPart = new LinkedList<Integer>();
 		List<Integer> exePart = new LinkedList<Integer>();
 
 		char[] vectorAll = itemSet.getAttributeVector();
 		char[] vectorPremise = currentSet.getAttributeVector();
 
-		// FIXME: this method sucks, could be used faster approach
+		// FIXME: this method sucks, could be used faster approach (using
+		// bitwise
+		// operations such as AND,XOR
 		// write reading the attribute vector and putting those elements
 		// into the lists
 		for (int i = 0; i < vectorPremise.length; i++) {
 
-			// this gets the binary representation - can be fasten using some
-			// bitwise tricks
-			char[] binaryAll = Integer.toBinaryString(vectorAll[i])
-					.toCharArray();
-			char[] binaryPremise = Integer.toBinaryString(vectorPremise[i])
-					.toCharArray();
+			// this gets the binary representation
+			char[] binaryAll = getBinaryString(vectorAll[i]);
+			char[] binaryPremise = getBinaryString(vectorPremise[i]);
 
 			for (int j = 0; j < binaryAll.length; j++) {
-				if (binaryAll[j] == 1) {
-					Integer value = (int) Math.pow(2, j + i);
-					if (binaryPremise[j] == 1) {
+
+				if (binaryAll[j] == '1') {
+					Integer value = 16 * i + j + 1;
+					if (binaryPremise[j] == '1') {
 						condPart.add(value);
 					} else {
 						exePart.add(value);
 					}
+				} else {
+					if (binaryPremise[j] == '1')
+						throw new RuntimeException(
+								"Total set is not super set of the passed permise");
 				}
 
 			}
@@ -147,6 +160,49 @@ public class BinaryRuleEngine implements IRulesEngine {
 				(int) (confidance * 100), suportXY);
 
 		return rule;
+	}
+
+	/**
+	 * Get the number of '1' in the binary representation number.
+	 * 
+	 * @param n
+	 *            : number to be looked into.
+	 * @return the number of '1' in the binary representation.
+	 */
+	private int bitcount(char n) {
+		int count = 0;
+		while (n == 0) {
+			count += n & 0x1;
+			n <<= 1;
+		}
+		return count;
+	}
+
+	/**
+	 * Gets the same as the Integer.toBinaryString, but does it with trailing
+	 * zeros at the beginning.
+	 * 
+	 * @param number
+	 *            : the value to be changed into binary representation.
+	 * @return the char[] representation of the passed value.
+	 */
+	private char[] getBinaryString(char number) {
+
+		char value = number;
+
+		char[] output = new char[16];
+
+		// 'read from behind' the standard algorithm
+		for (int i = 0; i < 16; i++) {
+			if (value % 2 == 1) {
+				output[15 - i] = '1';
+			} else {
+				output[15 - i] = '0';
+			}
+			value = (char) (value / 2);
+		}
+
+		return output;
 	}
 
 }

@@ -25,9 +25,8 @@ public class BinaryItemSet implements Comparable<BinaryItemSet> {
 			this.attributeVector[i] = elements[i];
 		}
 
-		// FIXME is this really necessary
 		// get the number of attributes from the attribute vector ?
-		// in a smart way
+		this.numberOfAttributes = this.attributeVector.length;
 	}
 
 	public BinaryItemSet(char[] elements, int numberOfAttributes) {
