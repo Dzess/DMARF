@@ -34,53 +34,61 @@ public class BinaryCanidateGenerator extends BinarySetsEngineTestBase {
 	}
 
 	@Test
-	public void set_partition(){
-		
+	public void set_partition() {
+
 		// input data
 		// 1000 0000 0000 0001 chunk 1 => 32769
 		// 0000 0000 0000 0001 chunk 2 => 1
 		char chunk1 = 32769;
 		char chunk2 = 1;
-		BinaryItemSet inputSet = new BinaryItemSet(new char[]{chunk1,chunk2},3);
-		
+		BinaryItemSet inputSet = new BinaryItemSet(
+				new char[] { chunk1, chunk2 }, 3);
+
 		// expected output (3 sets with 2 chunks)
 		List<BinaryItemSet> expected = new LinkedList<BinaryItemSet>();
-		
+
 		// set 1
 		// 0000 0000 0000 0001 => C1
 		// 0000 0000 0000 0001 => C2
 		chunk1 = 1;
 		chunk2 = 1;
-		BinaryItemSet set1 = new BinaryItemSet(new char[]{chunk1,chunk2},2);
-		
+		BinaryItemSet set1 = new BinaryItemSet(new char[] { chunk1, chunk2 }, 2);
+
 		// set 2
 		// 1000 0000 0000 0000 => C1
 		// 0000 0000 0000 0001 => C2
 		chunk1 = 32768;
 		chunk2 = 1;
-		BinaryItemSet set2 = new BinaryItemSet(new char[]{chunk1,chunk2},2);
-		
+		BinaryItemSet set2 = new BinaryItemSet(new char[] { chunk1, chunk2 }, 2);
+
 		// set 3
 		// 1000 0000 0000 0001 chunk 1 => 32769
 		// 0000 0000 0000 0000 chunk 2 => 0
 		chunk1 = 32769;
 		chunk2 = 0;
-		BinaryItemSet set3 = new BinaryItemSet(new char[]{chunk1,chunk2},2);
-		
+		BinaryItemSet set3 = new BinaryItemSet(new char[] { chunk1, chunk2 }, 2);
+
 		expected.add(set3);
 		expected.add(set2);
 		expected.add(set1);
-		
+
 		// use this feature from BinaryItemSet
 		Collection<BinaryItemSet> result = BinaryItemSet.divideSet(inputSet);
-		
+
 		// assert the output
 		for (BinaryItemSet binaryItemSet : result) {
-			if(!expected.contains(binaryItemSet))
+			if (!expected.contains(binaryItemSet))
 				Assert.fail("The set should be found in the expected sets");
 		}
+
+		// assert generations
+		int expectedNumberOfAttrubutes = 2;
+		for (BinaryItemSet binaryItemSet : result) {
+			Assert.assertEquals(expectedNumberOfAttrubutes,
+					binaryItemSet.getNumberOfAttributes());
+		}
 	}
-	
+
 	@Test
 	public void generatin_level_two_sets_from_one_level_sets() {
 
@@ -110,7 +118,8 @@ public class BinaryCanidateGenerator extends BinarySetsEngineTestBase {
 		frequentSupportMap = engine.getSingleCandidateSets(data, support);
 
 		// go with test
-		Set<BinaryItemSet> result = engine.getCandidateSets(frequentSupportMap.keySet(),1);
+		Set<BinaryItemSet> result = engine.getCandidateSets(
+				frequentSupportMap.keySet(), 1);
 
 		Assert.assertTrue(expecetCandidates.equals(result));
 	}
@@ -121,7 +130,7 @@ public class BinaryCanidateGenerator extends BinarySetsEngineTestBase {
 		// already generated frequent sets
 		frequentSupportMap = new TreeMap<BinaryItemSet, Integer>();
 		char setVector = 0;
-		
+
 		String dataString = "1 2 3";
 		Integer support = 0;
 		// mark the level one sets for the engine
@@ -150,7 +159,8 @@ public class BinaryCanidateGenerator extends BinarySetsEngineTestBase {
 		expecetCandidates.add(set1);
 
 		// go with test
-		Set<BinaryItemSet> result = engine.getCandidateSets(frequentSupportMap.keySet(),1);
+		Set<BinaryItemSet> result = engine.getCandidateSets(
+				frequentSupportMap.keySet(), 1);
 
 		Assert.assertTrue(expecetCandidates.equals(result));
 	}
@@ -159,21 +169,22 @@ public class BinaryCanidateGenerator extends BinarySetsEngineTestBase {
 	public void no_set_can_be_generated_from_current_stage_maximum_generation() {
 		// already generated frequent sets
 		frequentSupportMap = new TreeMap<BinaryItemSet, Integer>();
-		
+
 		String dataString = "1 2 3";
 		Integer support = 0;
 		// mark the level one sets for the engine
 		DataRepresentationBase data = getDataFromString(dataString);
 		engine.getSingleCandidateSets(data, support);
-		
+
 		// 1110 0000 0000 0000
 		char vector = 57344;
-		frequentSupportMap.put(new BinaryItemSet(new char[]{vector}), 1);
+		frequentSupportMap.put(new BinaryItemSet(new char[] { vector }), 1);
 
 		// expected candidate: no candidates
 
 		// go with test
-		Set<BinaryItemSet> result = engine.getCandidateSets(frequentSupportMap.keySet(),1);
+		Set<BinaryItemSet> result = engine.getCandidateSets(
+				frequentSupportMap.keySet(), 1);
 
 		Assert.assertTrue(expecetCandidates.equals(result));
 	}

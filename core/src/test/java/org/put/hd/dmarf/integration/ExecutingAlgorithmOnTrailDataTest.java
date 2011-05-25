@@ -138,8 +138,6 @@ public class ExecutingAlgorithmOnTrailDataTest {
 				Assert.fail("The rule" + rule
 						+ "could not be found in expected rule set.");
 			}
-
-			// TODO: write checking for the vaid
 		}
 
 	}

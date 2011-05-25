@@ -83,14 +83,14 @@ public class BinaryApriori extends AlgorithmBase {
 
 		Set<BinaryItemSet> approvedCandidates = frequentSuppMap.keySet();
 
-		// generate the frequent sets
-		int generation = 0;
+		// generate the frequent sets starting from generation two
+		int generation = 1;
 		while (true) {
 
 			// generate candidates with generation (with the generation)
 			// number of elements in them
 			Set<BinaryItemSet> candidates = this.binaryEngine.getCandidateSets(
-					approvedCandidates, generation++);
+					approvedCandidates, ++generation);
 
 			// verify that all elements in candidate set are eligible for
 			// being the frequent set

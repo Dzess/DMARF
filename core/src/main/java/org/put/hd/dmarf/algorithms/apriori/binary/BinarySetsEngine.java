@@ -119,11 +119,18 @@ public class BinarySetsEngine implements ISetsEngine {
 					int vectorLength = singleVector.length;
 
 					char[] outputVector = new char[vectorLength];
+					int sum = 0;
 					for (int i = 0; i < vectorLength; i++) {
 						// hope it will work
 						outputVector[i] = (char) (vector[i] | singleVector[i]);
+						sum += BinaryItemSet.bitcount(outputVector[i]);
 					}
 
+					// do not add the same set for the second time
+					if(sum == itemSet.getNumberOfAttributes())
+						continue;
+						
+					
 					// check this sets to throw out elements with (g-1) elements
 					// which are not marked frequent
 					// meaning cannot be find in the frequent support map
