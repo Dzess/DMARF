@@ -37,9 +37,9 @@ public class JOCLSetsEngine implements ISetsEngine {
 	private char[] transCharMap;
 
 	// ~support counting vector
-	private Pointer outSuppCharArrayPointer;
-	private cl_mem outSuppCharArrayMem;
-	private char[] outSuppCharArray;
+	private Pointer outSuppLongArrayPointer;
+	private cl_mem outSuppLongArrayMem;
+	private long[] outSuppLongArray;
 
 	// candidateSet Array
 	private cl_mem candSetMem;
@@ -47,9 +47,9 @@ public class JOCLSetsEngine implements ISetsEngine {
 	private char[] candSet;
 
 	// tmp Map
-	private Pointer outMapPointer;
-	private cl_mem outMapMem;
-	private char[] outTestCharMap;
+	private Pointer tmpMapPointer;
+	private cl_mem tmpMapMem;
+	private char[] tmpCharMap;
 
 	private long global_work_size[];
 	private long local_work_size[];
@@ -153,28 +153,29 @@ public class JOCLSetsEngine implements ISetsEngine {
 				| CL_MEM_COPY_HOST_PTR, Sizeof.cl_short * transCharMap.length,
 				transCharMapPointer, null);
 
+		tmpCharMap = new char[transCharMap.length];
+		tmpMapPointer = Pointer.to(tmpCharMap);
+
 		/**
 		 * The source code of the OpenCL support verifying program to execute
 		 */
 		String supportKernelSource = "__kernel void "
-				+ "supportKernel1(__global const ushort *inMap,"
-				+ "             __global const ushort *inSet,"
-				+ "             __global ushort *outMap)" + "{"
+				+ "supportKernel1(__global const ulong *inMap,"
+				+ "             __global const ulong *inSet,"
+				+ "             __global ulong *outMap)" + "{"
 				+ "    int gid = get_global_id(0);"
-				+ "    int grid = get_group_id(0);"
+
 				+ "    int glid = get_local_id(0);"
 				+ "	   outMap[gid] = (inSet[glid] & inMap[gid]) ^ inSet[glid];"
 				+ "}" + "__kernel void "
-				+ "supportKernel2(__global const ushort *inTmpMap,"
-				+ "             __global ushort *outSupp)" + "{"
+				+ "supportKernel2(__global const ulong *inTmpMap,"
+				+ "             __global ulong *outSupp)" + "{"
 				+ "    int gid = get_global_id(0);"
-				+ "    int grid = get_group_id(0);"
-				+ "    int glid = get_local_id(0);"
 				+ "    for (uint pos = 0; pos <"
-				+ data.getNumberOfAttributesClusters() + "; pos++) {"
+				+ data.getNumberOfAttributesClusters() / 4 + "; pos++) {"
 				+ "	       outSupp[gid] = outSupp[gid] | inTmpMap[gid * "
-				+ data.getNumberOfAttributesClusters() + "+ pos];" + "    };"
-				+ "}";
+				+ data.getNumberOfAttributesClusters() / 4 + "+ pos];"
+				+ "    };" + "}";
 
 		// Create the program from the source code
 		program = clCreateProgramWithSource(context, 1,
@@ -205,8 +206,7 @@ public class JOCLSetsEngine implements ISetsEngine {
 	public int getSupport(char[] candidateSet) {
 
 		// preparing candidateSet argument for kernel
-		candSet = candidateSet;
-		candSetPointer = Pointer.to(candSet);
+		candSetPointer = Pointer.to(candidateSet);
 
 		candSetMem = clCreateBuffer(context, CL_MEM_READ_ONLY
 				| CL_MEM_COPY_HOST_PTR,
@@ -214,57 +214,57 @@ public class JOCLSetsEngine implements ISetsEngine {
 				candSetPointer, null);
 
 		// preparing tmpMap argument for kernels
-		outTestCharMap = new char[transCharMap.length];
-		outMapPointer = Pointer.to(outTestCharMap);
 
-		outMapMem = clCreateBuffer(context, CL_MEM_READ_WRITE, Sizeof.cl_short
+		tmpMapMem = clCreateBuffer(context, CL_MEM_READ_WRITE, Sizeof.cl_short
 				* transCharMap.length, null, null);
 
 		clSetKernelArg(kernel1, 1, Sizeof.cl_mem, Pointer.to(candSetMem));
-		clSetKernelArg(kernel1, 2, Sizeof.cl_mem, Pointer.to(outMapMem));
+		clSetKernelArg(kernel1, 2, Sizeof.cl_mem, Pointer.to(tmpMapMem));
 
 		// Execute kernel1
 		// We got a worker per each comparison
-		global_work_size = new long[] { transCharMap.length };
-		local_work_size = new long[] { data.getNumberOfAttributesClusters() };
+		global_work_size[0] = transCharMap.length / 4;
+		local_work_size[0] = data.getNumberOfAttributesClusters() / 4;
 
 		clEnqueueNDRangeKernel(commandQueue, kernel1, 1, null,
 				global_work_size, local_work_size, 0, null, null);
 
 		// preparing data for reduction kernel2
-		outSuppCharArray = new char[data.getNumberOfTransactions()];
-		outSuppCharArrayPointer = Pointer.to(outSuppCharArray);
+		outSuppLongArray = new long[data.getNumberOfTransactions()];
+		outSuppLongArrayPointer = Pointer.to(outSuppLongArray);
 
-		outSuppCharArrayMem = clCreateBuffer(context, CL_MEM_WRITE_ONLY,
-				Sizeof.cl_short * data.getNumberOfTransactions(), null, null);
+		outSuppLongArrayMem = clCreateBuffer(context, CL_MEM_WRITE_ONLY,
+				Sizeof.cl_ulong * data.getNumberOfTransactions(), null, null);
 
-		clSetKernelArg(kernel2, 0, Sizeof.cl_mem, Pointer.to(outMapMem));
+		clSetKernelArg(kernel2, 0, Sizeof.cl_mem, Pointer.to(tmpMapMem));
 		clSetKernelArg(kernel2, 1, Sizeof.cl_mem,
-				Pointer.to(outSuppCharArrayMem));
+				Pointer.to(outSuppLongArrayMem));
 
 		// Execute the reduction kernel with 1 worker per transaction
-		global_work_size = new long[] { data.getNumberOfTransactions() };
-		local_work_size = new long[] { 1 };
+		global_work_size[0] = data.getNumberOfTransactions();
+		local_work_size[0] = 1;
 
 		clEnqueueNDRangeKernel(commandQueue, kernel2, 1, null,
 				global_work_size, local_work_size, 0, null, null);
 
 		// Read the output data
-		clEnqueueReadBuffer(commandQueue, outSuppCharArrayMem, CL_TRUE, 0,
-				data.getNumberOfTransactions() * Sizeof.cl_short,
-				outSuppCharArrayPointer, 0, null, null);
+		clEnqueueReadBuffer(commandQueue, outSuppLongArrayMem, CL_TRUE, 0,
+				data.getNumberOfTransactions() * Sizeof.cl_ulong,
+				outSuppLongArrayPointer, 0, null, null);
+
+		clFinish(commandQueue);
 
 		int supp = 0;
-		for (int i = 0; i < outSuppCharArray.length; i++) {
+		for (int i = 0; i < outSuppLongArray.length; i++) {
 			// System.out.println((int) outSuppCharArray[i] + " ");
-			if (outSuppCharArray[i] == 0)
+			if (outSuppLongArray[i] == 0)
 				supp++;
 		}
 
 		// cleaning gpuMem
 		clReleaseMemObject(candSetMem);
-		clReleaseMemObject(outMapMem);
-		clReleaseMemObject(outSuppCharArrayMem);
+		clReleaseMemObject(tmpMapMem);
+		clReleaseMemObject(outSuppLongArrayMem);
 		return supp;
 	}
 
