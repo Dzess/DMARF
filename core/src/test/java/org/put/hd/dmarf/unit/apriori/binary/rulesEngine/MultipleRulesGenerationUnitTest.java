@@ -79,12 +79,12 @@ public class MultipleRulesGenerationUnitTest {
 		List<Integer> listOne = new LinkedList<Integer>();
 		listOne.add(1);
 		List<Integer> listTwo = new LinkedList<Integer>();
-		listOne.add(16);
+		listTwo.add(16);
 
 		// rule if 1 => 16
-		expectedRules.add(new Rule(0, listOne, listTwo, 1, 1));
+		expectedRules.add(new Rule(1, listOne, listTwo, 50, 1));
 		// rule 16 => 1
-		expectedRules.add(new Rule(0, listTwo, listOne, 1, 1));
+		expectedRules.add(new Rule(0, listTwo, listOne, 50, 1));
 
 		// pass confidence 0 for always true (harvest all possible rules)
 		List<Rule> result = engine.getRules(frequentSet, 0, frequentSetsMap);

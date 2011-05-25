@@ -26,7 +26,11 @@ public class BinaryItemSet implements Comparable<BinaryItemSet> {
 		}
 
 		// get the number of attributes from the attribute vector ?
-		this.numberOfAttributes = this.attributeVector.length;
+		int sum = 0;
+		for (char v : this.attributeVector) {
+			sum += BinaryItemSet.bitcount(v);
+		}
+		this.numberOfAttributes = sum;
 	}
 
 	public BinaryItemSet(char[] elements, int numberOfAttributes) {
@@ -49,7 +53,7 @@ public class BinaryItemSet implements Comparable<BinaryItemSet> {
 		builder.append("Attribute vector: \n");
 		for (int i = 0; i < this.numberOfAttributes; i++) {
 			String chunk = Integer.toBinaryString(this.attributeVector[i]);
-			builder.append("Chunk" + i);
+			builder.append("Chunk: " + i);
 			builder.append(chunk);
 			builder.append('\n');
 		}
@@ -129,6 +133,9 @@ public class BinaryItemSet implements Comparable<BinaryItemSet> {
 			int numberOfAttributes) {
 		Set<BinaryItemSet> output = new LinkedHashSet<BinaryItemSet>();
 
+		if (numberOfAttributes < 2)
+			return output;
+
 		char[] vector = inputSet;
 		int generation = numberOfAttributes;
 		int newGeneration = generation - 1;
@@ -171,5 +178,22 @@ public class BinaryItemSet implements Comparable<BinaryItemSet> {
 	public static Collection<BinaryItemSet> divideSet(BinaryItemSet inputSet) {
 		return divideSet(inputSet.getAttributeVector(),
 				inputSet.getNumberOfAttributes());
+	}
+
+	/**
+	 * Get the number of '1' in the binary representation number.
+	 * 
+	 * @param n
+	 *            : number to be looked into.
+	 * @return the number of '1' in the binary representation.
+	 */
+	public static int bitcount(char x) {
+		// classic shift method
+		int result = 0;
+		for (int i = 0; i < 16; i++) {
+			result += x & 1;
+			x >>>= 1;
+		}
+		return result;
 	}
 }

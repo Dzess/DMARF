@@ -58,23 +58,25 @@ public class BinaryRuleEngine implements IRulesEngine {
 
 		// to search for all the combinations of the frequency sets
 		// but only n-1 goes down is possible up to the two element sets
-		for (int i = 0; i < itemSet.getAttributeVector().length * bitsFactor
-				- 1; i++) {
+		for (int i = 0; i < itemSet.getAttributeVector().length * 16; i++) {
 
-			// FIXME: this can be faster here i guess
-			// get the all (n-1 elemented) sets, from the accepted set elements
+			// this shallow copy CAN be faster
 			List<BinaryItemSet> smallerSets = new LinkedList<BinaryItemSet>(
 					nextSets);
+
+			// reset the next sets
+			nextSets.clear();
 
 			// checking if the set in the next is not in the veto list
 			// FIXME: it is optimization possibility
 
 			// check if they are eligible from confidence measure point of view
+			// checking the premise set (n-1) from the current iteration
 			// MT: this can also be parallel
 			for (BinaryItemSet currentSet : smallerSets) {
 
 				int supportX = frequentSet.get(currentSet);
-				double confidanceXY = suportXY / supportX;
+				double confidanceXY = suportXY / (double) supportX;
 
 				if (confidanceXY >= minCredibility) {
 
@@ -87,7 +89,7 @@ public class BinaryRuleEngine implements IRulesEngine {
 					// mark the set as the one to further rule implications
 					Collection<BinaryItemSet> sets = BinaryItemSet
 							.divideSet(currentSet);
-					if (sets != null)
+					if (sets.size() != 0)
 						nextSets.addAll(sets);
 				} else {
 
@@ -96,7 +98,7 @@ public class BinaryRuleEngine implements IRulesEngine {
 					Collection<BinaryItemSet> sets = BinaryItemSet
 							.divideSet(currentSet);
 
-					if (sets != null)
+					if (sets.size() != 0)
 						vetoSets.addAll(sets);
 				}
 			}
@@ -169,13 +171,14 @@ public class BinaryRuleEngine implements IRulesEngine {
 	 *            : number to be looked into.
 	 * @return the number of '1' in the binary representation.
 	 */
-	private int bitcount(char n) {
-		int count = 0;
-		while (n == 0) {
-			count += n & 0x1;
-			n <<= 1;
+	private int bitcount(char x) {
+		// classic shift method
+		int result = 0;
+		for (int i = 0; i < 16; i++) {
+			result += x & 1;
+			x >>>= 1;
 		}
-		return count;
+		return result;
 	}
 
 	/**
