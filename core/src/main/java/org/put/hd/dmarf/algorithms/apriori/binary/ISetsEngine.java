@@ -1,8 +1,11 @@
 package org.put.hd.dmarf.algorithms.apriori.binary;
 
+import java.io.IOException;
 import java.util.Set;
 import java.util.SortedMap;
 import java.util.SortedSet;
+
+import javax.naming.directory.InvalidAttributesException;
 
 import org.put.hd.dmarf.data.DataRepresentationBase;
 import org.put.hd.dmarf.data.InjectableDataRepresentation;
@@ -23,8 +26,9 @@ public interface ISetsEngine {
 
 	/**
 	 * Initializes the Engine.
+	 * @throws InvalidAttributesException
 	 */
-	public void initEngine(DataRepresentationBase data);
+	public void initEngine(DataRepresentationBase data) throws InvalidAttributesException;
 
 	
 	/**

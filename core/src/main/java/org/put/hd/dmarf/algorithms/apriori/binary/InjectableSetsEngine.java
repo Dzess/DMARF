@@ -3,6 +3,8 @@ package org.put.hd.dmarf.algorithms.apriori.binary;
 import java.util.Set;
 import java.util.SortedMap;
 
+import javax.naming.directory.InvalidAttributesException;
+
 import org.put.hd.dmarf.data.DataRepresentationBase;
 import org.put.hd.dmarf.data.InjectableDataRepresentation;
 
@@ -54,8 +56,14 @@ public class InjectableSetsEngine implements ISetsEngine {
 	}
 
 	public void initEngine(DataRepresentationBase data) {
-		this.candidateEngine.initEngine(data);
-		this.verifierEngine.initEngine(data);
+		try {
+			this.candidateEngine.initEngine(data);
+			this.verifierEngine.initEngine(data);
+		} catch (InvalidAttributesException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+
 		
 	}
 

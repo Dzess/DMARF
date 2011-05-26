@@ -6,6 +6,8 @@ import java.util.Map;
 import java.util.Set;
 import java.util.SortedMap;
 
+import javax.naming.directory.InvalidAttributesException;
+
 import org.put.hd.dmarf.algorithms.AlgorithmBase;
 import org.put.hd.dmarf.algorithms.Rule;
 import org.put.hd.dmarf.data.DataRepresentationBase;
@@ -119,7 +121,12 @@ public class BinaryApriori extends AlgorithmBase {
 
 	@Override
 	protected void initMemory(DataRepresentationBase data) {
-		binaryEngine.initEngine(data);
+		try {
+			binaryEngine.initEngine(data);
+		} catch (InvalidAttributesException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 
 	}
 

@@ -8,10 +8,13 @@ import java.io.BufferedReader;
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStreamReader;
+import java.io.InvalidObjectException;
 import java.util.Arrays;
 import java.util.Set;
 import java.util.SortedMap;
 import java.util.TreeMap;
+
+import javax.naming.directory.InvalidAttributesException;
 
 import org.put.hd.dmarf.data.DataRepresentationBase;
 import org.put.hd.dmarf.stopwatches.StopWatch;
@@ -75,7 +78,12 @@ public class JOCLSetsEngine implements ISetsEngine {
 
 		// do not upload data before each mining
 		if (!hasRun)
-			initEngine(data);
+			try {
+				initEngine(data);
+			} catch (InvalidAttributesException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
 
 		for (BinaryItemSet item : candidates) {
 
@@ -95,12 +103,16 @@ public class JOCLSetsEngine implements ISetsEngine {
 		return null;
 	}
 
-	public void initEngine(DataRepresentationBase data) {
+	public void initEngine(DataRepresentationBase data) throws InvalidAttributesException {
 
 		long numBytes[] = new long[1];
 
 		// Create input- and output data
 		this.data = data;
+		
+		if (data.getNumberOfAttributesClusters() % 4 != 0){
+			throw new InvalidAttributesException("Attribute clusters not aligned to %4");
+		}
 		System.out.println("Getting the charMap");
 		transCharMap = data.getTransactionsCharMap();
 		transCharMapPointer = Pointer.to(transCharMap);

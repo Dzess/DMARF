@@ -5,6 +5,8 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Random;
 
+import javax.naming.directory.InvalidAttributesException;
+
 import org.junit.Before;
 import org.junit.Test;
 import org.put.hd.dmarf.algorithms.apriori.binary.JOCLSetsEngine;
@@ -31,7 +33,7 @@ public class JOCLSetsEngineTest {
 	public void setUp() {
 
 		// use all the normal classes
-		builder = new BasicDataBuilder(128);
+		builder = new BasicDataBuilder(4);
 		formatter = new SimpleDataFormatter(builder);
 		dataloader = new SimpleDataLoader(formatter);
 
@@ -45,7 +47,7 @@ public class JOCLSetsEngineTest {
 	public void jocl_speedup_test() {
 
 		// perform test
-		String filename = "pumsb.dat";
+		String filename = "mushroom.dat";
 		String pathToFile = "resources" + File.separator + "data"
 				+ File.separator + filename;
 		dataloader.setInputFileName(pathToFile);
@@ -76,7 +78,12 @@ public class JOCLSetsEngineTest {
 		System.out.println("GPU Test");
 
 		sw.start();
-		joclEngine.initEngine(data);
+		try {
+			joclEngine.initEngine(data);
+		} catch (InvalidAttributesException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 		sw.stop();
 		System.out.println(sw.getElapsedTime() / 1000.0
 				+ " <- Time to initialize and upload transactions Matrix.");
