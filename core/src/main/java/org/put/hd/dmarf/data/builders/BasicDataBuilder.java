@@ -37,12 +37,30 @@ public class BasicDataBuilder implements IDataRepresentationBuilder {
 	private Map<String, Integer> attributesString;
 
 	// data set parameters
+	private int bitAlignment;
 	private int maxAttIndex;
 	private int alignedMaxAttIndex;
 	private int numberOfAttributesClusters;
 	private int numberOfTransactions;
 
+	/***
+	 * Default constructor with simple attributes clusters alignment for CPU
+	 */
 	public BasicDataBuilder() {
+		this(1);
+	}
+
+	/***
+	 * Creates Data builder with desired attributes clusters alignment.
+	 * 
+	 * @param bitAlignment
+	 *            Suggested:
+	 *            - 0 for clusters alignment to nearest power of 2.            
+	 *            - 1 cluster for CPU computations.
+	 *            - 128 clusters for GPU computations.
+	 */
+	public BasicDataBuilder(int bitAlignment) {
+		this.bitAlignment = bitAlignment;
 
 		// hash map settings
 		initialCapacity = 100;
@@ -141,15 +159,17 @@ public class BasicDataBuilder implements IDataRepresentationBuilder {
 
 		maxAttIndex = attsVector[attsVector.length - 1];
 
-		// we need to align attributes to clusters
-		// numberOfAttributesClusters = (int) Math.ceil(maxAttIndex / 16.0);
-
-		// and align clusters to nice gpu access
-		numberOfAttributesClusters = (int) Math.pow(2, Math.ceil(Math.log(Math
-				.ceil(maxAttIndex / 16.0)) / Math.log(2)));
-
-		// numberOfAttributesClusters = (int) Math.ceil(maxAttIndex / 128.0) *
-		// 8;
+		// we need to align attributes clusters
+		if (bitAlignment == 0) {
+			numberOfAttributesClusters = (int) Math.pow(
+					2,
+					Math.ceil(Math.log(Math.ceil(maxAttIndex / 16.0))
+							/ Math.log(2)));
+		} else {
+			numberOfAttributesClusters = (int) Math.ceil(Math
+					.ceil(maxAttIndex / 16.0) / (double) bitAlignment)
+					* bitAlignment;
+		}
 
 		alignedMaxAttIndex = 16 * numberOfAttributesClusters;
 
