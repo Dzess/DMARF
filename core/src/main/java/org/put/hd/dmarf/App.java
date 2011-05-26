@@ -42,6 +42,8 @@ public class App {
 		}
 
 		// loading data phase
+		// TODO: change the data representation builder into the fancy one
+		// using some kind of algorithms
 		IDataRepresentationBuilder builder = new BasicDataBuilder();
 		IDataFormatter fomratter = new SimpleDataFormatter(builder);
 		IDataLoader loader = new SimpleDataLoader(fomratter);

@@ -153,7 +153,7 @@ public class BasicDataBuilder implements IDataRepresentationBuilder {
 				.ceil(maxAttIndex / 16.0)) / Math.log(2)));
 
 		alignedMaxAttIndex = 16 * numberOfAttributesClusters;
-		
+
 		numberOfTransactions = transactionsList.size();
 
 	}
@@ -219,12 +219,17 @@ public class BasicDataBuilder implements IDataRepresentationBuilder {
 			if ((j + 1) % 16 == 0) { // we've got a cluster to save!
 				char clusterValue = 0;
 				for (int k = 0; k < 16; k++) {
-					clusterValue += Math.pow(2, k)
-							* transactionBitArray[j - k];
+					clusterValue += Math.pow(2, k) * transactionBitArray[j - k];
 				}
 				transactionCharArray[(j + 1) / 16 - 1] = clusterValue;
 			}
 		}
 		return transactionCharArray;
+	}
+
+	public InjectableDataRepresentation getMergedDataRepresentation(
+			InjectableDataRepresentation injectableDataRepresentation) {
+		// This class supports no merge operation
+		throw new RuntimeException("This class supports no merge operation");
 	}
 }
