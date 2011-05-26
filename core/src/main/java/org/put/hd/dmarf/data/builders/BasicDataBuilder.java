@@ -57,7 +57,7 @@ public class BasicDataBuilder implements IDataRepresentationBuilder {
 	 *            Suggested:
 	 *            - 0 for clusters alignment to nearest power of 2.            
 	 *            - 1 cluster for CPU computations.
-	 *            - 128 clusters for GPU computations.
+	 *            - x*4, x>=1, for GPU; best memory access x*128.
 	 */
 	public BasicDataBuilder(int bitAlignment) {
 		this.bitAlignment = bitAlignment;
