@@ -152,8 +152,11 @@ public class BasicDataBuilder implements IDataRepresentationBuilder {
 		numberOfAttributesClusters = (int) Math.pow(2, Math.ceil(Math.log(Math
 				.ceil(maxAttIndex / 16.0)) / Math.log(2)));
 
+		// numberOfAttributesClusters = (int) Math.ceil(maxAttIndex / 128.0) *
+		// 8;
+
 		alignedMaxAttIndex = 16 * numberOfAttributesClusters;
-		
+
 		numberOfTransactions = transactionsList.size();
 
 	}
@@ -203,27 +206,10 @@ public class BasicDataBuilder implements IDataRepresentationBuilder {
 	public static char[] generateCharArray(List<Integer> transaction,
 			int maxAttAligned) {
 
-		int[] transactionBitArray = new int[maxAttAligned];
 		char[] transactionCharArray = new char[maxAttAligned / 16];
-		// add elements to instance from the transaction on the proper place
-		for (int j = 0; j < transactionBitArray.length; j++) {
-
-			// populating with bits
-			if (transaction.contains(j + 1)) {
-				transactionBitArray[j] = 1;
-			} else {
-				transactionBitArray[j] = 0;
-			}
-
-			// populating ByteMap
-			if ((j + 1) % 16 == 0) { // we've got a cluster to save!
-				char clusterValue = 0;
-				for (int k = 0; k < 16; k++) {
-					clusterValue += Math.pow(2, k)
-							* transactionBitArray[j - k];
-				}
-				transactionCharArray[(j + 1) / 16 - 1] = clusterValue;
-			}
+		for (int att : transaction) {
+			transactionCharArray[(att - 1) / 16] |= (1 << (((att % 16)) == 0 ? 0
+					: 16 - (att % 16)));
 		}
 		return transactionCharArray;
 	}
