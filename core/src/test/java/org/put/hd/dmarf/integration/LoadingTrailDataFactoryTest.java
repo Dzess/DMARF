@@ -34,10 +34,27 @@ public class LoadingTrailDataFactoryTest {
 
 	@Mock
 	private IAlgorithm algorithmMock;
+	private Integer fiveAttribute;
+	private Integer fourAttribute;
+	private Integer threeAttribute;
+	private Integer twoAttribute;
+	private Integer oneAttribute;
+	private int numberOfTransactions;
+	private int numberOfAttributes;
 
 	@Before
 	public void set_up() {
 		MockitoAnnotations.initMocks(this);
+
+		// expected values of attributes
+		oneAttribute = 3;
+		twoAttribute = 3;
+		threeAttribute = 3;
+		fourAttribute = 3;
+		fiveAttribute = 2;
+
+		numberOfTransactions = 4;
+		numberOfAttributes = 5;
 
 	}
 
@@ -92,9 +109,10 @@ public class LoadingTrailDataFactoryTest {
 
 	@Test
 	public void algorithm_defines_integer_and_string_representation() {
+
 		List<IDataRepresentationBuilder> list = new LinkedList<IDataRepresentationBuilder>();
 		list.add(new StringDataBuilder());
-		
+
 		Mockito.when(algorithmMock.getRequiredBuilders()).thenReturn(list);
 
 		this.builder = new AlgorithmBasedBuilderFactory(algorithmMock);
@@ -106,19 +124,59 @@ public class LoadingTrailDataFactoryTest {
 		DataRepresentationBase result = dataloader.loadData();
 
 		// assert that created representations is good
-		// TODO: write the assertions
-		Assert.fail("Not yet implemented");
+		Assert.assertEquals(numberOfTransactions, result.getTransactions()
+				.size());
+
+		Assert.assertEquals(oneAttribute, result.getAttributes().get(1));
+		Assert.assertEquals(twoAttribute, result.getAttributes().get(2));
+		Assert.assertEquals(threeAttribute, result.getAttributes().get(3));
+		Assert.assertEquals(fourAttribute, result.getAttributes().get(4));
+		Assert.assertEquals(fiveAttribute, result.getAttributes().get(5));
+
+		Assert.assertEquals(numberOfAttributes, result.getAttributes().keySet()
+				.size());
+
+	}
+
+	@Test
+	public void algorithm_defines_integer_representation() {
+		List<IDataRepresentationBuilder> list = new LinkedList<IDataRepresentationBuilder>();
+		list.add(new StringDataBuilder());
+
+		Mockito.when(algorithmMock.getRequiredBuilders()).thenReturn(list);
+
+		this.builder = new AlgorithmBasedBuilderFactory(algorithmMock);
+
+		// prepare the set of class for loadings
+		dataloader = setUpDataSource();
+
+		// get the test working
+		DataRepresentationBase result = dataloader.loadData();
+
+		// assert that created representations is good
+		Assert.assertEquals(numberOfTransactions, result.getTransactionsList()
+				.size());
+
+		Assert.assertEquals(oneAttribute, result.getAttributesCounter().get(1));
+		Assert.assertEquals(twoAttribute, result.getAttributesCounter().get(2));
+		Assert.assertEquals(threeAttribute, result.getAttributesCounter()
+				.get(3));
+		Assert.assertEquals(fourAttribute, result.getAttributesCounter().get(4));
+		Assert.assertEquals(fiveAttribute, result.getAttributesCounter().get(5));
+
+		Assert.assertEquals(numberOfAttributes, result.getAttributesCounter()
+				.keySet().size());
 	}
 
 	@Test
 	public void algorithm_defines_char_map_representation() {
-		// TODO: write this test
+		// TODO: write asking about checkout representation
 		Assert.fail("Not yet implemented");
 	}
 
 	@Test
 	public void algorithm_defines_the_all_representations() {
-		// TODO: write this test
+		// TODO: write this test about merging
 		Assert.fail("Not yet implemented");
 	}
 }
