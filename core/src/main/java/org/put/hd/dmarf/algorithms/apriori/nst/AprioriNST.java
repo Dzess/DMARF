@@ -16,6 +16,7 @@ import org.put.hd.dmarf.algorithms.AlgorithmBase;
 import org.put.hd.dmarf.algorithms.Rule;
 import org.put.hd.dmarf.data.DataRepresentationBase;
 import org.put.hd.dmarf.data.builders.IDataRepresentationBuilder;
+import org.put.hd.dmarf.data.builders.StringDataBuilder;
 
 import weka.associations.Item;
 
@@ -316,7 +317,7 @@ public class AprioriNST extends AlgorithmBase {
 	public List<IDataRepresentationBuilder> getRequiredBuilders() {
 		List<IDataRepresentationBuilder> builders = new LinkedList<IDataRepresentationBuilder>();
 
-		// TODO: write required builders
+		builders.add(new StringDataBuilder());
 
 		return builders;
 	}

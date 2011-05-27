@@ -11,6 +11,7 @@ import javax.naming.directory.InvalidAttributesException;
 import org.put.hd.dmarf.algorithms.AlgorithmBase;
 import org.put.hd.dmarf.algorithms.Rule;
 import org.put.hd.dmarf.data.DataRepresentationBase;
+import org.put.hd.dmarf.data.builders.BinaryDataBuilder;
 import org.put.hd.dmarf.data.builders.IDataRepresentationBuilder;
 
 /**
@@ -25,13 +26,12 @@ import org.put.hd.dmarf.data.builders.IDataRepresentationBuilder;
 public class BinaryApriori extends AlgorithmBase {
 
 	private List<Rule> rules;
-	private double minSupport;
-	private double minCredibility;
 	private int supportThreshold;
 
 	private ISetsEngine binaryEngine;
 	private SortedMap<BinaryItemSet, Integer> frequentSet;
 	private IRulesEngine binaryRuleEngine;
+	private List<IDataRepresentationBuilder> passedBuilders;
 
 	/**
 	 * Constructor. Initializes the default engines for data mining. Mainly
@@ -46,6 +46,10 @@ public class BinaryApriori extends AlgorithmBase {
 	public BinaryApriori(IRulesEngine binaryRuleEngine, ISetsEngine binaryEngine) {
 		this.binaryEngine = binaryEngine;
 		this.binaryRuleEngine = binaryRuleEngine;
+
+		// TODO: change here passing the builders
+		this.passedBuilders = new LinkedList<IDataRepresentationBuilder>();
+		this.passedBuilders.add(new BinaryDataBuilder());
 	}
 
 	@Override
@@ -70,10 +74,6 @@ public class BinaryApriori extends AlgorithmBase {
 	@Override
 	protected void startSetGeneration(DataRepresentationBase data,
 			double minSupport, double minCredibility) {
-
-		// assign some values
-		this.minSupport = minSupport;
-		this.minCredibility = minCredibility;
 
 		// get the threshold for the minimal support of the frequent set =
 		// ceiling { transactions * percent }
@@ -138,10 +138,9 @@ public class BinaryApriori extends AlgorithmBase {
 	}
 
 	public List<IDataRepresentationBuilder> getRequiredBuilders() {
-		List<IDataRepresentationBuilder> builders = new LinkedList<IDataRepresentationBuilder>();
-		
-		// TODO: write harvesting the right builders
-		
+		List<IDataRepresentationBuilder> builders = new LinkedList<IDataRepresentationBuilder>(
+				passedBuilders);
+
 		return builders;
 	}
 
