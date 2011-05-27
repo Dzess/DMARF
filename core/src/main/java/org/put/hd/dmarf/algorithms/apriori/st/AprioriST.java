@@ -12,6 +12,7 @@ import java.util.TreeSet;
 import org.put.hd.dmarf.algorithms.AlgorithmBase;
 import org.put.hd.dmarf.algorithms.Rule;
 import org.put.hd.dmarf.data.DataRepresentationBase;
+import org.put.hd.dmarf.data.builders.IDataRepresentationBuilder;
 
 /**
  * Much faster version of apriori algorithm using optimized Java structures for
@@ -19,6 +20,8 @@ import org.put.hd.dmarf.data.DataRepresentationBase;
  * is single threaded.
  * 
  * @author Piotr
+ * 
+ * FIXME: this code is not finished YET
  * 
  */
 public class AprioriST extends AlgorithmBase {
@@ -232,6 +235,11 @@ public class AprioriST extends AlgorithmBase {
 	protected void cleanupMemory() {
 		// This algorithm does not require cleanup.
 		
+	}
+
+	public List<IDataRepresentationBuilder> getRequiredBuilders() {
+		// TODO Auto-generated method stub
+		return null;
 	}
 
 }

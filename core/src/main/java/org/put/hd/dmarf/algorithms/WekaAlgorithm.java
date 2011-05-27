@@ -7,6 +7,7 @@ import java.util.LinkedList;
 import java.util.List;
 
 import org.put.hd.dmarf.data.DataRepresentationBase;
+import org.put.hd.dmarf.data.builders.IDataRepresentationBuilder;
 import org.put.hd.dmarf.stopwatches.IStopWatch;
 import org.put.hd.dmarf.stopwatches.StopWatch;
 
@@ -192,6 +193,14 @@ public class WekaAlgorithm implements IAlgorithm {
 			Integer element = Integer.parseInt(s);
 			conditional.add(element);
 		}
+	}
+
+	public List<IDataRepresentationBuilder> getRequiredBuilders() {
+		List<IDataRepresentationBuilder> builders = new LinkedList<IDataRepresentationBuilder>();
+
+		// TODO: write the proper builder requirements
+
+		return builders;
 	}
 
 }

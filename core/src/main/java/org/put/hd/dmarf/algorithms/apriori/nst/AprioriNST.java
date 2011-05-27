@@ -15,6 +15,7 @@ import java.util.TreeSet;
 import org.put.hd.dmarf.algorithms.AlgorithmBase;
 import org.put.hd.dmarf.algorithms.Rule;
 import org.put.hd.dmarf.data.DataRepresentationBase;
+import org.put.hd.dmarf.data.builders.IDataRepresentationBuilder;
 
 import weka.associations.Item;
 
@@ -303,13 +304,21 @@ public class AprioriNST extends AlgorithmBase {
 	@Override
 	protected void initMemory(DataRepresentationBase data) {
 		// This algorithm does not require init.
-		
+
 	}
 
 	@Override
 	protected void cleanupMemory() {
 		// This algorithm does not require cleanup.
-		
+
+	}
+
+	public List<IDataRepresentationBuilder> getRequiredBuilders() {
+		List<IDataRepresentationBuilder> builders = new LinkedList<IDataRepresentationBuilder>();
+
+		// TODO: write required builders
+
+		return builders;
 	}
 
 }

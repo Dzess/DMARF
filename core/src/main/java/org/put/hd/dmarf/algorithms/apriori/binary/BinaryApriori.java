@@ -11,6 +11,7 @@ import javax.naming.directory.InvalidAttributesException;
 import org.put.hd.dmarf.algorithms.AlgorithmBase;
 import org.put.hd.dmarf.algorithms.Rule;
 import org.put.hd.dmarf.data.DataRepresentationBase;
+import org.put.hd.dmarf.data.builders.IDataRepresentationBuilder;
 
 /**
  * Apriori working on the nice features using bit level optimization and
@@ -134,6 +135,14 @@ public class BinaryApriori extends AlgorithmBase {
 	protected void cleanupMemory() {
 		binaryEngine.cleanupEngine();
 
+	}
+
+	public List<IDataRepresentationBuilder> getRequiredBuilders() {
+		List<IDataRepresentationBuilder> builders = new LinkedList<IDataRepresentationBuilder>();
+		
+		// TODO: write harvesting the right builders
+		
+		return builders;
 	}
 
 }

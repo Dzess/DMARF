@@ -3,6 +3,7 @@ package org.put.hd.dmarf.data;
 import java.util.LinkedList;
 import java.util.List;
 
+import org.put.hd.dmarf.algorithms.IAlgorithm;
 import org.put.hd.dmarf.data.builders.IDataRepresentationBuilder;
 
 /**
@@ -17,8 +18,18 @@ public class AlgorithmBasedBuilderFactory implements IDataRepresentationBuilder 
 
 	private List<IDataRepresentationBuilder> representations;
 
-	public AlgorithmBasedBuilderFactory() {
-		representations = new LinkedList<IDataRepresentationBuilder>();
+	public AlgorithmBasedBuilderFactory(IAlgorithm algorithm) {
+
+		if (algorithm == null)
+			throw new NullPointerException(
+					"Null is not applicable value for the IAlgorithm");
+
+		representations = algorithm.getRequiredBuilders();
+
+		if (representations == null || representations.size() == 0) {
+			throw new RuntimeException("Algorithm returned no values");
+		}
+
 	}
 
 	public void addItemInTransaction(Integer itemIdentifier) {
