@@ -13,7 +13,9 @@ import org.mockito.MockitoAnnotations;
 import org.put.hd.dmarf.algorithms.IAlgorithm;
 import org.put.hd.dmarf.data.AlgorithmBasedBuilderFactory;
 import org.put.hd.dmarf.data.DataRepresentationBase;
+import org.put.hd.dmarf.data.builders.BinaryDataBuilder;
 import org.put.hd.dmarf.data.builders.IDataRepresentationBuilder;
+import org.put.hd.dmarf.data.builders.IntegerDataBuilder;
 import org.put.hd.dmarf.data.builders.StringDataBuilder;
 import org.put.hd.dmarf.data.formatters.IDataFormatter;
 import org.put.hd.dmarf.data.formatters.SimpleDataFormatter;
@@ -108,7 +110,7 @@ public class LoadingTrailDataFactoryTest {
 	}
 
 	@Test
-	public void algorithm_defines_integer_and_string_representation() {
+	public void algorithm_defines_string_representation() {
 
 		List<IDataRepresentationBuilder> list = new LinkedList<IDataRepresentationBuilder>();
 		list.add(new StringDataBuilder());
@@ -127,11 +129,11 @@ public class LoadingTrailDataFactoryTest {
 		Assert.assertEquals(numberOfTransactions, result.getTransactions()
 				.size());
 
-		Assert.assertEquals(oneAttribute, result.getAttributes().get(1));
-		Assert.assertEquals(twoAttribute, result.getAttributes().get(2));
-		Assert.assertEquals(threeAttribute, result.getAttributes().get(3));
-		Assert.assertEquals(fourAttribute, result.getAttributes().get(4));
-		Assert.assertEquals(fiveAttribute, result.getAttributes().get(5));
+		Assert.assertEquals(oneAttribute, result.getAttributes().get("1"));
+		Assert.assertEquals(twoAttribute, result.getAttributes().get("2"));
+		Assert.assertEquals(threeAttribute, result.getAttributes().get("3"));
+		Assert.assertEquals(fourAttribute, result.getAttributes().get("4"));
+		Assert.assertEquals(fiveAttribute, result.getAttributes().get("5"));
 
 		Assert.assertEquals(numberOfAttributes, result.getAttributes().keySet()
 				.size());
@@ -141,7 +143,7 @@ public class LoadingTrailDataFactoryTest {
 	@Test
 	public void algorithm_defines_integer_representation() {
 		List<IDataRepresentationBuilder> list = new LinkedList<IDataRepresentationBuilder>();
-		list.add(new StringDataBuilder());
+		list.add(new IntegerDataBuilder());
 
 		Mockito.when(algorithmMock.getRequiredBuilders()).thenReturn(list);
 
@@ -170,13 +172,27 @@ public class LoadingTrailDataFactoryTest {
 
 	@Test
 	public void algorithm_defines_char_map_representation() {
-		// TODO: write asking about checkout representation
-		Assert.fail("Not yet implemented");
+		List<IDataRepresentationBuilder> list = new LinkedList<IDataRepresentationBuilder>();
+		list.add(new BinaryDataBuilder());
+
+		Mockito.when(algorithmMock.getRequiredBuilders()).thenReturn(list);
+
+		this.builder = new AlgorithmBasedBuilderFactory(algorithmMock);
+
+		// prepare the set of class for loadings
+		dataloader = setUpDataSource();
+
+		// get the test working
+		DataRepresentationBase result = dataloader.loadData();
+
+		// assert the result
+		// TODO: check against some meaningful values
+		result.getTransactionsCharMap();
+		result.getMaxAttAligned();
+		result.getMaxAttIndex();
+		result.getNumberOfAttributesClusters();
+
+		Assert.fail("Assertions not yet implemented");
 	}
 
-	@Test
-	public void algorithm_defines_the_all_representations() {
-		// TODO: write this test about merging
-		Assert.fail("Not yet implemented");
-	}
 }

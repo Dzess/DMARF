@@ -1,6 +1,5 @@
 package org.put.hd.dmarf.data;
 
-import java.util.LinkedList;
 import java.util.List;
 
 import org.put.hd.dmarf.algorithms.IAlgorithm;

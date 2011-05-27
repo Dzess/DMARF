@@ -1,5 +1,7 @@
 package org.put.hd.dmarf.data.builders;
 
+import java.util.LinkedHashMap;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 
@@ -16,25 +18,64 @@ import org.put.hd.dmarf.data.InjectableDataRepresentation;
  */
 public class StringDataBuilder implements IDataRepresentationBuilder {
 
-	public void addItemInTransaction(Integer itemIdentifier) {
-		// TODO Auto-generated method stub
+	private LinkedHashMap<String, Integer> attributesString;
+	private LinkedList<List<String>> transactionsString;
+	private LinkedList<String> lastTransactionString;
+	
+	private int initialCapacity;
+	private float loadFactor;
+
+	public StringDataBuilder() {
+
+		// hash map settings
+		initialCapacity = 100;
+		loadFactor = 0.75f;
+
+		this.lastTransactionString = new LinkedList<String>();
+		this.transactionsString = new LinkedList<List<String>>();
+		this.attributesString = new LinkedHashMap<String, Integer>(initialCapacity,loadFactor);
+	}
+
+	public void addItemInTransaction(Integer item) {
+
+		String itemIdentifier = item.toString();
+		// attributes
+		if (!attributesString.containsKey(itemIdentifier)) {
+			attributesString.put(itemIdentifier, 1);
+		} else {
+			Integer element = attributesString.get(itemIdentifier);
+			element += 1;
+			attributesString.put(itemIdentifier, element);
+		}
+
+		// transactions
+		lastTransactionString.add(itemIdentifier);
 
 	}
 
 	public void addTransaction(Integer transactionIdentifier) {
-		// TODO Auto-generated method stub
+		lastTransactionString = new LinkedList<String>();
 
+		transactionsString.add(lastTransactionString);
 	}
 
 	public DataRepresentationBase getDataRepresentation() {
-		// TODO Auto-generated method stub
-		return null;
+		InjectableDataRepresentation result = new InjectableDataRepresentation();
+		injectValues(result);
+
+		return result;
 	}
 
 	public InjectableDataRepresentation getMergedDataRepresentation(
 			InjectableDataRepresentation injectableDataRepresentation) {
-		// TODO Auto-generated method stub
-		return null;
+		injectValues(injectableDataRepresentation);
+
+		return injectableDataRepresentation;
+	}
+
+	private void injectValues(InjectableDataRepresentation result) {
+		result.setAttributes(attributesString);
+		result.setTransactions(transactionsString);
 	}
 
 }
