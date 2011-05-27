@@ -13,6 +13,7 @@ import java.util.TreeSet;
 
 import org.put.hd.dmarf.data.DataRepresentationBase;
 import org.put.hd.dmarf.data.builders.BasicDataBuilder;
+import org.put.hd.dmarf.data.utils.BinaryUtils;
 
 /**
  * Encapsulates all operations for the generating, growing the
@@ -63,8 +64,8 @@ public class BinarySetsEngine implements ISetsEngine {
 				// like that
 				List<Integer> attributeList = new LinkedList<Integer>();
 				attributeList.add(key);
-				char[] vector = BasicDataBuilder.generateCharArray(
-						attributeList, data.getMaxAttAligned());
+				char[] vector = BinaryUtils.generateCharArray(attributeList,
+						data.getMaxAttAligned());
 
 				// just make the item set
 				BinaryItemSet itemSet = new BinaryItemSet(vector, 1);
@@ -127,10 +128,9 @@ public class BinarySetsEngine implements ISetsEngine {
 					}
 
 					// do not add the same set for the second time
-					if(sum == itemSet.getNumberOfAttributes())
+					if (sum == itemSet.getNumberOfAttributes())
 						continue;
-						
-					
+
 					// check this sets to throw out elements with (g-1) elements
 					// which are not marked frequent
 					// meaning cannot be find in the frequent support map
@@ -206,7 +206,7 @@ public class BinarySetsEngine implements ISetsEngine {
 
 	public void cleanupEngine() {
 		// This Engine does not require cleanup.
-		
+
 	}
 
 }

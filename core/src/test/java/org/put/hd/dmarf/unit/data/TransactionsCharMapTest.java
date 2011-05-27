@@ -14,6 +14,7 @@ import org.put.hd.dmarf.data.formatters.IDataFormatter;
 import org.put.hd.dmarf.data.formatters.SimpleDataFormatter;
 import org.put.hd.dmarf.data.loaders.IDataLoader;
 import org.put.hd.dmarf.data.loaders.SimpleDataLoader;
+import org.put.hd.dmarf.data.utils.BinaryUtils;
 
 public class TransactionsCharMapTest {
 
@@ -50,7 +51,7 @@ public class TransactionsCharMapTest {
 		char[] vectorMine = new char[] { 32768 };
 		List<Integer> list = new LinkedList<Integer>();
 		list.add(1);
-		char[] mikiVector = BasicDataBuilder.generateCharArray(list, 16);
+		char[] mikiVector = BinaryUtils.generateCharArray(list, 16);
 
 		Assert.assertArrayEquals(vectorMine, mikiVector);
 	}
@@ -61,7 +62,7 @@ public class TransactionsCharMapTest {
 		char[] vectorMine = new char[] { 256 };
 		List<Integer> list = new LinkedList<Integer>();
 		list.add(8);
-		char[] mikiVector = BasicDataBuilder.generateCharArray(list, 16);
+		char[] mikiVector = BinaryUtils.generateCharArray(list, 16);
 
 		Assert.assertArrayEquals(vectorMine, mikiVector);
 	}
@@ -72,7 +73,7 @@ public class TransactionsCharMapTest {
 		char[] vectorMine = new char[] { 1 };
 		List<Integer> list = new LinkedList<Integer>();
 		list.add(16);
-		char[] mikiVector = BasicDataBuilder.generateCharArray(list, 16);
+		char[] mikiVector = BinaryUtils.generateCharArray(list, 16);
 
 		Assert.assertArrayEquals(vectorMine, mikiVector);
 	}
@@ -90,14 +91,16 @@ public class TransactionsCharMapTest {
 
 		char[] testCharMap = data.getTransactionsCharMap();
 
-		// 1 4 8 16 	 => 37121 0 0 0	=> 1001 0001 0000 0001 0x 0x 0x
-		// 1 2 8 16 	 => 49409 0 0 0	=> 1100 0001 0000 0001 0x 0x 0x
-		// 4 8 16 32 	 => 4353  1 0 0	=> 0001 0001 0000 0001 | 0000 0000 0000 0001 | 0x 0x
-		// 1 2 4 8 16 32 => 53505 1 0 0 => 1101 0001 0000 0001 | 0000 0000 0000 0001 | 0x 0x
-		// 48 			 => 	0 0 1 0 => 0x 0x | 0000 0000 0000 0001 | 0x
+		// 1 4 8 16 => 37121 0 0 0 => 1001 0001 0000 0001 0x 0x 0x
+		// 1 2 8 16 => 49409 0 0 0 => 1100 0001 0000 0001 0x 0x 0x
+		// 4 8 16 32 => 4353 1 0 0 => 0001 0001 0000 0001 | 0000 0000 0000 0001
+		// | 0x 0x
+		// 1 2 4 8 16 32 => 53505 1 0 0 => 1101 0001 0000 0001 | 0000 0000 0000
+		// 0001 | 0x 0x
+		// 48 => 0 0 1 0 => 0x 0x | 0000 0000 0000 0001 | 0x
 
-		char[] expectedCharMap = { 37121, 0, 0, 0, 49409, 0, 0, 0, 4353,
-				1, 0, 0, 53505, 1, 0, 0, 0, 0, 1, 0 };
+		char[] expectedCharMap = { 37121, 0, 0, 0, 49409, 0, 0, 0, 4353, 1, 0,
+				0, 53505, 1, 0, 0, 0, 0, 1, 0 };
 
 		Assert.assertArrayEquals(expectedCharMap, testCharMap);
 
@@ -114,14 +117,16 @@ public class TransactionsCharMapTest {
 
 		char[] testCharMap = data.getTransactionsCharMap();
 
-		// 1 4 15      => 36866 0 0 0 	=> 1001 0000 0000 0010 0x 0x 0x
-		// 1 2 15 	   => 49154 0 0 0 	=> 1100 0000 0000 0010 0x 0x 0x
-		// 4 15 31 	   => 4098  2 0 0 	=> 0001 0000 0000 0010 | 0000 0000 0000 0010 0x 0x
-		// 1 2 4 15 31 => 53250 2 0 0 	=> 1101 0000 0000 0010 | 0000 0000 0000 0010 0x 0x
-		// 47		
-		
-		char[] expectedCharMap = { 36866, 0, 0, 0, 49154, 0, 0, 0, 4098,
-				2, 0, 0, 53250, 2, 0, 0, 0, 0, 2, 0 };
+		// 1 4 15 => 36866 0 0 0 => 1001 0000 0000 0010 0x 0x 0x
+		// 1 2 15 => 49154 0 0 0 => 1100 0000 0000 0010 0x 0x 0x
+		// 4 15 31 => 4098 2 0 0 => 0001 0000 0000 0010 | 0000 0000 0000 0010 0x
+		// 0x
+		// 1 2 4 15 31 => 53250 2 0 0 => 1101 0000 0000 0010 | 0000 0000 0000
+		// 0010 0x 0x
+		// 47
+
+		char[] expectedCharMap = { 36866, 0, 0, 0, 49154, 0, 0, 0, 4098, 2, 0,
+				0, 53250, 2, 0, 0, 0, 0, 2, 0 };
 
 		Assert.assertArrayEquals(expectedCharMap, testCharMap);
 
