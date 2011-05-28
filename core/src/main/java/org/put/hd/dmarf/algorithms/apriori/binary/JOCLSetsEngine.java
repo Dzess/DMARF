@@ -65,6 +65,8 @@ public class JOCLSetsEngine implements ISetsEngine {
 
 	private StopWatch sw;
 	private boolean hasRun = false;
+	private int candSetSize;
+	private long outSupplyLongArraySize;
 
 	public Set<BinaryItemSet> getCandidateSets(
 			Set<BinaryItemSet> frequentSupportMap, int i) {
@@ -118,6 +120,76 @@ public class JOCLSetsEngine implements ISetsEngine {
 			throw new InvalidAttributesException("Attribute clusters not aligned to %4");
 		}
 
+		// Sets up the CPU | GPU profile, which deceives to use and so on
+		setUpPlatforms();
+
+		// Enable exceptions and subsequently omit error checks in this sample
+		CL.setExceptionsEnabled(true);
+
+		// Sets up the devices with configuring context and command queue
+		setUpDevices(numBytes);		
+
+		// Set Up kernel
+		setUpKernels(data);
+		
+		// preparing MapData argument for kernels (read only map)
+		transCharMap = data.getTransactionsCharMap();
+		transCharMapPointer = Pointer.to(transCharMap);
+		transCharMapMem = clCreateBuffer(
+				context, 
+				CL_MEM_READ_ONLY | CL_MEM_COPY_HOST_PTR, 
+				Sizeof.cl_short * transCharMap.length,
+				transCharMapPointer, null);		
+
+		//  Map for writes after kernel1
+		tmpMapMem = clCreateBuffer(
+				context,
+				CL_MEM_READ_WRITE , 
+				Sizeof.cl_short* transCharMap.length,
+				null, null);
+		
+
+		// candidate vector for reads before kernel 1 (allocates with 0)
+		this.candSetSize = Sizeof.cl_short * data.getNumberOfAttributesClusters();
+		this.candSetPointer = Pointer.to(new char[candSetSize]);
+		candSetMem = clCreateBuffer(
+				context,
+				CL_MEM_READ_ONLY | CL_MEM_COPY_HOST_PTR,
+				candSetSize,
+				candSetPointer, null);
+		
+		// Set up supply vector
+		outSuppLongArray = new long[data.getNumberOfTransactions()];
+		outSuppLongArrayPointer = Pointer.to(outSuppLongArray);
+		outSupplyLongArraySize = Sizeof.cl_ulong * data.getNumberOfTransactions();
+		
+		outSuppLongArrayMem = clCreateBuffer(
+				context,
+				CL_MEM_WRITE_ONLY | CL_MEM_COPY_HOST_PTR,
+				outSupplyLongArraySize,
+				outSuppLongArrayPointer, null);
+		
+		// Set up the dimensions for the workers
+		global_work_size = new long[] { transCharMap.length };
+		local_work_size = new long[] { data.getNumberOfAttributesClusters() };
+		
+	}
+
+	private void setUpDevices(long[] numBytes) {
+		// Get the list of GPU devices associated with the context
+		clGetContextInfo(context, CL_CONTEXT_DEVICES, 0, null, numBytes);
+
+		// Obtain the cl_device_id for the first device
+		int numDevices = (int) numBytes[0] / Sizeof.cl_device_id;
+		cl_device_id devices[] = new cl_device_id[numDevices];
+		clGetContextInfo(context, CL_CONTEXT_DEVICES, numBytes[0],
+				Pointer.to(devices), null);
+
+		// Create a command-queue
+		commandQueue = clCreateCommandQueue(context, devices[0], 0, null);
+	}
+
+	private void setUpPlatforms() {
 		// Obtain the number of platforms
 		int numPlatforms[] = new int[1];
 		clGetPlatformIDs(0, null, numPlatforms);
@@ -179,32 +251,9 @@ public class JOCLSetsEngine implements ISetsEngine {
 		if (context == null) {
 			throw new RuntimeException("Could not create the context on the device");
 		}
+	}
 
-		// Enable exceptions and subsequently omit error checks in this sample
-		CL.setExceptionsEnabled(true);
-
-		// Get the list of GPU devices associated with the context
-		clGetContextInfo(context, CL_CONTEXT_DEVICES, 0, null, numBytes);
-
-		// Obtain the cl_device_id for the first device
-		int numDevices = (int) numBytes[0] / Sizeof.cl_device_id;
-		cl_device_id devices[] = new cl_device_id[numDevices];
-		clGetContextInfo(context, CL_CONTEXT_DEVICES, numBytes[0],
-				Pointer.to(devices), null);
-
-		// Create a command-queue
-		commandQueue = clCreateCommandQueue(context, devices[0], 0, null);
-
-
-		// Allocate the memory objects for the input- and output data
-		//System.out.println("Getting the charMap");
-		transCharMap = data.getTransactionsCharMap();
-		transCharMapPointer = Pointer.to(transCharMap);
-
-
-		tmpCharMap = new char[transCharMap.length];
-		tmpMapPointer = Pointer.to(tmpCharMap);
-
+	private void setUpKernels(DataRepresentationBase data) {
 		/**
 		 * The source code of the OpenCL support verifying program to execute
 		 */
@@ -236,12 +285,6 @@ public class JOCLSetsEngine implements ISetsEngine {
 		// Create the kernel
 		kernel1 = clCreateKernel(program, "supportKernel1", null);
 		kernel2 = clCreateKernel(program, "supportKernel2", null);
-
-
-
-		global_work_size = new long[] { transCharMap.length };
-		local_work_size = new long[] { data.getNumberOfAttributesClusters() };
-
 	}
 
 	/**
@@ -256,20 +299,19 @@ public class JOCLSetsEngine implements ISetsEngine {
 		// preparing candidateSet argument for kernel
 		candSetPointer = Pointer.to(candidateSet);
 
-		candSetMem = clCreateBuffer(context, CL_MEM_READ_ONLY
-				| CL_MEM_COPY_HOST_PTR,
-				Sizeof.cl_short * data.getNumberOfAttributesClusters(),
-				candSetPointer, null);
-
-		// preparing MapData argument for kernels
-		transCharMapMem = clCreateBuffer(context, CL_MEM_READ_ONLY
-				| CL_MEM_COPY_HOST_PTR, Sizeof.cl_short * transCharMap.length,
-				transCharMapPointer, null);		
-
-		// allocating buffer for the writes 
-		tmpMapMem = clCreateBuffer(context, CL_MEM_WRITE_ONLY , Sizeof.cl_short
-				* transCharMap.length, null, null);
+//		readVector(data.getNumberOfAttributesClusters(),this.candSetMem,this.candSetSize);
 		
+		// Write the new candidate set vector to the already defined buffer
+		clEnqueueWriteBuffer(commandQueue, // use normal queue
+				candSetMem, // write into candidate memory buffer
+				CL_TRUE, // blocking write
+				0, // offset goes to zero
+				this.candSetSize, // this size of the vector
+				candSetPointer, 0, null, null);
+
+		// DEBUG: (read the tranCharMap)
+//		readTrans();
+//		readVector(data.getNumberOfAttributesClusters(),this.candSetMem,this.candSetSize);
 		
 		// Set the arguments for the kernel
 		clSetKernelArg(kernel1, 0, Sizeof.cl_mem, Pointer.to(transCharMapMem));
@@ -284,21 +326,33 @@ public class JOCLSetsEngine implements ISetsEngine {
 		clEnqueueNDRangeKernel(commandQueue, kernel1, 1, null,
 				global_work_size, local_work_size, 0, null, null);
 
-		// preparing data for reduction kernel2
+		
+		// preparing data for reduction kernel2		
 		outSuppLongArray = new long[data.getNumberOfTransactions()];
 		outSuppLongArrayPointer = Pointer.to(outSuppLongArray);
-
-		outSuppLongArrayMem = clCreateBuffer(context, CL_MEM_WRITE_ONLY,
-				Sizeof.cl_ulong * data.getNumberOfTransactions(), null, null);
+		clEnqueueWriteBuffer(commandQueue, // use normal queue
+				this.outSuppLongArrayMem, // write into candidate memory buffer
+				CL_TRUE, // blocking write
+				0, // offset goes to zero
+				this.outSupplyLongArraySize, // this size of the vector
+				this.outSuppLongArrayPointer, 0, null, null);
+		
+		// DEBUG: (read the tranCharMap)
+//		readSupplyArray();
 
 		clSetKernelArg(kernel2, 0, Sizeof.cl_mem, Pointer.to(tmpMapMem));
 		clSetKernelArg(kernel2, 1, Sizeof.cl_mem,
 				Pointer.to(outSuppLongArrayMem));
-
+		
+		// DEBUG: (read the tranCharMap)
+//		readTrans();
+//		readTmp();
+//		readSupplyArray();
+		
 		// Execute the reduction kernel with 1 worker per transaction
 		global_work_size[0] = data.getNumberOfTransactions();
 		local_work_size[0] = 1;
-
+		
 		clEnqueueNDRangeKernel(commandQueue, kernel2, 1, null,
 				global_work_size, local_work_size, 0, null, null);
 
@@ -316,16 +370,98 @@ public class JOCLSetsEngine implements ISetsEngine {
 				supp++;
 		}
 
+		return supp;
+	}
+
+	private void readSupplyArray() {
+		
+		char[] vector = new char[this.outSuppLongArray.length*4];
+		Pointer vectorPointer = Pointer.to(vector);
+		
+		clEnqueueReadBuffer(
+				commandQueue,
+				this.outSuppLongArrayMem, 
+				CL_TRUE, 0,
+				data.getNumberOfTransactions() * Sizeof.cl_ulong,
+				vectorPointer, 0, null, null);
+	
+		// Print the data with java
+		System.out.println("\n Supply Vector");
+		for (int i = 0; i < vector.length; i++) {
+			System.out.print( new String(BinaryItemSet.getBinaryString(vector[i])) + "\t");
+			if( (i + 1) % 4 == 0)
+				System.out.println("");
+		}
+		System.out.println("");
+	}
+
+	private void readVector(int vector_size, cl_mem mem, long mem_size){
+		
+		char[] vector = new char[vector_size];
+		Pointer vectorPointer = Pointer.to(vector);
+		
+		clEnqueueReadBuffer(
+				commandQueue,
+				mem, 
+				CL_TRUE, 0,
+				mem_size,
+				vectorPointer, 0, null, null);
+	
+		// Print the data with java
+		System.out.println("\nDebuging Vector");
+		for (int i = 0; i < vector.length; i++) {
+			System.out.print( new String(BinaryItemSet.getBinaryString(vector[i])) + "\t");
+		}
+		System.out.println("");
+	}
+	
+	private void readTrans(){
+		
+		// Get the data
+		clEnqueueReadBuffer(
+				commandQueue,
+				transCharMapMem, 
+				CL_TRUE, 0,
+				Sizeof.cl_short * this.transCharMap.length,
+				this.transCharMapPointer, 0, null, null);
+	
+		// Print the data with java
+		System.out.println("\nDebuging Transactions");
+		for (int i = 0; i < transCharMap.length; i++) {
+			System.out.print( new String(BinaryItemSet.getBinaryString(transCharMap[i])) + "\t");
+			if( (i +1) % this.data.getNumberOfAttributesClusters() == 0)
+				System.out.println("");
+		}
+	}
+	
+	private void readTmp(){
+		char[] tmpMap = new char[this.transCharMap.length];
+		Pointer tmpMapPtr = Pointer.to(tmpMap);
+		// Get the data
+		clEnqueueReadBuffer(
+				commandQueue,
+				tmpMapMem, 
+				CL_TRUE, 0,
+				Sizeof.cl_short * this.transCharMap.length,
+				tmpMapPtr, 0, null, null);
+	
+		// Print the data with java
+		System.out.println("\nDebuging Temporary");
+		for (int i = 0; i < transCharMap.length; i++) {
+			System.out.print( new String(BinaryItemSet.getBinaryString(tmpMap[i])) + "\t");
+			if( (i + 1) % this.data.getNumberOfAttributesClusters() == 0)
+				System.out.println("");
+		}
+	}
+	
+	public void cleanupEngine() {
+
 		// cleaning gpuMem
 		clReleaseMemObject(candSetMem);
 		clReleaseMemObject(tmpMapMem);
 		clReleaseMemObject(transCharMapMem);
 		clReleaseMemObject(outSuppLongArrayMem);
-		return supp;
-	}
-
-	public void cleanupEngine() {
-
+		
 		// Release kernel, program, and memory objects
 		System.out.println("Releasing objects.");
 		clReleaseKernel(kernel1);
