@@ -7,6 +7,7 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 
+import org.put.hd.dmarf.algorithms.IAlgorithm;
 import org.put.hd.dmarf.data.DataRepresentationBase;
 import org.put.hd.dmarf.data.InjectableDataRepresentation;
 import org.put.hd.dmarf.data.utils.BinaryUtils;
@@ -17,7 +18,8 @@ import org.put.hd.dmarf.data.utils.BinaryUtils;
  * {@link java.util}
  * 
  * @author Piotr
- * 
+ * @deprecated This class is old an inefficient in memory. Use {@link AlgorithmBasedBuilderFactory} to determine
+ * what kind of representations are needed depending on {@link IAlgorithm}.
  */
 public class BasicDataBuilder implements IDataRepresentationBuilder {
 

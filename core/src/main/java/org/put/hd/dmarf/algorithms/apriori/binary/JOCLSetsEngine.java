@@ -144,7 +144,6 @@ public class JOCLSetsEngine implements ISetsEngine {
 			} catch (CLException e) {
 				// well do nothing now
 			}
-
 			
 			try {
 				result = clGetDeviceIDs(platforms[i], CL_DEVICE_TYPE_CPU, 0,null, null);
@@ -263,13 +262,13 @@ public class JOCLSetsEngine implements ISetsEngine {
 				candSetPointer, null);
 
 		// preparing MapData argument for kernels
-		
 		transCharMapMem = clCreateBuffer(context, CL_MEM_READ_ONLY
 				| CL_MEM_COPY_HOST_PTR, Sizeof.cl_short * transCharMap.length,
 				transCharMapPointer, null);		
 
-		tmpMapMem = clCreateBuffer(context, CL_MEM_READ_WRITE, Sizeof.cl_short
-				* transCharMap.length, tmpMapPointer, null);
+		// allocating buffer for the writes 
+		tmpMapMem = clCreateBuffer(context, CL_MEM_WRITE_ONLY , Sizeof.cl_short
+				* transCharMap.length, null, null);
 		
 		
 		// Set the arguments for the kernel

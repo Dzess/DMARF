@@ -3,7 +3,8 @@ package org.put.hd.dmarf.data.utils;
 import java.util.List;
 
 /**
- * Utility class for creating the binary data from code.
+ * Utility class for creating the binary data from some other form of
+ * representation.
  * @author Ankhazam
  *
  */
