@@ -50,7 +50,7 @@ public class Rule {
 		result = prime * result + confidance;
 		result = prime * result
 				+ ((exectuivePart == null) ? 0 : exectuivePart.hashCode());
-		result = prime * result + id;
+		
 		result = prime * result + support;
 		return result;
 	}

@@ -10,6 +10,7 @@ import java.util.Set;
 import java.util.SortedMap;
 import java.util.SortedSet;
 import java.util.TreeMap;
+import java.util.TreeSet;
 
 import org.put.hd.dmarf.algorithms.AlgorithmBase;
 import org.put.hd.dmarf.algorithms.Rule;
@@ -37,8 +38,7 @@ public class AprioriNST extends AlgorithmBase {
 	protected void startRuleGeneration(DataRepresentationBase data,
 			double minSupport, double minCredibility) {
 
-		rules = new LinkedList<Rule>();
-
+		Set<Rule> rulseSet = new HashSet<Rule>();
 		// for each frequent set
 		// MT: this can be paralyzed quite easy
 		for (Map.Entry<ItemSet, Integer> entry : frequentSet.entrySet()) {
@@ -48,12 +48,13 @@ public class AprioriNST extends AlgorithmBase {
 				continue;
 
 			// generate possible rules for this frequent set
-			List<Rule> frequentSetRules = getRulesFromItemSet(entry.getKey(),
-					data, minCredibility);
+			Set<Rule> itemRuleSet = getRulesFromItemSet(entry.getKey(), data,
+					minCredibility);
+			rulseSet.addAll(itemRuleSet);
 
-			rules.addAll(frequentSetRules);
 		}
 
+		rules = new LinkedList<Rule>(rulseSet);
 	}
 
 	/**
@@ -197,7 +198,7 @@ public class AprioriNST extends AlgorithmBase {
 	 *            : one of the frequent items.
 	 * @return List of rules which satisfy minimal credibility.
 	 */
-	private List<Rule> getRulesFromItemSet(ItemSet itemSet,
+	private Set<Rule> getRulesFromItemSet(ItemSet itemSet,
 			DataRepresentationBase data, double minCredibility) {
 
 		Set<Rule> itemSetRules = new HashSet<Rule>();
@@ -224,7 +225,7 @@ public class AprioriNST extends AlgorithmBase {
 			for (ItemSet currentSet : smallerSets) {
 
 				int supportX = frequentSet.get(currentSet);
-				double confidance = suportXY / (double)supportX;
+				double confidance = suportXY / (double) supportX;
 
 				if (confidance >= minCredibility) {
 
@@ -246,7 +247,7 @@ public class AprioriNST extends AlgorithmBase {
 
 					// the rule must have confidence in percents provided
 					Rule rule = new Rule(ruleCounter++, conditionalPart,
-							exectuivePart, (int) (confidance * 100), supportX);
+							exectuivePart, (int) (confidance * 100), suportXY);
 
 					itemSetRules.add(rule);
 
@@ -264,7 +265,7 @@ public class AprioriNST extends AlgorithmBase {
 			}
 		}
 
-		return new LinkedList<Rule>(itemSetRules);
+		return itemSetRules;
 	}
 
 	/**
