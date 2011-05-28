@@ -85,7 +85,7 @@ public class JOCLSetsEngineTest {
 		candidateSet = BinaryUtils.generateCharArray(set,
 				data.getMaxAttAligned());
 		gpuSupport = joclEngine.getSupport(candidateSet);
-		Assert.assertTrue(gpuSupport == 3);
+		Assert.assertTrue("Should be 3, was: "+gpuSupport,gpuSupport == 3);
 
 		
 		// against 1,16
@@ -93,7 +93,7 @@ public class JOCLSetsEngineTest {
 		candidateSet = BinaryUtils.generateCharArray(set,
 				data.getMaxAttAligned());
 		gpuSupport = joclEngine.getSupport(candidateSet);
-		Assert.assertTrue(gpuSupport == 3);
+		Assert.assertTrue("Should be 3, was: "+gpuSupport,gpuSupport == 3);
 
 	
 		// against 1,16,32
@@ -101,7 +101,7 @@ public class JOCLSetsEngineTest {
 		candidateSet = BinaryUtils.generateCharArray(set,
 				data.getMaxAttAligned());
 		gpuSupport = joclEngine.getSupport(candidateSet);
-		Assert.assertTrue(gpuSupport == 1);		
+		Assert.assertTrue("Should be 1, was: "+gpuSupport,gpuSupport == 1);		
 
 		
 		// against 1,8,16,32
@@ -109,7 +109,7 @@ public class JOCLSetsEngineTest {
 		candidateSet = BinaryUtils.generateCharArray(set,
 				data.getMaxAttAligned());
 		gpuSupport = joclEngine.getSupport(candidateSet);
-		Assert.assertTrue(gpuSupport == 1);
+		Assert.assertTrue("Should be 1, was: "+gpuSupport,gpuSupport == 1);
 		
 
 		// against 1,2,8,16,32
@@ -117,14 +117,14 @@ public class JOCLSetsEngineTest {
 		candidateSet = BinaryUtils.generateCharArray(set,
 				data.getMaxAttAligned());
 		gpuSupport = joclEngine.getSupport(candidateSet);
-		Assert.assertTrue(gpuSupport == 1);
+		Assert.assertTrue("Should be 1, was: "+gpuSupport,gpuSupport == 1);
 		
 		// against 1,2,8,16,32,48
 		set.add(48);
 		candidateSet = BinaryUtils.generateCharArray(set,
 				data.getMaxAttAligned());
 		gpuSupport = joclEngine.getSupport(candidateSet);
-		Assert.assertTrue(gpuSupport == 0);		
+		Assert.assertTrue("Should be 0, was: "+gpuSupport,gpuSupport == 0);		
 		
 		// against 2
 		set.clear();
@@ -132,21 +132,21 @@ public class JOCLSetsEngineTest {
 		candidateSet = BinaryUtils.generateCharArray(set,
 				data.getMaxAttAligned());
 		gpuSupport = joclEngine.getSupport(candidateSet);
-		Assert.assertTrue(gpuSupport == 2);	
+		Assert.assertTrue("Should be 2, was: "+gpuSupport,gpuSupport == 2);	
 		
 		// against 2,8
 		set.add(8);
 		candidateSet = BinaryUtils.generateCharArray(set,
 				data.getMaxAttAligned());
 		gpuSupport = joclEngine.getSupport(candidateSet);
-		Assert.assertTrue(gpuSupport == 2);	
+		Assert.assertTrue("Should be 2, was: "+gpuSupport,gpuSupport == 2);	
 		
 		// against 2,4,8
 		set.add(4);
 		candidateSet = BinaryUtils.generateCharArray(set,
 				data.getMaxAttAligned());
 		gpuSupport = joclEngine.getSupport(candidateSet);
-		Assert.assertTrue(gpuSupport == 1);	
+		Assert.assertTrue("Should be 1, was: "+gpuSupport,gpuSupport == 1);	
 
 		// against 48
 		set.clear();
@@ -154,14 +154,14 @@ public class JOCLSetsEngineTest {
 		candidateSet = BinaryUtils.generateCharArray(set,
 				data.getMaxAttAligned());
 		gpuSupport = joclEngine.getSupport(candidateSet);
-		Assert.assertTrue(gpuSupport == 1);
+		Assert.assertTrue("Should be 1, was: "+gpuSupport,gpuSupport == 1);
 		
 		// against 1,48
 		set.add(1);
 		candidateSet = BinaryUtils.generateCharArray(set,
 				data.getMaxAttAligned());
 		gpuSupport = joclEngine.getSupport(candidateSet);
-		Assert.assertTrue(gpuSupport == 0);	
+		Assert.assertTrue("Should be 0, was: "+gpuSupport,gpuSupport == 0);	
 		
 		joclEngine.cleanupEngine();		
 	}
