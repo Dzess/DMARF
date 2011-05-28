@@ -7,6 +7,7 @@ import java.io.IOException;
 import org.put.hd.dmarf.algorithms.IAlgorithm;
 import org.put.hd.dmarf.algorithms.factories.IAlgorithmFactory;
 import org.put.hd.dmarf.algorithms.factories.ProductionAlgorithmFactory;
+import org.put.hd.dmarf.data.AlgorithmBasedBuilderFactory;
 import org.put.hd.dmarf.data.DataRepresentationBase;
 import org.put.hd.dmarf.data.builders.BasicDataBuilder;
 import org.put.hd.dmarf.data.builders.IDataRepresentationBuilder;
@@ -40,22 +41,24 @@ public class App {
 			System.out.println(e.getMessage());
 			return;
 		}
+		
+		IAlgorithm algorithm = parser.getAlgorithm();
 
 		// loading data phase
-		// TODO: change the data representation builder into the fancy one
+		// FIXME: change the data representation builder into the fancy one
 		// using some kind of algorithms
-		IDataRepresentationBuilder builder = new BasicDataBuilder();
+		IDataRepresentationBuilder builder = new AlgorithmBasedBuilderFactory(algorithm);
+		//IDataRepresentationBuilder builder = new BasicDataBuilder();
 		IDataFormatter fomratter = new SimpleDataFormatter(builder);
 		IDataLoader loader = new SimpleDataLoader(fomratter);
 		loader.setInputFileName(parser.getInputFileName());
 		DataRepresentationBase data = loader.loadData();
 
 		// running the algorithm
-		IAlgorithm algorithm = parser.getAlgorithm();
 		algorithm.start(data, parser.getMinSupport(),
 				parser.getMinCredibility());
 
-		// FIXME: get the wait lock here for the MT implementations
+		// the main thread within algorithm should be sequential 
 		stopWatch.stop();
 		
 		// saving the output

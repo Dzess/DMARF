@@ -21,6 +21,7 @@ import org.put.hd.dmarf.data.formatters.IDataFormatter;
 import org.put.hd.dmarf.data.formatters.SimpleDataFormatter;
 import org.put.hd.dmarf.data.loaders.IDataLoader;
 import org.put.hd.dmarf.data.loaders.SimpleDataLoader;
+import org.put.hd.dmarf.data.utils.BinaryUtils;
 
 /**
  * Test loading the data using the hierarchy of the
@@ -185,14 +186,21 @@ public class LoadingTrailDataFactoryTest {
 		// get the test working
 		DataRepresentationBase result = dataloader.loadData();
 
-		// assert the result
-		// TODO: check against some meaningful values
-		result.getTransactionsCharMap();
-		result.getMaxAttAligned();
-		result.getMaxAttIndex();
-		result.getNumberOfAttributesClusters();
+		// expected char map
+		// 4 rows with 1 chunk each
+		char[] map = new char[4];
+		map[0] = 63488; // 11111 rest 0 (16 bit)
+		map[1] = 49152; // 11 rest 0 (16 bit)
+		map[2] = 12288; // 0011 rest 0 (1b bit)
+		map[3] = map[0]; // the same value
 
-		Assert.fail("Assertions not yet implemented");
+		// assert the result
+		Assert.assertArrayEquals(map, result.getTransactionsCharMap());
+		Assert.assertEquals(16, result.getMaxAttAligned());
+		Assert.assertEquals(5, result.getMaxAttIndex());
+		Assert.assertEquals(1, result.getNumberOfAttributesClusters());
+		Assert.assertEquals(4, result.getNumberOfTransactions());
+
 	}
 
 }
