@@ -9,6 +9,7 @@ import java.util.TreeMap;
 import javax.naming.directory.InvalidAttributesException;
 
 import org.jocl.CL;
+import org.jocl.CLException;
 import org.jocl.Pointer;
 import org.jocl.Sizeof;
 import org.jocl.cl_command_queue;
@@ -127,22 +128,57 @@ public class JOCLSetsEngine implements ISetsEngine {
 		System.out.println("Obtaining platform...");
 		cl_platform_id platforms[] = new cl_platform_id[numPlatforms[0]];
 		clGetPlatformIDs(platforms.length, platforms, null);
-		cl_context_properties contextProperties = new cl_context_properties();
-		contextProperties.addProperty(CL_CONTEXT_PLATFORM, platforms[0]); 
+		 
 		
-		// Create an OpenCL context on a GPU device
-		context = clCreateContextFromType(contextProperties,
-				CL_DEVICE_TYPE_GPU, null, null, null);
-		if (context == null) {
-			// If no context for a GPU device could be created,
-			// try to create one for a CPU device.
+		// Get devices from platform  
+		int platformWithGPU = -1;
+		int platformWithCPU = -1;
+		for (int i = 0; i < platforms.length; i++) {
+
+			int result;
+			try {
+				result = clGetDeviceIDs(platforms[i], CL_DEVICE_TYPE_GPU, 0,null, null);
+				if (result == CL_SUCCESS) {
+					platformWithGPU = i;
+				}
+			} catch (CLException e) {
+				// well do nothing now
+			}
+
+			
+			try {
+				result = clGetDeviceIDs(platforms[i], CL_DEVICE_TYPE_CPU, 0,null, null);
+				if (result == CL_SUCCESS) {
+					platformWithCPU = i;
+				}
+			} catch (CLException e) {
+				// well do nothing now
+			}
+		}
+		
+		if(platformWithGPU != -1){
+			// Create an OpenCL context on a GPU device
+			cl_context_properties contextProperties = new cl_context_properties();
+			contextProperties.addProperty(CL_CONTEXT_PLATFORM, platforms[platformWithGPU]);
+			
+			context = clCreateContextFromType(contextProperties,
+					CL_DEVICE_TYPE_GPU, null, null, null);
+		}
+		// if no GPU the create the CPU context
+		else if (platformWithCPU != -1 ){
+			cl_context_properties contextProperties = new cl_context_properties();
+			contextProperties.addProperty(CL_CONTEXT_PLATFORM, platforms[platformWithCPU]);
+			
 			context = clCreateContextFromType(contextProperties,
 					CL_DEVICE_TYPE_CPU, null, null, null);
+		}
+		// if no CPU context available then throw and exception about 
+		else{
+			throw new RuntimeException("No CPU or GPU device to get the code working");
+		}
 
-			if (context == null) {
-				System.out.println("Unable to create a context");
-				return;
-			}
+		if (context == null) {
+			throw new RuntimeException("Could not create the context on the device");
 		}
 
 		// Enable exceptions and subsequently omit error checks in this sample
