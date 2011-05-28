@@ -1,6 +1,7 @@
 package org.put.hd.dmarf.algorithms.apriori.nst;
 
 import java.util.Collection;
+import java.util.HashSet;
 import java.util.LinkedHashSet;
 import java.util.LinkedList;
 import java.util.List;
@@ -199,7 +200,7 @@ public class AprioriNST extends AlgorithmBase {
 	private List<Rule> getRulesFromItemSet(ItemSet itemSet,
 			DataRepresentationBase data, double minCredibility) {
 
-		List<Rule> itemSetRules = new LinkedList<Rule>();
+		Set<Rule> itemSetRules = new HashSet<Rule>();
 
 		// all rule item set support (FOR THE WHOLE RULE)
 		int suportXY = frequentSet.get(itemSet);
@@ -211,7 +212,7 @@ public class AprioriNST extends AlgorithmBase {
 
 		// to search for all the combinations of the frequency sets
 		// but only n-1 goes down is possible up to the two element sets
-		for (int i = 0; i < itemSet.getElements().size() - 1; i++) {
+		for (int i = 0; i < itemSet.getElements().size(); i++) {
 			// get the all (n-1 elemented) sets, from the accepted set elements
 			List<ItemSet> smallerSets = new LinkedList<ItemSet>(nextSets);
 
@@ -223,7 +224,7 @@ public class AprioriNST extends AlgorithmBase {
 			for (ItemSet currentSet : smallerSets) {
 
 				int supportX = frequentSet.get(currentSet);
-				double confidance = suportXY / supportX;
+				double confidance = suportXY / (double)supportX;
 
 				if (confidance >= minCredibility) {
 
@@ -263,7 +264,7 @@ public class AprioriNST extends AlgorithmBase {
 			}
 		}
 
-		return itemSetRules;
+		return new LinkedList<Rule>(itemSetRules);
 	}
 
 	/**

@@ -42,13 +42,13 @@ public class BinaryRuleEngine implements IRulesEngine {
 		int suportXY = frequentSet.get(itemSet);
 
 		// check if the set passed is the at least two element set
+		int count = 0;
 		for (char elements : itemSet.getAttributeVector()) {
-			int count = bitcount(elements);
-
-			// for one and two element sets return the empty list
-			if (count == 0 || count == 1)
-				return itemSetRules;
+			count += BinaryItemSet.bitcount(elements);
 		}
+		// for one and two element sets return the empty list
+		if (count == 0 || count == 1)
+			return itemSetRules;
 
 		// create the veto list of elements that can be placed in conditional
 		// part of the rule
@@ -136,8 +136,9 @@ public class BinaryRuleEngine implements IRulesEngine {
 		for (int i = 0; i < vectorPremise.length; i++) {
 
 			// this gets the binary representation
-			char[] binaryAll = getBinaryString(vectorAll[i]);
-			char[] binaryPremise = getBinaryString(vectorPremise[i]);
+			char[] binaryAll = BinaryItemSet.getBinaryString(vectorAll[i]);
+			char[] binaryPremise = BinaryItemSet
+					.getBinaryString(vectorPremise[i]);
 
 			for (int j = 0; j < binaryAll.length; j++) {
 
@@ -162,49 +163,4 @@ public class BinaryRuleEngine implements IRulesEngine {
 
 		return rule;
 	}
-
-	/**
-	 * Get the number of '1' in the binary representation number.
-	 * 
-	 * @param n
-	 *            : number to be looked into.
-	 * @return the number of '1' in the binary representation.
-	 */
-	private int bitcount(char x) {
-		// classic shift method
-		int result = 0;
-		for (int i = 0; i < 16; i++) {
-			result += x & 1;
-			x >>>= 1;
-		}
-		return result;
-	}
-
-	/**
-	 * Gets the same as the Integer.toBinaryString, but does it with trailing
-	 * zeros at the beginning.
-	 * 
-	 * @param number
-	 *            : the value to be changed into binary representation.
-	 * @return the char[] representation of the passed value.
-	 */
-	private char[] getBinaryString(char number) {
-
-		char value = number;
-
-		char[] output = new char[16];
-
-		// 'read from behind' the standard algorithm
-		for (int i = 0; i < 16; i++) {
-			if (value % 2 == 1) {
-				output[15 - i] = '1';
-			} else {
-				output[15 - i] = '0';
-			}
-			value = (char) (value / 2);
-		}
-
-		return output;
-	}
-
 }

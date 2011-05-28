@@ -51,9 +51,9 @@ public class BinaryItemSet implements Comparable<BinaryItemSet> {
 
 		builder.append("\nItem Set\n");
 		builder.append("Attribute vector: \n");
-		for (int i = 0; i < this.numberOfAttributes; i++) {
-			String chunk = Integer.toBinaryString(this.attributeVector[i]);
-			builder.append("Chunk: " + i);
+		for (int i = 0; i < this.attributeVector.length; i++) {
+			char[] chunk = BinaryItemSet.getBinaryString(this.attributeVector[i]);
+			builder.append("Chunk " + i + ": ");
 			builder.append(chunk);
 			builder.append('\n');
 		}
@@ -195,5 +195,32 @@ public class BinaryItemSet implements Comparable<BinaryItemSet> {
 			x >>>= 1;
 		}
 		return result;
+	}
+
+	/**
+	 * Gets the same as the Integer.toBinaryString, but does it with trailing
+	 * zeros at the beginning.
+	 * 
+	 * @param number
+	 *            : the value to be changed into binary representation.
+	 * @return the char[] representation of the passed value.
+	 */
+	public static char[] getBinaryString(char number) {
+
+		char value = number;
+
+		char[] output = new char[16];
+
+		// 'read from behind' the standard algorithm
+		for (int i = 0; i < 16; i++) {
+			if (value % 2 == 1) {
+				output[15 - i] = '1';
+			} else {
+				output[15 - i] = '0';
+			}
+			value = (char) (value / 2);
+		}
+
+		return output;
 	}
 }

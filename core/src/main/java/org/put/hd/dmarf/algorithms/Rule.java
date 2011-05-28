@@ -34,10 +34,10 @@ public class Rule {
 		// print the support and confidance
 		builder.append("  Confidance: ");
 		builder.append(this.confidance);
-		
+
 		builder.append("  Support: ");
 		builder.append(this.support);
-		
+
 		return builder.toString();
 	}
 
@@ -81,8 +81,7 @@ public class Rule {
 		// custom set comparison
 		else if (!smartEquals(exectuivePart, other.exectuivePart))
 			return false;
-		if (id != other.id)
-			return false;
+
 		if (support != other.support)
 			return false;
 		return true;

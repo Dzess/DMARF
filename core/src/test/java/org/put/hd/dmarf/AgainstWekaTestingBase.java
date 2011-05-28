@@ -104,14 +104,14 @@ public class AgainstWekaTestingBase {
 		System.err.println("OutCome: ");
 		
 		for (Rule r : result) {
-			System.out.println(r);
+			System.err.println(r);
 		}
 
 		System.err.flush();
 		
 		System.err.println("Expected outcome: ");
 		for (Rule r : expectedRules) {
-			System.out.println(r);
+			System.err.println(r);
 		}
 
 		System.err.flush();
