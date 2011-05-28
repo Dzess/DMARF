@@ -10,6 +10,8 @@ accidents.dat
 .class
 *~
 
+core/resources/data/retail.dat
+core/resources/data/accidents.dat
 core/resources/data/chess.dat
 core/resources/data/connect.dat
 core/resources/data/pumsb.dat

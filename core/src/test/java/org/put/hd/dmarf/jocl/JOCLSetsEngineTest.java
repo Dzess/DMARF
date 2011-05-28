@@ -7,6 +7,7 @@ import java.util.Random;
 
 import javax.naming.directory.InvalidAttributesException;
 
+import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 import org.put.hd.dmarf.algorithms.apriori.binary.JOCLSetsEngine;
@@ -88,24 +89,24 @@ public class JOCLSetsEngineTest {
 		System.out.println(sw.getElapsedTime() / 1000.0
 				+ " <- Time to initialize and upload transactions Matrix.");
 
-		int supp = 0;
+		int gpuSupport = 0;
 		sw.start();
 		for (int i = 0; i < howMany; i++) {
-			supp = joclEngine.getSupport(candidateSet);
+			gpuSupport = joclEngine.getSupport(candidateSet);
 		}
 		sw.stop();
 		System.out.println(sw.getElapsedTime() / 1000.0
 				+ " <- Time to find support " + howMany + " times.");
-		System.out.println("Supporting transactions = " + supp);
+		System.out.println("Supporting transactions = " + gpuSupport);
 		joclEngine.cleanupEngine();
 
 		System.out.println("CPU ST Test");
 		int numberOfAttClusters = data.getNumberOfAttributesClusters();
-		int supportInData = 0;
+		int cpuSupport = 0;
 		sw.start();
 		for (int k = 0; k < howMany; k++) {
 
-			supportInData = 0;
+			cpuSupport = 0;
 			char[] transactionsMap = data.getTransactionsCharMap();
 			for (int i = 0; i < data.getNumberOfTransactions(); i++) {
 				char flag = 0;
@@ -114,14 +115,14 @@ public class JOCLSetsEngineTest {
 							* numberOfAttClusters + j]) ^ candidateSet[j])));
 				}
 				if (flag == 0) {
-					supportInData++;
+					cpuSupport++;
 				}
 			}
 		}
 		sw.stop();
-		System.out.println("CPU found supporting transactions: "
-				+ supportInData);
+		System.out.println("CPU found supporting transactions: " + cpuSupport);
 		System.out.println("CPU running time: " + sw.getElapsedTime() / 1000.0);
 
+		Assert.assertTrue(cpuSupport == gpuSupport);
 	}
 }
