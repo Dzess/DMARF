@@ -7,6 +7,7 @@ import java.util.Random;
 
 import javax.naming.directory.InvalidAttributesException;
 
+import org.junit.After;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
@@ -44,6 +45,11 @@ public class JOCLSetsEngineTest {
 
 		sw = new StopWatch();
 
+	}
+	
+	@After
+	public void tear_down(){
+		joclEngine.cleanupEngine();
 	}
 
 	/**
@@ -163,7 +169,6 @@ public class JOCLSetsEngineTest {
 		gpuSupport = joclEngine.getSupport(candidateSet);
 		Assert.assertTrue("Should be 0, was: "+gpuSupport,gpuSupport == 0);	
 		
-		joclEngine.cleanupEngine();		
 	}
 
 	@Test
@@ -219,7 +224,6 @@ public class JOCLSetsEngineTest {
 		System.out.println(sw.getElapsedTime() / 1000.0
 				+ " <- Time to find support " + howMany + " times.");
 		System.out.println("Supporting transactions = " + gpuSupport);
-		//joclEngine.cleanupEngine();
 
 		System.out.println("CPU ST Test");
 		int numberOfAttClusters = data.getNumberOfAttributesClusters();

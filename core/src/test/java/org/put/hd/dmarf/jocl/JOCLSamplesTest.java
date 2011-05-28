@@ -2,11 +2,17 @@ package org.put.hd.dmarf.jocl;
 
 import org.jocl.samples.JOCLDeviceQuery;
 import org.jocl.samples.JOCLSample;
+import org.junit.Before;
 import org.junit.Ignore;
 import org.junit.Test;
 
 public class JOCLSamplesTest {
 
+	@Before
+	public void set_up(){
+		// TODO: those test are problematic in log runing with other test
+	}
+	
 	@Test
 	public void deviceQueryTest() {
 		JOCLDeviceQuery.runJOCLDeviceQuery();

@@ -58,7 +58,7 @@
 				<configuration>
 					<argline>-Djava.library.path=${lib.directory}</argline>
 					<parallel>methods</parallel>
-					<threadCount>10</threadCount>
+					<threadCount>1</threadCount>
 				</configuration>
 			</plugin>
 		</plugins>
