@@ -42,14 +42,18 @@ public class BinaryApriori extends AlgorithmBase {
 	 * 
 	 * @param binaryEngine
 	 *            : engine that will be used for creating sets
+	 * @param bitAligment
+	 *            : set the bit alignment using the {@link BinaryDataBuilder}
+	 *            bit alignment settings.
 	 */
-	public BinaryApriori(IRulesEngine binaryRuleEngine, ISetsEngine binaryEngine) {
+	public BinaryApriori(IRulesEngine binaryRuleEngine,
+			ISetsEngine binaryEngine, int bitAligment) {
 		this.binaryEngine = binaryEngine;
 		this.binaryRuleEngine = binaryRuleEngine;
 
 		// TODO: change here passing the builders
 		this.passedBuilders = new LinkedList<IDataRepresentationBuilder>();
-		this.passedBuilders.add(new BinaryDataBuilder());
+		this.passedBuilders.add(new BinaryDataBuilder(bitAligment));
 	}
 
 	@Override

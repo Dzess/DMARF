@@ -6,7 +6,6 @@ import java.util.List;
 import java.util.SortedMap;
 
 import org.put.hd.dmarf.algorithms.Rule;
-import org.put.hd.dmarf.data.DataRepresentationBase;
 
 /**
  * Class encapsulates the whole logic of the rule harvesting. Quite the fast

@@ -21,7 +21,6 @@ import weka.core.DenseInstance;
 import weka.core.FastVector;
 import weka.core.Instance;
 import weka.core.Instances;
-import weka.core.SparseInstance;
 
 /**
  * Implementation of Apriori algorithm using Weka tool. Used for verification

@@ -1,7 +1,6 @@
 package org.put.hd.dmarf.data.loaders;
 
 import java.io.File;
-import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.Reader;
 

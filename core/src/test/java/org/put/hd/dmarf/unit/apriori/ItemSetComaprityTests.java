@@ -3,7 +3,8 @@ package org.put.hd.dmarf.unit.apriori;
 import java.util.SortedSet;
 import java.util.TreeSet;
 
-import org.junit.*;
+import org.junit.Assert;
+import org.junit.Test;
 import org.put.hd.dmarf.algorithms.apriori.nst.ItemSet;
 
 public class ItemSetComaprityTests {

@@ -10,7 +10,6 @@ import org.put.hd.dmarf.algorithms.Rule;
 import org.put.hd.dmarf.algorithms.WekaAlgorithm;
 import org.put.hd.dmarf.algorithms.factories.IAlgorithmFactory;
 import org.put.hd.dmarf.algorithms.factories.ProductionAlgorithmFactory;
-import org.put.hd.dmarf.algorithms.factories.TestAlgorithmFactory;
 import org.put.hd.dmarf.data.DataRepresentationBase;
 import org.put.hd.dmarf.data.builders.BasicDataBuilder;
 import org.put.hd.dmarf.data.builders.IDataRepresentationBuilder;

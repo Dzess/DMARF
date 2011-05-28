@@ -6,11 +6,60 @@
 
 package org.jocl.samples;
 
-import static org.jocl.CL.*;
+import static org.jocl.CL.CL_DEVICE_ADDRESS_BITS;
+import static org.jocl.CL.CL_DEVICE_ERROR_CORRECTION_SUPPORT;
+import static org.jocl.CL.CL_DEVICE_GLOBAL_MEM_SIZE;
+import static org.jocl.CL.CL_DEVICE_IMAGE2D_MAX_HEIGHT;
+import static org.jocl.CL.CL_DEVICE_IMAGE2D_MAX_WIDTH;
+import static org.jocl.CL.CL_DEVICE_IMAGE3D_MAX_DEPTH;
+import static org.jocl.CL.CL_DEVICE_IMAGE3D_MAX_HEIGHT;
+import static org.jocl.CL.CL_DEVICE_IMAGE3D_MAX_WIDTH;
+import static org.jocl.CL.CL_DEVICE_IMAGE_SUPPORT;
+import static org.jocl.CL.CL_DEVICE_LOCAL_MEM_SIZE;
+import static org.jocl.CL.CL_DEVICE_LOCAL_MEM_TYPE;
+import static org.jocl.CL.CL_DEVICE_MAX_CLOCK_FREQUENCY;
+import static org.jocl.CL.CL_DEVICE_MAX_COMPUTE_UNITS;
+import static org.jocl.CL.CL_DEVICE_MAX_CONSTANT_BUFFER_SIZE;
+import static org.jocl.CL.CL_DEVICE_MAX_MEM_ALLOC_SIZE;
+import static org.jocl.CL.CL_DEVICE_MAX_READ_IMAGE_ARGS;
+import static org.jocl.CL.CL_DEVICE_MAX_WORK_GROUP_SIZE;
+import static org.jocl.CL.CL_DEVICE_MAX_WORK_ITEM_DIMENSIONS;
+import static org.jocl.CL.CL_DEVICE_MAX_WORK_ITEM_SIZES;
+import static org.jocl.CL.CL_DEVICE_MAX_WRITE_IMAGE_ARGS;
+import static org.jocl.CL.CL_DEVICE_NAME;
+import static org.jocl.CL.CL_DEVICE_PREFERRED_VECTOR_WIDTH_CHAR;
+import static org.jocl.CL.CL_DEVICE_PREFERRED_VECTOR_WIDTH_DOUBLE;
+import static org.jocl.CL.CL_DEVICE_PREFERRED_VECTOR_WIDTH_FLOAT;
+import static org.jocl.CL.CL_DEVICE_PREFERRED_VECTOR_WIDTH_INT;
+import static org.jocl.CL.CL_DEVICE_PREFERRED_VECTOR_WIDTH_LONG;
+import static org.jocl.CL.CL_DEVICE_PREFERRED_VECTOR_WIDTH_SHORT;
+import static org.jocl.CL.CL_DEVICE_QUEUE_PROPERTIES;
+import static org.jocl.CL.CL_DEVICE_SINGLE_FP_CONFIG;
+import static org.jocl.CL.CL_DEVICE_TYPE;
+import static org.jocl.CL.CL_DEVICE_TYPE_ACCELERATOR;
+import static org.jocl.CL.CL_DEVICE_TYPE_ALL;
+import static org.jocl.CL.CL_DEVICE_TYPE_CPU;
+import static org.jocl.CL.CL_DEVICE_TYPE_DEFAULT;
+import static org.jocl.CL.CL_DEVICE_TYPE_GPU;
+import static org.jocl.CL.CL_DEVICE_VENDOR;
+import static org.jocl.CL.CL_DRIVER_VERSION;
+import static org.jocl.CL.CL_PLATFORM_NAME;
+import static org.jocl.CL.CL_QUEUE_OUT_OF_ORDER_EXEC_MODE_ENABLE;
+import static org.jocl.CL.CL_QUEUE_PROFILING_ENABLE;
+import static org.jocl.CL.clGetDeviceIDs;
+import static org.jocl.CL.clGetDeviceInfo;
+import static org.jocl.CL.clGetPlatformIDs;
+import static org.jocl.CL.clGetPlatformInfo;
+import static org.jocl.CL.stringFor_cl_device_fp_config;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
 
-import org.jocl.*;
+import org.jocl.Pointer;
+import org.jocl.Sizeof;
+import org.jocl.cl_device_id;
+import org.jocl.cl_platform_id;
 
 /**
  * A JOCL program that queries and prints information about all

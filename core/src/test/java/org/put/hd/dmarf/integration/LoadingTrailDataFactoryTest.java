@@ -21,7 +21,6 @@ import org.put.hd.dmarf.data.formatters.IDataFormatter;
 import org.put.hd.dmarf.data.formatters.SimpleDataFormatter;
 import org.put.hd.dmarf.data.loaders.IDataLoader;
 import org.put.hd.dmarf.data.loaders.SimpleDataLoader;
-import org.put.hd.dmarf.data.utils.BinaryUtils;
 
 /**
  * Test loading the data using the hierarchy of the

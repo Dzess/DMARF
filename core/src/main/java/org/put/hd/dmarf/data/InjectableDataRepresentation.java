@@ -3,8 +3,6 @@ package org.put.hd.dmarf.data;
 import java.util.List;
 import java.util.Map;
 
-import org.omg.CORBA.NVList;
-
 /**
  * Injectable representation of {@link DataRepresentationBase}. Simplest
  * possible ever.

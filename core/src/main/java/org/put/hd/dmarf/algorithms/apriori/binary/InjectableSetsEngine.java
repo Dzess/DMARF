@@ -6,7 +6,6 @@ import java.util.SortedMap;
 import javax.naming.directory.InvalidAttributesException;
 
 import org.put.hd.dmarf.data.DataRepresentationBase;
-import org.put.hd.dmarf.data.InjectableDataRepresentation;
 
 /**
  * This class uses the various {@see ISetsEngine} to compose the one

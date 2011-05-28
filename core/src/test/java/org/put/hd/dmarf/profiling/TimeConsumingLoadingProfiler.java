@@ -1,10 +1,7 @@
 package org.put.hd.dmarf.profiling;
 
 import java.io.File;
-import java.util.Set;
 
-import org.junit.Before;
-import org.junit.Test;
 import org.put.hd.dmarf.data.DataRepresentationBase;
 import org.put.hd.dmarf.data.builders.BasicDataBuilder;
 import org.put.hd.dmarf.data.formatters.SimpleDataFormatter;

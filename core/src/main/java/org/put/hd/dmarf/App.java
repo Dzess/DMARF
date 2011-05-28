@@ -9,7 +9,6 @@ import org.put.hd.dmarf.algorithms.factories.IAlgorithmFactory;
 import org.put.hd.dmarf.algorithms.factories.ProductionAlgorithmFactory;
 import org.put.hd.dmarf.data.AlgorithmBasedBuilderFactory;
 import org.put.hd.dmarf.data.DataRepresentationBase;
-import org.put.hd.dmarf.data.builders.BasicDataBuilder;
 import org.put.hd.dmarf.data.builders.IDataRepresentationBuilder;
 import org.put.hd.dmarf.data.formatters.IDataFormatter;
 import org.put.hd.dmarf.data.formatters.SimpleDataFormatter;

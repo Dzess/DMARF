@@ -8,7 +8,6 @@ import org.put.hd.dmarf.algorithms.WekaAlgorithm;
 import org.put.hd.dmarf.algorithms.apriori.binary.BinaryApriori;
 import org.put.hd.dmarf.algorithms.apriori.binary.BinaryRuleEngine;
 import org.put.hd.dmarf.algorithms.apriori.binary.BinarySetsEngine;
-import org.put.hd.dmarf.algorithms.apriori.binary.ISetsEngine;
 import org.put.hd.dmarf.algorithms.apriori.binary.InjectableSetsEngine;
 import org.put.hd.dmarf.algorithms.apriori.binary.JOCLSetsEngine;
 import org.put.hd.dmarf.algorithms.apriori.nst.AprioriNST;
@@ -36,14 +35,17 @@ public class ProductionAlgorithmFactory implements IAlgorithmFactory {
 		algorithms.add(new AprioriNST());
 
 		// Standard CPU implementation of binary apriori
-		// TODO: Fix this!
-		algorithms.add(new BinaryApriori(new BinaryRuleEngine(),new BinarySetsEngine()));
+		algorithms.add(new BinaryApriori(new BinaryRuleEngine(),new BinarySetsEngine(),1));
 
-		// CPU based apriori with support mining on GPU
-//		 setsEngine = new InjectableSetsEngine(
-//				new BinarySetsEngine(), new JOCLSetsEngine());
-//		algorithms.add(new BinaryApriori(new BinaryRuleEngine(), setsEngine));
+		// CPU based apriori with support mining with OpenCL (bit align to 64 bits vectors)
+		InjectableSetsEngine setsEngine = new InjectableSetsEngine(
+				new BinarySetsEngine(), new JOCLSetsEngine());
+		
+		//algorithms.add(new BinaryApriori(new BinaryRuleEngine(), setsEngine,64));
 
+		// CPU based apriori with support mining with OpenCL (bit align to 64 bits vectors)
+		//algorithms.add(new BinaryApriori(new BinaryRuleEngine(), setsEngine, 128));
+		
 	}
 
 	public int getNumberOfAlgorithms() {

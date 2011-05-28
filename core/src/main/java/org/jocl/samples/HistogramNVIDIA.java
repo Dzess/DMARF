@@ -6,12 +6,46 @@
 
 package org.jocl.samples;
 
-import static org.jocl.CL.*;
+import static org.jocl.CL.CL_CONTEXT_DEVICES;
+import static org.jocl.CL.CL_CONTEXT_PLATFORM;
+import static org.jocl.CL.CL_DEVICE_TYPE_GPU;
+import static org.jocl.CL.CL_MEM_COPY_HOST_PTR;
+import static org.jocl.CL.CL_MEM_READ_ONLY;
+import static org.jocl.CL.CL_MEM_READ_WRITE;
+import static org.jocl.CL.CL_TRUE;
+import static org.jocl.CL.clBuildProgram;
+import static org.jocl.CL.clCreateBuffer;
+import static org.jocl.CL.clCreateCommandQueue;
+import static org.jocl.CL.clCreateContextFromType;
+import static org.jocl.CL.clCreateKernel;
+import static org.jocl.CL.clCreateProgramWithSource;
+import static org.jocl.CL.clEnqueueNDRangeKernel;
+import static org.jocl.CL.clEnqueueReadBuffer;
+import static org.jocl.CL.clGetContextInfo;
+import static org.jocl.CL.clGetPlatformIDs;
+import static org.jocl.CL.clReleaseCommandQueue;
+import static org.jocl.CL.clReleaseContext;
+import static org.jocl.CL.clReleaseKernel;
+import static org.jocl.CL.clReleaseMemObject;
+import static org.jocl.CL.clReleaseProgram;
+import static org.jocl.CL.clSetKernelArg;
 
-import java.io.*;
+import java.io.BufferedReader;
+import java.io.FileReader;
+import java.io.IOException;
 import java.util.Random;
 
-import org.jocl.*;
+import org.jocl.CL;
+import org.jocl.Pointer;
+import org.jocl.Sizeof;
+import org.jocl.cl_command_queue;
+import org.jocl.cl_context;
+import org.jocl.cl_context_properties;
+import org.jocl.cl_device_id;
+import org.jocl.cl_kernel;
+import org.jocl.cl_mem;
+import org.jocl.cl_platform_id;
+import org.jocl.cl_program;
 
 /**
  * This class is a port of the NVIDIA OpenCL SDK "Histogram" sample.

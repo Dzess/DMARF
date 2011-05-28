@@ -5,12 +5,55 @@
  */
 package org.jocl.samples;
 
-import static org.jocl.CL.*;
+import static org.jocl.CL.CL_CONTEXT_DEVICES;
+import static org.jocl.CL.CL_CONTEXT_PLATFORM;
+import static org.jocl.CL.CL_DEVICE_TYPE_CPU;
+import static org.jocl.CL.CL_DEVICE_TYPE_GPU;
+import static org.jocl.CL.CL_MEM_COPY_HOST_PTR;
+import static org.jocl.CL.CL_MEM_READ_ONLY;
+import static org.jocl.CL.CL_MEM_READ_WRITE;
+import static org.jocl.CL.clBuildProgram;
+import static org.jocl.CL.clCreateBuffer;
+import static org.jocl.CL.clCreateCommandQueue;
+import static org.jocl.CL.clCreateContextFromType;
+import static org.jocl.CL.clCreateKernel;
+import static org.jocl.CL.clCreateProgramWithSource;
+import static org.jocl.CL.clCreateUserEvent;
+import static org.jocl.CL.clEnqueueNDRangeKernel;
+import static org.jocl.CL.clEnqueueReadBufferRect;
+import static org.jocl.CL.clFinish;
+import static org.jocl.CL.clGetContextInfo;
+import static org.jocl.CL.clGetPlatformIDs;
+import static org.jocl.CL.clReleaseCommandQueue;
+import static org.jocl.CL.clReleaseContext;
+import static org.jocl.CL.clReleaseKernel;
+import static org.jocl.CL.clReleaseMemObject;
+import static org.jocl.CL.clReleaseProgram;
+import static org.jocl.CL.clSetEventCallback;
+import static org.jocl.CL.clSetKernelArg;
+import static org.jocl.CL.clSetMemObjectDestructorCallback;
+import static org.jocl.CL.clSetUserEventStatus;
 
-import java.nio.*;
-import java.util.*;
+import java.nio.ByteBuffer;
+import java.nio.ByteOrder;
+import java.nio.FloatBuffer;
+import java.util.Arrays;
+import java.util.Locale;
 
-import org.jocl.*;
+import org.jocl.CL;
+import org.jocl.EventCallbackFunction;
+import org.jocl.MemObjectDestructorCallbackFunction;
+import org.jocl.Pointer;
+import org.jocl.Sizeof;
+import org.jocl.cl_command_queue;
+import org.jocl.cl_context;
+import org.jocl.cl_context_properties;
+import org.jocl.cl_device_id;
+import org.jocl.cl_event;
+import org.jocl.cl_kernel;
+import org.jocl.cl_mem;
+import org.jocl.cl_platform_id;
+import org.jocl.cl_program;
 
 
 /**

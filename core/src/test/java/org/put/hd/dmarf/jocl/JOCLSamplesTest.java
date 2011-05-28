@@ -1,7 +1,6 @@
 package org.put.hd.dmarf.jocl;
 
 import org.junit.Test;
-import org.jocl.samples.*;
 
 public class JOCLSamplesTest {
 

@@ -1,6 +1,7 @@
 package org.put.hd.dmarf.unit;
 
-import org.junit.*;
+import org.junit.Assert;
+import org.junit.Test;
 
 /**
  * Unit test class for sample application

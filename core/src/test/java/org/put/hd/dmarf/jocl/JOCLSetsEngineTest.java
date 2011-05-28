@@ -48,7 +48,7 @@ public class JOCLSetsEngineTest {
 	public void jocl_speedup_test() {
 
 		// perform test
-		String filename = "mushroom.dat";
+		String filename = "pumsb_star.dat";
 		String pathToFile = "resources" + File.separator + "data"
 				+ File.separator + filename;
 		dataloader.setInputFileName(pathToFile);
@@ -75,7 +75,7 @@ public class JOCLSetsEngineTest {
 		char[] candidateSet = BinaryUtils.generateCharArray(set,
 				data.getMaxAttAligned());
 
-		System.out.println("GPU T	est");
+		System.out.println("GPU Test");
 
 		sw.start();
 		try {

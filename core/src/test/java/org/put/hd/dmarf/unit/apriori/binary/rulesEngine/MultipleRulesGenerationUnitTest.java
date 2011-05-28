@@ -12,9 +12,6 @@ import org.put.hd.dmarf.algorithms.Rule;
 import org.put.hd.dmarf.algorithms.apriori.binary.BinaryItemSet;
 import org.put.hd.dmarf.algorithms.apriori.binary.BinaryRuleEngine;
 import org.put.hd.dmarf.algorithms.apriori.binary.IRulesEngine;
-import org.put.hd.dmarf.data.DataRepresentationBase;
-
-import weka.associations.BinaryItem;
 
 /**
  * Quite the short class testing the general rule harvesting from frequent set.
