@@ -41,7 +41,7 @@ public class ProductionAlgorithmFactory implements IAlgorithmFactory {
 		InjectableSetsEngine setsEngine = new InjectableSetsEngine(
 				new BinarySetsEngine(), new JOCLSetsEngine());
 		
-		//algorithms.add(new BinaryApriori(new BinaryRuleEngine(), setsEngine,64));
+		algorithms.add(new BinaryApriori(new BinaryRuleEngine(), setsEngine,4));
 
 		// CPU based apriori with support mining with OpenCL (bit align to 64 bits vectors)
 		//algorithms.add(new BinaryApriori(new BinaryRuleEngine(), setsEngine, 128));

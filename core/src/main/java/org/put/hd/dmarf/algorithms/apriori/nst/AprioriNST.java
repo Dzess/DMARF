@@ -163,7 +163,7 @@ public class AprioriNST extends AlgorithmBase {
 
 		// get the threshold for the minimal support of the frequent set =
 		// ceiling { transactions * percent }
-		supportThreshold = (int) Math.ceil(data.getTransactionsList().size()
+		supportThreshold = (int) Math.ceil(data.getTransactions().size()
 				* minSupport);
 
 		// first level frequent sets (based on the maps) - quite a nice feature

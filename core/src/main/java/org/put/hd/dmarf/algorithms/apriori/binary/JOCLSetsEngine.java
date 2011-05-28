@@ -156,8 +156,8 @@ public class JOCLSetsEngine implements ISetsEngine {
 		cl_platform_id platforms[] = new cl_platform_id[numPlatforms[0]];
 		clGetPlatformIDs(platforms.length, platforms, null);
 		cl_context_properties contextProperties = new cl_context_properties();
-		contextProperties.addProperty(CL_CONTEXT_PLATFORM, platforms[0]);
-
+		contextProperties.addProperty(CL_CONTEXT_PLATFORM, platforms[0]); 
+		
 		// Create an OpenCL context on a GPU device
 		context = clCreateContextFromType(contextProperties,
 				CL_DEVICE_TYPE_GPU, null, null, null);

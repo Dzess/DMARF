@@ -4,12 +4,14 @@ import java.util.List;
 
 import org.junit.Assert;
 import org.junit.Before;
+import org.junit.Ignore;
 import org.junit.Test;
 import org.put.hd.dmarf.algorithms.IAlgorithm;
 import org.put.hd.dmarf.algorithms.Rule;
 import org.put.hd.dmarf.algorithms.WekaAlgorithm;
 import org.put.hd.dmarf.algorithms.factories.IAlgorithmFactory;
 import org.put.hd.dmarf.algorithms.factories.ProductionAlgorithmFactory;
+import org.put.hd.dmarf.data.AlgorithmBasedBuilderFactory;
 import org.put.hd.dmarf.data.DataRepresentationBase;
 import org.put.hd.dmarf.data.builders.BasicDataBuilder;
 import org.put.hd.dmarf.data.builders.IDataRepresentationBuilder;
@@ -56,7 +58,8 @@ public class ExecutingAlgorithmOnTrailDataTest {
 		wekaProvider = new WekaAlgorithm();
 
 		// set the parameters of the algorithms
-		minSupport = 0.6; // meaning 3 item must support (0*6 * 4 = 2,4 -> 3 rules i guess)
+		minSupport = 0.6; // meaning 3 item must support (0*6 * 4 = 2,4 -> 3
+							// rules i guess)
 		minConfidance = 0.75;
 	}
 
@@ -68,12 +71,24 @@ public class ExecutingAlgorithmOnTrailDataTest {
 		double confidance = 0.5;
 		double support = 0.7;
 
-		// get data
-		loader.setInputFileName(fileName);
-		DataRepresentationBase data = loader.loadData();
+		runTestingForDataSet(fileName);
+	}
 
-		// get the weka results - expected ones
-		wekaProvider.start(data, support, confidance);
+	@Test
+	public void run_all_tests_from_simple_algorithm_factory_trial_1() {
+
+		// path to the resources data
+		String fileName = "resources/data/trail.dat";
+
+		runTestingForDataSet(fileName);
+
+	}
+
+	private void runTestingForDataSet(String fileName) {
+		DataRepresentationBase wekaData = getWekaData(fileName);
+
+		// get the Weka results - expected ones
+		wekaProvider.start(wekaData, minSupport, minConfidance);
 		List<Rule> wekaResults = wekaProvider.getRules();
 
 		// run the tests for each algorithm
@@ -81,7 +96,16 @@ public class ExecutingAlgorithmOnTrailDataTest {
 
 			// out part of algorithms
 			IAlgorithm algorithm = factory.getAlgorithm(i);
-			algorithm.start(data, support, confidance);
+
+			// get data from algorithm
+			getAlgorithmData(algorithm);
+
+			// get data
+			loader.setInputFileName(fileName);
+			DataRepresentationBase data = loader.loadData();
+
+			// go with the algorithms
+			algorithm.start(data, minSupport, minConfidance);
 
 			// ignore the time just get output
 			List<Rule> result = algorithm.getRules();
@@ -91,34 +115,20 @@ public class ExecutingAlgorithmOnTrailDataTest {
 		}
 	}
 
-	@Test
-	public void run_all_tests_from_simple_algorithm_factory_trial_1() {
+	private void getAlgorithmData(IAlgorithm algorithm) {
+		builder = new AlgorithmBasedBuilderFactory(algorithm);
+		fomratter = new SimpleDataFormatter(builder);
+		loader = new SimpleDataLoader(fomratter);
+	}
 
-		// path to the resources data
-		String fileName = "resources/data/trail.dat";
-
-		// get data
-		loader.setInputFileName(fileName);
-		DataRepresentationBase data = loader.loadData();
-
-		// get the weka results - expected ones
-		wekaProvider.start(data, minSupport, minConfidance);
-		List<Rule> wekaResults = wekaProvider.getRules();
-
-		// run the tests for each algorithm
-		for (int i = 0; i < factory.getNumberOfAlgorithms(); i++) {
-
-			// out part of algorithms
-			IAlgorithm algorithm = factory.getAlgorithm(i);
-			algorithm.start(data, minSupport, minConfidance);
-
-			// ignore the time just get output
-			List<Rule> result = algorithm.getRules();
-
-			// verify that result is good
-			verifyOutput(result, wekaResults);
-		}
-
+	private DataRepresentationBase getWekaData(String fileName) {
+		IDataRepresentationBuilder wekaBuilder = new AlgorithmBasedBuilderFactory(
+				wekaProvider);
+		IDataFormatter wekaFormatter = new SimpleDataFormatter(wekaBuilder);
+		SimpleDataLoader wekaLoader = new SimpleDataLoader(wekaFormatter);
+		wekaLoader.setInputFileName(fileName);
+		DataRepresentationBase wekaData = wekaLoader.loadData();
+		return wekaData;
 	}
 
 	private void verifyOutput(List<Rule> result, List<Rule> expectedRules) {
