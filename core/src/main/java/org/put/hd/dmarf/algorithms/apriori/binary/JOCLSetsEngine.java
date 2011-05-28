@@ -141,9 +141,6 @@ public class JOCLSetsEngine implements ISetsEngine {
 		if (data.getNumberOfAttributesClusters() % 4 != 0){
 			throw new InvalidAttributesException("Attribute clusters not aligned to %4");
 		}
-		System.out.println("Getting the charMap");
-		transCharMap = data.getTransactionsCharMap();
-		transCharMapPointer = Pointer.to(transCharMap);
 
 		// Obtain the number of platforms
 		int numPlatforms[] = new int[1];
@@ -188,10 +185,12 @@ public class JOCLSetsEngine implements ISetsEngine {
 		// Create a command-queue
 		commandQueue = clCreateCommandQueue(context, devices[0], 0, null);
 
+
 		// Allocate the memory objects for the input- and output data
-		transCharMapMem = clCreateBuffer(context, CL_MEM_READ_ONLY
-				| CL_MEM_COPY_HOST_PTR, Sizeof.cl_short * transCharMap.length,
-				transCharMapPointer, null);
+		//System.out.println("Getting the charMap");
+		transCharMap = data.getTransactionsCharMap();
+		transCharMapPointer = Pointer.to(transCharMap);
+
 
 		tmpCharMap = new char[transCharMap.length];
 		tmpMapPointer = Pointer.to(tmpCharMap);
@@ -228,8 +227,7 @@ public class JOCLSetsEngine implements ISetsEngine {
 		kernel1 = clCreateKernel(program, "supportKernel1", null);
 		kernel2 = clCreateKernel(program, "supportKernel2", null);
 
-		// Set the arguments for the kernel
-		clSetKernelArg(kernel1, 0, Sizeof.cl_mem, Pointer.to(transCharMapMem));
+
 
 		global_work_size = new long[] { transCharMap.length };
 		local_work_size = new long[] { data.getNumberOfAttributesClusters() };
@@ -253,11 +251,18 @@ public class JOCLSetsEngine implements ISetsEngine {
 				Sizeof.cl_short * data.getNumberOfAttributesClusters(),
 				candSetPointer, null);
 
-		// preparing tmpMap argument for kernels
+		// preparing MapData argument for kernels
+		
+		transCharMapMem = clCreateBuffer(context, CL_MEM_READ_ONLY
+				| CL_MEM_COPY_HOST_PTR, Sizeof.cl_short * transCharMap.length,
+				transCharMapPointer, null);		
 
 		tmpMapMem = clCreateBuffer(context, CL_MEM_READ_WRITE, Sizeof.cl_short
-				* transCharMap.length, null, null);
-
+				* transCharMap.length, tmpMapPointer, null);
+		
+		
+		// Set the arguments for the kernel
+		clSetKernelArg(kernel1, 0, Sizeof.cl_mem, Pointer.to(transCharMapMem));
 		clSetKernelArg(kernel1, 1, Sizeof.cl_mem, Pointer.to(candSetMem));
 		clSetKernelArg(kernel1, 2, Sizeof.cl_mem, Pointer.to(tmpMapMem));
 
@@ -304,6 +309,7 @@ public class JOCLSetsEngine implements ISetsEngine {
 		// cleaning gpuMem
 		clReleaseMemObject(candSetMem);
 		clReleaseMemObject(tmpMapMem);
+		clReleaseMemObject(transCharMapMem);
 		clReleaseMemObject(outSuppLongArrayMem);
 		return supp;
 	}
@@ -312,7 +318,6 @@ public class JOCLSetsEngine implements ISetsEngine {
 
 		// Release kernel, program, and memory objects
 		System.out.println("Releasing objects.");
-		clReleaseMemObject(transCharMapMem);
 		clReleaseKernel(kernel1);
 		clReleaseKernel(kernel2);
 		clReleaseProgram(program);

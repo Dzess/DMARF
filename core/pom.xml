@@ -100,17 +100,7 @@
 			<groupId>weka</groupId>
 			<artifactId>weka</artifactId>
 			<version>3.7.3</version>
-		</dependency>
-		<dependency>
-			<groupId>jcuda</groupId>
-			<artifactId>jcuda</artifactId>
-			<version>0.3.2a</version>
-		</dependency>				
-		<dependency>
-			<groupId>jcuda</groupId>
-			<artifactId>jcuda-native</artifactId>
-			<version>0.3.2a</version>
-		</dependency>		
+		</dependency>						
 		<dependency>
 			<groupId>org.jocl</groupId>
 			<artifactId>jocl</artifactId>

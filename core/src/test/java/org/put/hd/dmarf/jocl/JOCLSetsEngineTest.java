@@ -10,6 +10,7 @@ import javax.naming.directory.InvalidAttributesException;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
+import org.put.hd.dmarf.algorithms.apriori.binary.BinaryItemSet;
 import org.put.hd.dmarf.algorithms.apriori.binary.JOCLSetsEngine;
 import org.put.hd.dmarf.data.DataRepresentationBase;
 import org.put.hd.dmarf.data.builders.BasicDataBuilder;
@@ -45,11 +46,131 @@ public class JOCLSetsEngineTest {
 
 	}
 
+	/**
+	 * Test against alignedSet.dat
+	 */
+	@Test
+	public void jocl_support_test() {
+
+		// perform test
+		String filename = "alignedSet.data";
+		String pathToFile = "resources" + File.separator + "data"
+				+ File.separator + filename;
+		dataloader.setInputFileName(pathToFile);
+		System.out.println("Loading data set: " + filename);
+		sw.start();
+		data = dataloader.loadData();
+		sw.stop();
+
+		System.out.println("Loading took [s]: " + sw.getElapsedTimeSecs());
+		System.out.println("Found clusters: "
+				+ data.getNumberOfAttributesClusters());
+		System.out.println("Found transactions: "
+				+ data.getNumberOfTransactions());
+
+		try {
+			joclEngine.initEngine(data);
+		} catch (InvalidAttributesException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+
+		char[] candidateSet;
+		int gpuSupport;
+		List<Integer> set = new LinkedList<Integer>();
+
+		
+		//testing against 1
+		set.add(1);
+		candidateSet = BinaryUtils.generateCharArray(set,
+				data.getMaxAttAligned());
+		gpuSupport = joclEngine.getSupport(candidateSet);
+		Assert.assertTrue(gpuSupport == 3);
+
+		
+		// against 1,16
+		set.add(16);
+		candidateSet = BinaryUtils.generateCharArray(set,
+				data.getMaxAttAligned());
+		gpuSupport = joclEngine.getSupport(candidateSet);
+		Assert.assertTrue(gpuSupport == 3);
+
+	
+		// against 1,16,32
+		set.add(32);
+		candidateSet = BinaryUtils.generateCharArray(set,
+				data.getMaxAttAligned());
+		gpuSupport = joclEngine.getSupport(candidateSet);
+		Assert.assertTrue(gpuSupport == 1);		
+
+		
+		// against 1,8,16,32
+		set.add(8);
+		candidateSet = BinaryUtils.generateCharArray(set,
+				data.getMaxAttAligned());
+		gpuSupport = joclEngine.getSupport(candidateSet);
+		Assert.assertTrue(gpuSupport == 1);
+		
+
+		// against 1,2,8,16,32
+		set.add(2);
+		candidateSet = BinaryUtils.generateCharArray(set,
+				data.getMaxAttAligned());
+		gpuSupport = joclEngine.getSupport(candidateSet);
+		Assert.assertTrue(gpuSupport == 1);
+		
+		// against 1,2,8,16,32,48
+		set.add(48);
+		candidateSet = BinaryUtils.generateCharArray(set,
+				data.getMaxAttAligned());
+		gpuSupport = joclEngine.getSupport(candidateSet);
+		Assert.assertTrue(gpuSupport == 0);		
+		
+		// against 2
+		set.clear();
+		set.add(2);
+		candidateSet = BinaryUtils.generateCharArray(set,
+				data.getMaxAttAligned());
+		gpuSupport = joclEngine.getSupport(candidateSet);
+		Assert.assertTrue(gpuSupport == 2);	
+		
+		// against 2,8
+		set.add(8);
+		candidateSet = BinaryUtils.generateCharArray(set,
+				data.getMaxAttAligned());
+		gpuSupport = joclEngine.getSupport(candidateSet);
+		Assert.assertTrue(gpuSupport == 2);	
+		
+		// against 2,4,8
+		set.add(4);
+		candidateSet = BinaryUtils.generateCharArray(set,
+				data.getMaxAttAligned());
+		gpuSupport = joclEngine.getSupport(candidateSet);
+		Assert.assertTrue(gpuSupport == 1);	
+
+		// against 48
+		set.clear();
+		set.add(48);
+		candidateSet = BinaryUtils.generateCharArray(set,
+				data.getMaxAttAligned());
+		gpuSupport = joclEngine.getSupport(candidateSet);
+		Assert.assertTrue(gpuSupport == 1);
+		
+		// against 1,48
+		set.add(1);
+		candidateSet = BinaryUtils.generateCharArray(set,
+				data.getMaxAttAligned());
+		gpuSupport = joclEngine.getSupport(candidateSet);
+		Assert.assertTrue(gpuSupport == 0);	
+		
+		joclEngine.cleanupEngine();		
+	}
+
 	@Test
 	public void jocl_speedup_test() {
 
 		// perform test
-		String filename = "pumsb_star.dat";
+		String filename = "mushroom.dat";
 		String pathToFile = "resources" + File.separator + "data"
 				+ File.separator + filename;
 		dataloader.setInputFileName(pathToFile);
@@ -98,7 +219,7 @@ public class JOCLSetsEngineTest {
 		System.out.println(sw.getElapsedTime() / 1000.0
 				+ " <- Time to find support " + howMany + " times.");
 		System.out.println("Supporting transactions = " + gpuSupport);
-		joclEngine.cleanupEngine();
+		//joclEngine.cleanupEngine();
 
 		System.out.println("CPU ST Test");
 		int numberOfAttClusters = data.getNumberOfAttributesClusters();
