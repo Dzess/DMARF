@@ -1,25 +1,13 @@
 package org.put.hd.dmarf.algorithms.apriori.binary;
 
 import static org.jocl.CL.*;
+import org.jocl.*;
 
 import java.util.Set;
 import java.util.SortedMap;
 import java.util.TreeMap;
-
 import javax.naming.directory.InvalidAttributesException;
 
-import org.jocl.CL;
-import org.jocl.CLException;
-import org.jocl.Pointer;
-import org.jocl.Sizeof;
-import org.jocl.cl_command_queue;
-import org.jocl.cl_context;
-import org.jocl.cl_context_properties;
-import org.jocl.cl_device_id;
-import org.jocl.cl_kernel;
-import org.jocl.cl_mem;
-import org.jocl.cl_platform_id;
-import org.jocl.cl_program;
 import org.put.hd.dmarf.data.DataRepresentationBase;
 import org.put.hd.dmarf.stopwatches.StopWatch;
 
@@ -67,12 +55,14 @@ public class JOCLSetsEngine implements ISetsEngine {
 	private boolean hasRun = false;
 	private int candSetSize;
 	private long outSupplyLongArraySize;
+	private int numberOfTransactions;
+	private int numberOfAttClusters;
+	private long numBytes[];
 
 	public Set<BinaryItemSet> getCandidateSets(
 			Set<BinaryItemSet> frequentSupportMap, int i) {
-		// TODO Auto-generated method stub
-		// TEN KOD TE¯ MO¯E TRAFIÆ NA JOCLA - LATER
-		return null;
+
+		throw new RuntimeException("Not yet implemented");
 	}
 
 	public SortedMap<BinaryItemSet, Integer> verifyCandidatesInData(
@@ -111,10 +101,12 @@ public class JOCLSetsEngine implements ISetsEngine {
 
 	public void initEngine(DataRepresentationBase data) throws InvalidAttributesException {
 
-		long numBytes[] = new long[1];
+		numBytes= new long[1];
 
 		// Create input- and output data
 		this.data = data;
+		this.numberOfTransactions = data.getNumberOfTransactions();
+		this.numberOfAttClusters = data.getNumberOfAttributesClusters();
 		
 		if (data.getNumberOfAttributesClusters() % 4 != 0){
 			throw new InvalidAttributesException("Attribute clusters not aligned to %4");
@@ -127,10 +119,10 @@ public class JOCLSetsEngine implements ISetsEngine {
 		CL.setExceptionsEnabled(true);
 
 		// Sets up the devices with configuring context and command queue
-		setUpDevices(numBytes);		
+		setUpDevices();		
 
 		// Set Up kernel
-		setUpKernels(data);
+		setUpKernels();
 		
 		// preparing MapData argument for kernels (read only map)
 		transCharMap = data.getTransactionsCharMap();
@@ -150,18 +142,18 @@ public class JOCLSetsEngine implements ISetsEngine {
 		
 
 		// candidate vector for reads before kernel 1 (allocates with 0)
-		this.candSetSize = Sizeof.cl_short * data.getNumberOfAttributesClusters();
+		this.candSetSize = Sizeof.cl_short * numberOfAttClusters;
 		this.candSetPointer = Pointer.to(new char[candSetSize]);
 		candSetMem = clCreateBuffer(
 				context,
-				CL_MEM_READ_ONLY | CL_MEM_COPY_HOST_PTR,
+				CL_MEM_READ_ONLY,
 				candSetSize,
-				candSetPointer, null);
+				null, null);
 		
 		// Set up supply vector
-		outSuppLongArray = new long[data.getNumberOfTransactions()];
+		outSuppLongArray = new long[numberOfTransactions];
 		outSuppLongArrayPointer = Pointer.to(outSuppLongArray);
-		outSupplyLongArraySize = Sizeof.cl_ulong * data.getNumberOfTransactions();
+		outSupplyLongArraySize = Sizeof.cl_ulong * numberOfTransactions;
 		
 		outSuppLongArrayMem = clCreateBuffer(
 				context,
@@ -171,11 +163,21 @@ public class JOCLSetsEngine implements ISetsEngine {
 		
 		// Set up the dimensions for the workers
 		global_work_size = new long[] { transCharMap.length };
-		local_work_size = new long[] { data.getNumberOfAttributesClusters() };
+		local_work_size = new long[] { numberOfAttClusters };
 		
+
+		// Set the arguments for the kernel
+		clSetKernelArg(kernel1, 0, Sizeof.cl_mem, Pointer.to(transCharMapMem));
+		clSetKernelArg(kernel1, 1, Sizeof.cl_mem, Pointer.to(candSetMem));
+		clSetKernelArg(kernel1, 2, Sizeof.cl_mem, Pointer.to(tmpMapMem));
+		
+		
+		clSetKernelArg(kernel2, 0, Sizeof.cl_mem, Pointer.to(tmpMapMem));
+		clSetKernelArg(kernel2, 1, Sizeof.cl_mem,
+				Pointer.to(outSuppLongArrayMem));
 	}
 
-	private void setUpDevices(long[] numBytes) {
+	private void setUpDevices() {
 		// Get the list of GPU devices associated with the context
 		clGetContextInfo(context, CL_CONTEXT_DEVICES, 0, null, numBytes);
 
@@ -195,9 +197,9 @@ public class JOCLSetsEngine implements ISetsEngine {
 		clGetPlatformIDs(0, null, numPlatforms);
 
 		// Obtain the platform IDs and initialize the context properties
-		System.out.println("Number of platforms: " + numPlatforms[0]);
+		//System.out.println("Number of platforms: " + numPlatforms[0]);
 
-		System.out.println("Obtaining platform...");
+		//System.out.println("Obtaining platform...");
 		cl_platform_id platforms[] = new cl_platform_id[numPlatforms[0]];
 		clGetPlatformIDs(platforms.length, platforms, null);
 		 
@@ -208,6 +210,7 @@ public class JOCLSetsEngine implements ISetsEngine {
 		for (int i = 0; i < platforms.length; i++) {
 
 			int result;
+			
 			try {
 				result = clGetDeviceIDs(platforms[i], CL_DEVICE_TYPE_GPU, 0,null, null);
 				if (result == CL_SUCCESS) {
@@ -253,7 +256,7 @@ public class JOCLSetsEngine implements ISetsEngine {
 		}
 	}
 
-	private void setUpKernels(DataRepresentationBase data) {
+	private void setUpKernels() {
 		/**
 		 * The source code of the OpenCL support verifying program to execute
 		 */
@@ -270,9 +273,9 @@ public class JOCLSetsEngine implements ISetsEngine {
 				+ "             __global ulong *outSupp)" + "{"
 				+ "    int gid = get_global_id(0);"
 				+ "    for (uint pos = 0; pos <"
-				+ data.getNumberOfAttributesClusters() / 4 + "; pos++) {"
+				+ numberOfAttClusters / 4 + "; pos++) {"
 				+ "	       outSupp[gid] = outSupp[gid] | inTmpMap[gid * "
-				+ data.getNumberOfAttributesClusters() / 4 + "+ pos];"
+				+ numberOfAttClusters / 4 + "+ pos];"
 				+ "    };" + "}";
 
 		// Create the program from the source code
@@ -313,22 +316,19 @@ public class JOCLSetsEngine implements ISetsEngine {
 //		readTrans();
 //		readVector(data.getNumberOfAttributesClusters(),this.candSetMem,this.candSetSize);
 		
-		// Set the arguments for the kernel
-		clSetKernelArg(kernel1, 0, Sizeof.cl_mem, Pointer.to(transCharMapMem));
-		clSetKernelArg(kernel1, 1, Sizeof.cl_mem, Pointer.to(candSetMem));
-		clSetKernelArg(kernel1, 2, Sizeof.cl_mem, Pointer.to(tmpMapMem));
+
 
 		// Execute kernel1
 		// We got a worker per each comparison
 		global_work_size[0] = transCharMap.length / 4;
-		local_work_size[0] = data.getNumberOfAttributesClusters() / 4;
+		local_work_size[0] = numberOfAttClusters / 4;
 
 		clEnqueueNDRangeKernel(commandQueue, kernel1, 1, null,
 				global_work_size, local_work_size, 0, null, null);
 
 		
 		// preparing data for reduction kernel2		
-		outSuppLongArray = new long[data.getNumberOfTransactions()];
+		outSuppLongArray = new long[numberOfTransactions];
 		outSuppLongArrayPointer = Pointer.to(outSuppLongArray);
 		clEnqueueWriteBuffer(commandQueue, // use normal queue
 				this.outSuppLongArrayMem, // write into candidate memory buffer
@@ -340,9 +340,6 @@ public class JOCLSetsEngine implements ISetsEngine {
 		// DEBUG: (read the tranCharMap)
 //		readSupplyArray();
 
-		clSetKernelArg(kernel2, 0, Sizeof.cl_mem, Pointer.to(tmpMapMem));
-		clSetKernelArg(kernel2, 1, Sizeof.cl_mem,
-				Pointer.to(outSuppLongArrayMem));
 		
 		// DEBUG: (read the tranCharMap)
 //		readTrans();
@@ -350,7 +347,7 @@ public class JOCLSetsEngine implements ISetsEngine {
 //		readSupplyArray();
 		
 		// Execute the reduction kernel with 1 worker per transaction
-		global_work_size[0] = data.getNumberOfTransactions();
+		global_work_size[0] = numberOfTransactions;
 		local_work_size[0] = 1;
 		
 		clEnqueueNDRangeKernel(commandQueue, kernel2, 1, null,
@@ -358,14 +355,12 @@ public class JOCLSetsEngine implements ISetsEngine {
 
 		// Read the output data
 		clEnqueueReadBuffer(commandQueue, outSuppLongArrayMem, CL_TRUE, 0,
-				data.getNumberOfTransactions() * Sizeof.cl_ulong,
+				numberOfTransactions * Sizeof.cl_ulong,
 				outSuppLongArrayPointer, 0, null, null);
 
-		clFinish(commandQueue);
-
+		
 		int supp = 0;
 		for (int i = 0; i < outSuppLongArray.length; i++) {
-			// System.out.println((int) outSuppCharArray[i] + " ");
 			if (outSuppLongArray[i] == 0)
 				supp++;
 		}
@@ -463,7 +458,7 @@ public class JOCLSetsEngine implements ISetsEngine {
 		clReleaseMemObject(outSuppLongArrayMem);
 		
 		// Release kernel, program, and memory objects
-		System.out.println("Releasing objects.");
+		// System.out.println("Releasing objects.");
 		clReleaseKernel(kernel1);
 		clReleaseKernel(kernel2);
 		clReleaseProgram(program);

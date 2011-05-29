@@ -10,15 +10,17 @@ public class JOCLSamplesTest {
 
 	@Before
 	public void set_up(){
-		// TODO: those test are problematic in log runing with other test
+		// TODO: those test are problematic in log running with other test
 	}
 	
 	@Test
+	@Ignore("Learning OpenCL tests only.")
 	public void deviceQueryTest() {
 		JOCLDeviceQuery.runJOCLDeviceQuery();
 	}
 
 	@Test
+	@Ignore("Learning OpenCL tests only.")
 	public void OpenCL_1_0_Test() {
 		JOCLSample.runJOCL_1_0_Sample();
 	}
