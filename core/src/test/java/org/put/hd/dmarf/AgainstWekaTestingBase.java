@@ -15,6 +15,7 @@ import org.put.hd.dmarf.data.formatters.IDataFormatter;
 import org.put.hd.dmarf.data.formatters.SimpleDataFormatter;
 import org.put.hd.dmarf.data.loaders.IDataLoader;
 import org.put.hd.dmarf.data.loaders.SimpleDataLoader;
+import org.put.hd.dmarf.stopwatches.StopWatch;
 
 public class AgainstWekaTestingBase {
 
@@ -31,11 +32,17 @@ public class AgainstWekaTestingBase {
 	}
 
 	protected void runTestingForDataSet(String fileName) {
+		StopWatch sw = new StopWatch();
+		
+		sw.start();
 		DataRepresentationBase wekaData = getWekaData(fileName);
 
 		// get the Weka results - expected ones
 		wekaProvider.start(wekaData, minSupport, minConfidance);
 		List<Rule> wekaResults = wekaProvider.getRules();
+		sw.stop();
+		
+		System.out.println("Weka preRun time [s]: "+ sw.getElapsedTimeSecs());
 
 		// run the tests for each algorithm
 		for (int i = 0; i < factory.getNumberOfAlgorithms(); i++) {
@@ -51,13 +58,20 @@ public class AgainstWekaTestingBase {
 			DataRepresentationBase data = loader.loadData();
 
 			// go with the algorithms
+			sw.start();
 			algorithm.start(data, minSupport, minConfidance);
+			sw.stop();
 
+			System.out.println("Algorithm: " + algorithm.toString()
+					+ " took [s]: " + sw.getElapsedTimeSecs());
 			// ignore the time just get output
 			List<Rule> result = algorithm.getRules();
 
+			sw.start();
 			// verify that result is good
 			verifyOutput(result, wekaResults);
+			sw.stop();
+			System.out.println("Verify took [s]: "+sw.getElapsedTimeSecs());
 		}
 	}
 
@@ -81,7 +95,7 @@ public class AgainstWekaTestingBase {
 
 		// check the sizes - must be the same
 		if (result.size() != expectedRules.size()) {
-			showRulesDifferences(result, expectedRules);
+			//showRulesDifferences(result, expectedRules);
 			Assert.fail("The both result rules should be of equal lenght");
 		}
 
@@ -89,7 +103,7 @@ public class AgainstWekaTestingBase {
 		for (Rule rule : result) {
 
 			if (!expectedRules.contains(rule)) {
-				showRulesDifferences(result, expectedRules);
+				//showRulesDifferences(result, expectedRules);
 				Assert.fail("The rule" + rule
 						+ "could not be found in expected rule set.");
 			}
@@ -99,16 +113,16 @@ public class AgainstWekaTestingBase {
 
 	private void showRulesDifferences(List<Rule> result,
 			List<Rule> expectedRules) {
-		
+
 		// Show what went wrong
 		System.err.println("OutCome: ");
-		
+
 		for (Rule r : result) {
 			System.err.println(r);
 		}
 
 		System.err.flush();
-		
+
 		System.err.println("Expected outcome: ");
 		for (Rule r : expectedRules) {
 			System.err.println(r);
