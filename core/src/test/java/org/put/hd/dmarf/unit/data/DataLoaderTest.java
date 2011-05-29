@@ -44,9 +44,7 @@ public class DataLoaderTest {
 	public void cleanup() {
 		// clean up after this fileName
 		if (file.exists())
-			if (file.delete())
-				System.out.println("Deleted tha File");
-			else
+			if (!file.delete())
 				System.out.println("File deletion failed");
 	}
 

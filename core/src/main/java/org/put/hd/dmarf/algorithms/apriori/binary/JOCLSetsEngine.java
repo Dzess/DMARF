@@ -8,6 +8,7 @@ import java.util.SortedMap;
 import java.util.TreeMap;
 import javax.naming.directory.InvalidAttributesException;
 
+import org.put.hd.dmarf.algorithms.apriori.binary.JOCLSetsEngine.DeviceTypeSelector;
 import org.put.hd.dmarf.data.DataRepresentationBase;
 import org.put.hd.dmarf.stopwatches.StopWatch;
 
@@ -58,6 +59,30 @@ public class JOCLSetsEngine implements ISetsEngine {
 	private int numberOfTransactions;
 	private int numberOfAttClusters;
 	private long numBytes[];
+	private DeviceTypeSelector selectedDeviceType;
+
+	public enum DeviceTypeSelector {
+		Any, CPU, GPU
+	};
+
+	public DeviceTypeSelector getSelectedDeviceType() {
+		return selectedDeviceType;
+	}
+
+	/**
+	 * This engine will try to run OpenCL on any found device type by default.
+	 */
+	public JOCLSetsEngine(){
+		this.selectedDeviceType = DeviceTypeSelector.Any;
+	}
+	
+	/**
+	 * Creates the OpenCL engine with runtime on desired deviceType.
+	 * @param dts selected device type for OpenCL to run on.
+	 */
+	public JOCLSetsEngine(DeviceTypeSelector dts){
+		this.selectedDeviceType = dts;
+	}
 
 	public Set<BinaryItemSet> getCandidateSets(
 			Set<BinaryItemSet> frequentSupportMap, int i) {
@@ -197,62 +222,71 @@ public class JOCLSetsEngine implements ISetsEngine {
 		clGetPlatformIDs(0, null, numPlatforms);
 
 		// Obtain the platform IDs and initialize the context properties
-		//System.out.println("Number of platforms: " + numPlatforms[0]);
+		// System.out.println("Number of platforms: " + numPlatforms[0]);
 
-		//System.out.println("Obtaining platform...");
+		// System.out.println("Obtaining platform...");
 		cl_platform_id platforms[] = new cl_platform_id[numPlatforms[0]];
 		clGetPlatformIDs(platforms.length, platforms, null);
-		 
-		
-		// Get devices from platform  
+
+		// Get devices from platform
 		int platformWithGPU = -1;
 		int platformWithCPU = -1;
 		for (int i = 0; i < platforms.length; i++) {
 
 			int result;
-			
-			try {
-				result = clGetDeviceIDs(platforms[i], CL_DEVICE_TYPE_GPU, 0,null, null);
-				if (result == CL_SUCCESS) {
-					platformWithGPU = i;
+			if (selectedDeviceType != DeviceTypeSelector.CPU) 
+				try {
+					result = clGetDeviceIDs(platforms[i], CL_DEVICE_TYPE_GPU, 0,
+							null, null);
+					if (result == CL_SUCCESS) {
+						platformWithGPU = i;
+					}
+				} catch (CLException e) {
+					// well do nothing now
 				}
-			} catch (CLException e) {
-				// well do nothing now
-			}
-			
-			try {
-				result = clGetDeviceIDs(platforms[i], CL_DEVICE_TYPE_CPU, 0,null, null);
-				if (result == CL_SUCCESS) {
-					platformWithCPU = i;
+			if (selectedDeviceType != DeviceTypeSelector.GPU) 
+				try {
+					result = clGetDeviceIDs(platforms[i], CL_DEVICE_TYPE_CPU, 0,
+							null, null);
+					if (result == CL_SUCCESS) {
+						platformWithCPU = i;
+					}
+				} catch (CLException e) {
+					// well do nothing now
 				}
-			} catch (CLException e) {
-				// well do nothing now
-			}
 		}
-		
-		if(platformWithGPU != -1){
+
+		if (platformWithGPU != -1) {
 			// Create an OpenCL context on a GPU device
 			cl_context_properties contextProperties = new cl_context_properties();
-			contextProperties.addProperty(CL_CONTEXT_PLATFORM, platforms[platformWithGPU]);
-			
+			contextProperties.addProperty(CL_CONTEXT_PLATFORM,
+					platforms[platformWithGPU]);
+
 			context = clCreateContextFromType(contextProperties,
 					CL_DEVICE_TYPE_GPU, null, null, null);
+			
+			selectedDeviceType = DeviceTypeSelector.GPU;
 		}
 		// if no GPU the create the CPU context
-		else if (platformWithCPU != -1 ){
+		else if (platformWithCPU != -1) {
 			cl_context_properties contextProperties = new cl_context_properties();
-			contextProperties.addProperty(CL_CONTEXT_PLATFORM, platforms[platformWithCPU]);
-			
+			contextProperties.addProperty(CL_CONTEXT_PLATFORM,
+					platforms[platformWithCPU]);
+
 			context = clCreateContextFromType(contextProperties,
 					CL_DEVICE_TYPE_CPU, null, null, null);
+			
+			selectedDeviceType = DeviceTypeSelector.CPU;
 		}
-		// if no CPU context available then throw and exception about 
-		else{
-			throw new RuntimeException("No CPU or GPU device to get the code working");
+		// if no CPU context available then throw and exception about
+		else {
+			throw new RuntimeException(
+					"No CPU or GPU device to get the code working");
 		}
 
 		if (context == null) {
-			throw new RuntimeException("Could not create the context on the device");
+			throw new RuntimeException(
+					"Could not create the context on the device");
 		}
 	}
 
@@ -358,7 +392,6 @@ public class JOCLSetsEngine implements ISetsEngine {
 				numberOfTransactions * Sizeof.cl_ulong,
 				outSuppLongArrayPointer, 0, null, null);
 
-		
 		int supp = 0;
 		for (int i = 0; i < outSuppLongArray.length; i++) {
 			if (outSuppLongArray[i] == 0)
@@ -456,7 +489,7 @@ public class JOCLSetsEngine implements ISetsEngine {
 		clReleaseMemObject(tmpMapMem);
 		clReleaseMemObject(transCharMapMem);
 		clReleaseMemObject(outSuppLongArrayMem);
-		
+
 		// Release kernel, program, and memory objects
 		// System.out.println("Releasing objects.");
 		clReleaseKernel(kernel1);

@@ -13,6 +13,7 @@ import org.junit.Before;
 import org.junit.Test;
 import org.put.hd.dmarf.algorithms.apriori.binary.BinaryItemSet;
 import org.put.hd.dmarf.algorithms.apriori.binary.JOCLSetsEngine;
+import org.put.hd.dmarf.algorithms.apriori.binary.JOCLSetsEngine.DeviceTypeSelector;
 import org.put.hd.dmarf.data.DataRepresentationBase;
 import org.put.hd.dmarf.data.builders.BasicDataBuilder;
 import org.put.hd.dmarf.data.formatters.IDataFormatter;
@@ -41,15 +42,8 @@ public class JOCLSetsEngineTest {
 		formatter = new SimpleDataFormatter(builder);
 		dataloader = new SimpleDataLoader(formatter);
 
-		joclEngine = new JOCLSetsEngine();
-
 		sw = new StopWatch();
 
-	}
-	
-	@After
-	public void tear_down(){
-		joclEngine.cleanupEngine();
 	}
 
 	/**
@@ -75,7 +69,9 @@ public class JOCLSetsEngineTest {
 				+ data.getNumberOfTransactions());
 
 		try {
+			joclEngine = new JOCLSetsEngine();
 			joclEngine.initEngine(data);
+			System.out.println("Created OpenCL on: "+joclEngine.getSelectedDeviceType());
 		} catch (InvalidAttributesException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
@@ -85,74 +81,69 @@ public class JOCLSetsEngineTest {
 		int gpuSupport;
 		List<Integer> set = new LinkedList<Integer>();
 
-		
-		//testing against 1
+		// testing against 1
 		set.add(1);
 		candidateSet = BinaryUtils.generateCharArray(set,
 				data.getMaxAttAligned());
 		gpuSupport = joclEngine.getSupport(candidateSet);
-		Assert.assertTrue("Should be 3, was: "+gpuSupport,gpuSupport == 3);
+		Assert.assertTrue("Should be 3, was: " + gpuSupport, gpuSupport == 3);
 
-		
 		// against 1,16
 		set.add(16);
 		candidateSet = BinaryUtils.generateCharArray(set,
 				data.getMaxAttAligned());
 		gpuSupport = joclEngine.getSupport(candidateSet);
-		Assert.assertTrue("Should be 3, was: "+gpuSupport,gpuSupport == 3);
+		Assert.assertTrue("Should be 3, was: " + gpuSupport, gpuSupport == 3);
 
-	
 		// against 1,16,32
 		set.add(32);
 		candidateSet = BinaryUtils.generateCharArray(set,
 				data.getMaxAttAligned());
 		gpuSupport = joclEngine.getSupport(candidateSet);
-		Assert.assertTrue("Should be 1, was: "+gpuSupport,gpuSupport == 1);		
+		Assert.assertTrue("Should be 1, was: " + gpuSupport, gpuSupport == 1);
 
-		
 		// against 1,8,16,32
 		set.add(8);
 		candidateSet = BinaryUtils.generateCharArray(set,
 				data.getMaxAttAligned());
 		gpuSupport = joclEngine.getSupport(candidateSet);
-		Assert.assertTrue("Should be 1, was: "+gpuSupport,gpuSupport == 1);
-		
+		Assert.assertTrue("Should be 1, was: " + gpuSupport, gpuSupport == 1);
 
 		// against 1,2,8,16,32
 		set.add(2);
 		candidateSet = BinaryUtils.generateCharArray(set,
 				data.getMaxAttAligned());
 		gpuSupport = joclEngine.getSupport(candidateSet);
-		Assert.assertTrue("Should be 1, was: "+gpuSupport,gpuSupport == 1);
-		
+		Assert.assertTrue("Should be 1, was: " + gpuSupport, gpuSupport == 1);
+
 		// against 1,2,8,16,32,48
 		set.add(48);
 		candidateSet = BinaryUtils.generateCharArray(set,
 				data.getMaxAttAligned());
 		gpuSupport = joclEngine.getSupport(candidateSet);
-		Assert.assertTrue("Should be 0, was: "+gpuSupport,gpuSupport == 0);		
-		
+		Assert.assertTrue("Should be 0, was: " + gpuSupport, gpuSupport == 0);
+
 		// against 2
 		set.clear();
 		set.add(2);
 		candidateSet = BinaryUtils.generateCharArray(set,
 				data.getMaxAttAligned());
 		gpuSupport = joclEngine.getSupport(candidateSet);
-		Assert.assertTrue("Should be 2, was: "+gpuSupport,gpuSupport == 2);	
-		
+		Assert.assertTrue("Should be 2, was: " + gpuSupport, gpuSupport == 2);
+
 		// against 2,8
 		set.add(8);
 		candidateSet = BinaryUtils.generateCharArray(set,
 				data.getMaxAttAligned());
 		gpuSupport = joclEngine.getSupport(candidateSet);
-		Assert.assertTrue("Should be 2, was: "+gpuSupport,gpuSupport == 2);	
-		
+		Assert.assertTrue("Should be 2, was: " + gpuSupport, gpuSupport == 2);
+
 		// against 2,4,8
 		set.add(4);
 		candidateSet = BinaryUtils.generateCharArray(set,
 				data.getMaxAttAligned());
 		gpuSupport = joclEngine.getSupport(candidateSet);
-		Assert.assertTrue("Should be 1, was: "+gpuSupport,gpuSupport == 1);	
+		Assert.assertTrue("Should be 1, was: " + gpuSupport, gpuSupport == 1);
 
 		// against 48
 		set.clear();
@@ -160,15 +151,16 @@ public class JOCLSetsEngineTest {
 		candidateSet = BinaryUtils.generateCharArray(set,
 				data.getMaxAttAligned());
 		gpuSupport = joclEngine.getSupport(candidateSet);
-		Assert.assertTrue("Should be 1, was: "+gpuSupport,gpuSupport == 1);
-		
+		Assert.assertTrue("Should be 1, was: " + gpuSupport, gpuSupport == 1);
+
 		// against 1,48
 		set.add(1);
 		candidateSet = BinaryUtils.generateCharArray(set,
 				data.getMaxAttAligned());
 		gpuSupport = joclEngine.getSupport(candidateSet);
-		Assert.assertTrue("Should be 0, was: "+gpuSupport,gpuSupport == 0);	
-		
+		Assert.assertTrue("Should be 0, was: " + gpuSupport, gpuSupport == 0);
+
+		joclEngine.cleanupEngine();
 	}
 
 	@Test
@@ -193,6 +185,8 @@ public class JOCLSetsEngineTest {
 		Random r = new Random();
 		// >>>
 		int howMany = 100;
+		System.out.println("Test will be searching support " + howMany
+				+ " times.");
 		// >>>
 		List<Integer> set = new LinkedList<Integer>();
 
@@ -202,17 +196,19 @@ public class JOCLSetsEngineTest {
 		char[] candidateSet = BinaryUtils.generateCharArray(set,
 				data.getMaxAttAligned());
 
-		System.out.println("GPU Test");
+		System.out.println("OpenCL Test");
 
 		sw.start();
 		try {
+			joclEngine = new JOCLSetsEngine();
 			joclEngine.initEngine(data);
+			System.out.println("OpenCL will run on: "+joclEngine.getSelectedDeviceType());
 		} catch (InvalidAttributesException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 		sw.stop();
-		System.out.println(sw.getElapsedTime() / 1000.0
+		System.out.println(sw.getElapsedTimeSecs()
 				+ " <- Time to initialize and upload transactions Matrix.");
 
 		int gpuSupport = 0;
@@ -221,9 +217,11 @@ public class JOCLSetsEngineTest {
 			gpuSupport = joclEngine.getSupport(candidateSet);
 		}
 		sw.stop();
-		System.out.println(sw.getElapsedTime() / 1000.0
-				+ " <- Time to find support " + howMany + " times.");
-		System.out.println("Supporting transactions = " + gpuSupport);
+		System.out.println(sw.getElapsedTimeSecs()
+				+ " <- OpenCL time to find support.");
+		System.out.println(gpuSupport + " <- OpenCL supporting transactions.");
+
+		joclEngine.cleanupEngine();
 
 		System.out.println("CPU ST Test");
 		int numberOfAttClusters = data.getNumberOfAttributesClusters();
@@ -245,8 +243,9 @@ public class JOCLSetsEngineTest {
 			}
 		}
 		sw.stop();
-		System.out.println("CPU found supporting transactions: " + cpuSupport);
-		System.out.println("CPU running time: " + sw.getElapsedTime() / 1000.0);
+		System.out.println(sw.getElapsedTimeSecs() + " <- CPU running time.");
+		System.out.println(cpuSupport
+				+ " <- CPU found supporting transactions.");
 
 		Assert.assertTrue(cpuSupport == gpuSupport);
 	}
