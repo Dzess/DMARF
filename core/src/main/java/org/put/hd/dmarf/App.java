@@ -69,9 +69,6 @@ public class App {
 		outputFormatter.setTotalTime(stopWatch.getElapsedTimeSecs());
 
 		String outputString = outputFormatter.getFormattedOutputString();
-
-		// write the output to the standard output
-		System.out.println(outputString);
 		
 		// write the output the file name
 		try {
