@@ -10,6 +10,7 @@ import org.put.hd.dmarf.algorithms.apriori.binary.BinaryRuleEngine;
 import org.put.hd.dmarf.algorithms.apriori.binary.BinarySetsEngine;
 import org.put.hd.dmarf.algorithms.apriori.binary.InjectableSetsEngine;
 import org.put.hd.dmarf.algorithms.apriori.binary.JOCLSetsEngine;
+import org.put.hd.dmarf.algorithms.apriori.binary.JOCLSetsEngine.DeviceTypeSelector;
 import org.put.hd.dmarf.algorithms.apriori.nst.AprioriNST;
 
 /**
@@ -35,16 +36,19 @@ public class ProductionAlgorithmFactory implements IAlgorithmFactory {
 		algorithms.add(new AprioriNST());
 
 		// Standard CPU implementation of binary apriori
-		algorithms.add(new BinaryApriori(new BinaryRuleEngine(),new BinarySetsEngine(),1));
+		algorithms.add(new BinaryApriori(new BinaryRuleEngine(),new BinarySetsEngine(),512));
 
-		// CPU based apriori with support mining with OpenCL (bit align to 64 bits vectors)
-		InjectableSetsEngine setsEngine = new InjectableSetsEngine(
-				new BinarySetsEngine(), new JOCLSetsEngine());
+		// CPU based apriori with support mining with OpenCL
+		InjectableSetsEngine GPUsetsEngine = new InjectableSetsEngine(
+				new BinarySetsEngine(), new JOCLSetsEngine(DeviceTypeSelector.Any));
+		//will prefer GPU
+		algorithms.add(new BinaryApriori(new BinaryRuleEngine(), GPUsetsEngine,4));
+
+		// CPU based apriori with support mining with OpenCL
+		InjectableSetsEngine CPUsetsEngine = new InjectableSetsEngine(
+				new BinarySetsEngine(), new JOCLSetsEngine(DeviceTypeSelector.CPU));
 		
-		algorithms.add(new BinaryApriori(new BinaryRuleEngine(), setsEngine,4));
-
-		// CPU based apriori with support mining with OpenCL (bit align to 64 bits vectors)
-		algorithms.add(new BinaryApriori(new BinaryRuleEngine(), setsEngine, 64));
+		algorithms.add(new BinaryApriori(new BinaryRuleEngine(), CPUsetsEngine,4));
 		
 	}
 
