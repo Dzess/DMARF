@@ -3,6 +3,7 @@ package org.put.hd.dmarf.profiling;
 import java.io.File;
 
 import org.junit.Before;
+import org.junit.Ignore;
 import org.junit.Test;
 import org.put.hd.dmarf.AgainstWekaTestingBase;
 
@@ -53,7 +54,9 @@ public class TimeConsumingTests extends AgainstWekaTestingBase {
 
 		runTestingForDataSet(fileName);
 	}
-
+	
+	@Test
+	@Ignore("Too time consuming")
 	public void retail_testing() {
 		// path to the resources data
 		String fileName = "resources/data/retail.dat";
