@@ -1,0 +1,1 @@
+Presentation about GPGPU data mining methods
