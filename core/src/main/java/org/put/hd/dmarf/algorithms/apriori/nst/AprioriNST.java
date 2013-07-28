@@ -10,7 +10,6 @@ import java.util.Set;
 import java.util.SortedMap;
 import java.util.SortedSet;
 import java.util.TreeMap;
-import java.util.TreeSet;
 
 import org.put.hd.dmarf.algorithms.AlgorithmBase;
 import org.put.hd.dmarf.algorithms.Rule;
@@ -36,7 +35,7 @@ public class AprioriNST extends AlgorithmBase {
 
 	@Override
 	protected void startRuleGeneration(DataRepresentationBase data,
-			double minSupport, double minCredibility) {
+			double minSupport, double minConfidence) {
 
 		Set<Rule> rulseSet = new HashSet<Rule>();
 		// for each frequent set
@@ -49,7 +48,7 @@ public class AprioriNST extends AlgorithmBase {
 
 			// generate possible rules for this frequent set
 			Set<Rule> itemRuleSet = getRulesFromItemSet(entry.getKey(), data,
-					minCredibility);
+                    minConfidence);
 			rulseSet.addAll(itemRuleSet);
 
 		}
@@ -99,7 +98,7 @@ public class AprioriNST extends AlgorithmBase {
 	}
 
 	/**
-	 * Generates the candidate for the frequent sets using avaliable frequent
+	 * Generates the candidate for the frequent sets using available frequent
 	 * sets.
 	 * 
 	 * @param frequentSets
@@ -161,7 +160,7 @@ public class AprioriNST extends AlgorithmBase {
 
 	@Override
 	protected void startSetGeneration(DataRepresentationBase data,
-			double minSupport, double minCredibility) {
+			double minSupport, double minConfidence) {
 
 		// get the threshold for the minimal support of the frequent set =
 		// ceiling { transactions * percent }
@@ -192,19 +191,19 @@ public class AprioriNST extends AlgorithmBase {
 	/**
 	 * Gets the rules out of the passed itemSet
 	 * 
-	 * @param minCredibility
+	 * @param minConfidence
 	 * @param data
 	 * @param itemSet
 	 *            : one of the frequent items.
-	 * @return List of rules which satisfy minimal credibility.
+	 * @return List of rules which satisfy minimal confidence.
 	 */
 	private Set<Rule> getRulesFromItemSet(ItemSet itemSet,
-			DataRepresentationBase data, double minCredibility) {
+			DataRepresentationBase data, double minConfidence) {
 
 		Set<Rule> itemSetRules = new HashSet<Rule>();
 
 		// all rule item set support (FOR THE WHOLE RULE)
-		int suportXY = frequentSet.get(itemSet);
+		int supportXY = frequentSet.get(itemSet);
 
 		// create the veto list of elements that can be placed in conditional
 		// part of the rule
@@ -214,7 +213,7 @@ public class AprioriNST extends AlgorithmBase {
 		// to search for all the combinations of the frequency sets
 		// but only n-1 goes down is possible up to the two element sets
 		for (int i = 0; i < itemSet.getElements().size(); i++) {
-			// get the all (n-1 elemented) sets, from the accepted set elements
+			// get the all (n-1 elements) sets, from the accepted set elements
 			List<ItemSet> smallerSets = new LinkedList<ItemSet>(nextSets);
 
 			// checking if the set in the next is not in the veto list
@@ -225,12 +224,12 @@ public class AprioriNST extends AlgorithmBase {
 			for (ItemSet currentSet : smallerSets) {
 
 				int supportX = frequentSet.get(currentSet);
-				double confidance = suportXY / (double) supportX;
+				double confidence = supportXY / (double) supportX;
 
-				if (confidance >= minCredibility) {
+				if (confidence >= minConfidence) {
 
 					// create the production rule here if the set is nice
-					List<Integer> exectuivePart = new LinkedList<Integer>();
+					List<Integer> executivePart = new LinkedList<Integer>();
 					List<Integer> conditionalPart = new LinkedList<Integer>();
 
 					// MT: can be parallel
@@ -241,13 +240,13 @@ public class AprioriNST extends AlgorithmBase {
 							// it gets to the conditional part
 							conditionalPart.add(Integer.parseInt(attribute));
 						} else {
-							exectuivePart.add(Integer.parseInt(attribute));
+							executivePart.add(Integer.parseInt(attribute));
 						}
 					}
 
 					// the rule must have confidence in percents provided
 					Rule rule = new Rule(ruleCounter++, conditionalPart,
-							exectuivePart, (int) (confidance * 100), suportXY);
+							executivePart, (int) (confidence * 100), supportXY);
 
 					itemSetRules.add(rule);
 

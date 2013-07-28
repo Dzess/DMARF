@@ -21,7 +21,7 @@ public class ArgumentParserInputArgumentsTest {
 	private String inputFileName;
 	private String outputFileName;
 	private String minSupport;
-	private String minCredibility;
+	private String minConfidence;
 	private String algorithm;
 
 	@Mock private IAlgorithmFactory mockAlgorithmFactory;
@@ -36,7 +36,7 @@ public class ArgumentParserInputArgumentsTest {
 		inputFileName = "inputFile";
 		outputFileName = "outputFile";
 		minSupport = "30";
-		minCredibility = "60";
+		minConfidence = "60";
 		algorithm = "1";
 		
 		Mockito.when(mockAlgorithmFactory.getNumberOfAlgorithms()).thenReturn(3);
@@ -75,7 +75,7 @@ public class ArgumentParserInputArgumentsTest {
 
 		// wait for confirmation message
 		list = new String[] { inputFileName,
-				outputFileName, minSupport, minCredibility, algorithm };
+				outputFileName, minSupport, minConfidence, algorithm };
 		
 		String result = parser.setInputArguments(list);
 		Assert.assertEquals(parser.confirmationMessage, result);
@@ -85,7 +85,7 @@ public class ArgumentParserInputArgumentsTest {
 	public void providing_good_list_works_with_confirmation_message() {
 
 		String arguments = inputFileName + " " + outputFileName + " "
-				+ minSupport + " " + minCredibility + " " + algorithm;
+				+ minSupport + " " + minConfidence + " " + algorithm;
 
 		// well this should work as assert.doesNotThrow
 		String result = parser.setInputArguments(arguments);
@@ -103,7 +103,7 @@ public class ArgumentParserInputArgumentsTest {
 
 		// test
 		list = new String[] { inputFileName,
-				outputFileName, minSupport, minCredibility, algorithm };
+				outputFileName, minSupport, minConfidence, algorithm };
 		
 		try {
 			parser.setInputArguments(list);

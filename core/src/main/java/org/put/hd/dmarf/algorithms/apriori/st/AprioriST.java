@@ -36,11 +36,11 @@ public class AprioriST extends AlgorithmBase {
 
 	private int supportThreshold;
 	private double minSupport;
-	private double minCredibility;
+	private double minConfidence;
 
 	@Override
 	protected void startRuleGeneration(DataRepresentationBase data,
-			double minSupport, double minCredibility) {
+			double minSupport, double minConfidence) {
 
 		rules = new LinkedList<Rule>();
 
@@ -54,19 +54,19 @@ public class AprioriST extends AlgorithmBase {
 
 			// generate possible rules for this frequent set
 			List<Rule> frequentSetRules = generateRulesForItemSet(
-					entry.getKey(), data, minCredibility);
+					entry.getKey(), data, minConfidence);
 
 			rules.addAll(frequentSetRules);
 		}
 	}
 
 	private List<Rule> generateRulesForItemSet(FastItemSet itemSet,
-			DataRepresentationBase data, double minCredibility2) {
+			DataRepresentationBase data, double minConfidence2) {
 
 		List<Rule> itemSetRules = new LinkedList<Rule>();
 
 		// all rule item set support (FOR THE WHOLE RULE)
-		int suportXY = frequentSet.get(itemSet);
+		int supportXY = frequentSet.get(itemSet);
 
 		// create the veto list of elements that can be placed in conditional
 		// part of the rule
@@ -90,12 +90,12 @@ public class AprioriST extends AlgorithmBase {
 			for (FastItemSet currentSet : smallerSets) {
 
 				int supportX = frequentSet.get(currentSet);
-				double confidance = suportXY / supportX;
+				double confidence = supportXY / supportX;
 
-				if (confidance >= minCredibility) {
+				if (confidence >= minConfidence) {
 
 					// create the production rule here if the set is nice
-					List<Integer> exectuivePart = new LinkedList<Integer>();
+					List<Integer> executivePart = new LinkedList<Integer>();
 					List<Integer> conditionalPart = new LinkedList<Integer>();
 
 					// MT: can be parallel
@@ -105,13 +105,13 @@ public class AprioriST extends AlgorithmBase {
 							// it gets to the conditional part
 							conditionalPart.add(attribute);
 						} else {
-							exectuivePart.add(attribute);
+							executivePart.add(attribute);
 						}
 					}
 
 					// the rule must have confidence in percents provided
 					Rule rule = new Rule(ruleCounter++, conditionalPart,
-							exectuivePart, (int) (confidance * 100), supportX);
+							executivePart, (int) (confidence * 100), supportX);
 
 					itemSetRules.add(rule);
 
@@ -157,11 +157,11 @@ public class AprioriST extends AlgorithmBase {
 
 	@Override
 	protected void startSetGeneration(DataRepresentationBase data,
-			double minSupport, double minCredibility) {
+			double minSupport, double minConfidence) {
 
 		// assign some values
 		this.minSupport = minSupport;
-		this.minCredibility = minCredibility;
+		this.minConfidence = minConfidence;
 
 		// get the threshold for the minimal support of the frequent set =
 		// ceiling { transactions * percent }
@@ -169,7 +169,7 @@ public class AprioriST extends AlgorithmBase {
 				* minSupport);
 
 		// first level frequent sets (based on the maps) - quite a nice feature
-		SortedMap<FastItemSet, Integer> frequentSuppMap = generateLevelOneFreqent(data);
+		SortedMap<FastItemSet, Integer> frequentSuppMap = generateLevelOneFrequent(data);
 
 		// generate the frequent sets
 		int generation = 0;
@@ -200,8 +200,8 @@ public class AprioriST extends AlgorithmBase {
 		return candidateSet;
 	}
 
-	private SortedMap<FastItemSet, Integer> generateLevelOneFreqent(
-			DataRepresentationBase data) {
+	private SortedMap<FastItemSet, Integer> generateLevelOneFrequent(
+            DataRepresentationBase data) {
 
 		// MT: get the each attribute independently
 		SortedMap<FastItemSet, Integer> frequentSets = new TreeMap<FastItemSet, Integer>();

@@ -51,11 +51,11 @@ public interface IAlgorithm {
 	 *            : Data representation
 	 * @param minSupport
 	 *            : Minimal support.
-	 * @param minCredibility
-	 *            : Minimal credibility.
+	 * @param minConfidence
+	 *            : Minimal confidence.
 	 */
 	public void start(DataRepresentationBase data, double minSupport,
-			double minCredibility);
+			double minConfidence);
 
 	/**
 	 * Gets the result for the this algorithm

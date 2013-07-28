@@ -21,14 +21,12 @@ public class BinaryItemSet implements Comparable<BinaryItemSet> {
 
 		// perform shallow copy
 		this.attributeVector = new char[elements.length];
-		for (int i = 0; i < elements.length; i++) {
-			this.attributeVector[i] = elements[i];
-		}
+        System.arraycopy(elements, 0, this.attributeVector, 0, elements.length);
 
 		// get the number of attributes from the attribute vector ?
 		int sum = 0;
 		for (char v : this.attributeVector) {
-			sum += BinaryItemSet.bitcount(v);
+			sum += BinaryItemSet.bitCount(v);
 		}
 		this.numberOfAttributes = sum;
 	}
@@ -40,9 +38,7 @@ public class BinaryItemSet implements Comparable<BinaryItemSet> {
 
 		// perform shallow copy
 		this.attributeVector = new char[elements.length];
-		for (int i = 0; i < elements.length; i++) {
-			this.attributeVector[i] = elements[i];
-		}
+        System.arraycopy(elements, 0, this.attributeVector, 0, elements.length);
 	}
 
 	@Override
@@ -53,7 +49,7 @@ public class BinaryItemSet implements Comparable<BinaryItemSet> {
 		builder.append("Attribute vector: \n");
 		for (int i = 0; i < this.attributeVector.length; i++) {
 			char[] chunk = BinaryItemSet.getBinaryString(this.attributeVector[i]);
-			builder.append("Chunk " + i + ": ");
+			builder.append("Chunk ").append(i).append(": ");
 			builder.append(chunk);
 			builder.append('\n');
 		}
@@ -65,7 +61,7 @@ public class BinaryItemSet implements Comparable<BinaryItemSet> {
 	 * Gets the vector describing the attributes in binary format, using 16 bit
 	 * chunks of data.
 	 * 
-	 * @return
+	 * @return vector of attributes in binary format
 	 */
 	public char[] getAttributeVector() {
 		return attributeVector;
@@ -97,10 +93,8 @@ public class BinaryItemSet implements Comparable<BinaryItemSet> {
 		if (getClass() != obj.getClass())
 			return false;
 		BinaryItemSet other = (BinaryItemSet) obj;
-		if (!Arrays.equals(attributeVector, other.attributeVector))
-			return false;
-		return true;
-	}
+        return Arrays.equals(attributeVector, other.attributeVector);
+    }
 
 	public int compareTo(BinaryItemSet o) {
 
@@ -136,23 +130,21 @@ public class BinaryItemSet implements Comparable<BinaryItemSet> {
 		if (numberOfAttributes < 2)
 			return output;
 
-		char[] vector = inputSet;
-		int generation = numberOfAttributes;
-		int newGeneration = generation - 1;
+		int newGeneration = numberOfAttributes - 1;
 
-		for (int i = 0; i < vector.length; i++) {
+		for (int i = 0; i < inputSet.length; i++) {
 			// 1000 0000 0000 0000
 			char mask = 32768;
 			for (int j = 0; j < 16; j++) {
 				// get the set with n-1 attributes
 				char invertedMask = (char) ~mask;
-				char outChunk = (char) (invertedMask & vector[i]);
+				char outChunk = (char) (invertedMask & inputSet[i]);
 
 				// if same then
 				// 0000
 				// 0010 case was
-				if (outChunk != vector[i]) {
-					char[] newElements = vector.clone();
+				if (outChunk != inputSet[i]) {
+					char[] newElements = inputSet.clone();
 					newElements[i] = outChunk;
 					BinaryItemSet set = new BinaryItemSet(newElements,
 							newGeneration);
@@ -183,11 +175,11 @@ public class BinaryItemSet implements Comparable<BinaryItemSet> {
 	/**
 	 * Get the number of '1' in the binary representation number.
 	 * 
-	 * @param n
+	 * @param x
 	 *            : number to be looked into.
 	 * @return the number of '1' in the binary representation.
 	 */
-	public static int bitcount(char x) {
+	public static int bitCount(char x) {
 		// classic shift method
 		int result = 0;
 		for (int i = 0; i < 16; i++) {

@@ -393,10 +393,10 @@ public class JOCLSetsEngine implements ISetsEngine {
 				outSuppLongArrayPointer, 0, null, null);
 
 		int supp = 0;
-		for (int i = 0; i < outSuppLongArray.length; i++) {
-			if (outSuppLongArray[i] == 0)
-				supp++;
-		}
+        for (long anOutSuppLongArray : outSuppLongArray) {
+            if (anOutSuppLongArray == 0)
+                supp++;
+        }
 
 		return supp;
 	}
@@ -437,9 +437,9 @@ public class JOCLSetsEngine implements ISetsEngine {
 	
 		// Print the data with java
 		System.out.println("\nDebuging Vector");
-		for (int i = 0; i < vector.length; i++) {
-			System.out.print( new String(BinaryItemSet.getBinaryString(vector[i])) + "\t");
-		}
+        for (char c : vector) {
+            System.out.print(new String(BinaryItemSet.getBinaryString(c)) + "\t");
+        }
 		System.out.println("");
 	}
 	

@@ -33,7 +33,7 @@ public abstract class AlgorithmBase implements IAlgorithm {
 	}
 
 	public void start(DataRepresentationBase data, double minSupport,
-			double minCredibility) {
+			double minConfidence) {
 
 		overallStopWatch.start();
 
@@ -44,11 +44,11 @@ public abstract class AlgorithmBase implements IAlgorithm {
 
 		// Frequent set generation step
 		generationStopWatch.start();
-		startSetGeneration(data, minSupport, minCredibility);
+		startSetGeneration(data, minSupport, minConfidence);
 		generationStopWatch.stop();
 
 		// Rules generation step
-		startRuleGeneration(data, minSupport, minCredibility);
+		startRuleGeneration(data, minSupport, minConfidence);
 
 		// Cleanup relevant memory.
 		cleanupMemory();
@@ -57,10 +57,10 @@ public abstract class AlgorithmBase implements IAlgorithm {
 	}
 
 	protected abstract void startRuleGeneration(DataRepresentationBase data,
-			double minSupport, double minCredibility);
+			double minSupport, double minConfidence);
 
 	protected abstract void startSetGeneration(DataRepresentationBase data,
-			double minSupport, double minCredibility);
+			double minSupport, double minConfidence);
 
 	protected abstract void initMemory(DataRepresentationBase data);
 
