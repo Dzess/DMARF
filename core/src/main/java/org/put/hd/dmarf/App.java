@@ -48,14 +48,14 @@ public class App {
 		// using some kind of algorithms
 		IDataRepresentationBuilder builder = new AlgorithmBasedBuilderFactory(algorithm);
 		//IDataRepresentationBuilder builder = new BasicDataBuilder();
-		IDataFormatter fomratter = new SimpleDataFormatter(builder);
-		IDataLoader loader = new SimpleDataLoader(fomratter);
+		IDataFormatter formatter = new SimpleDataFormatter(builder);
+		IDataLoader loader = new SimpleDataLoader(formatter);
 		loader.setInputFileName(parser.getInputFileName());
 		DataRepresentationBase data = loader.loadData();
 
 		// running the algorithm
 		algorithm.start(data, parser.getMinSupport(),
-				parser.getMinCredibility());
+				parser.getMinConfidence());
 
 		// the main thread within algorithm should be sequential 
 		stopWatch.stop();
@@ -63,7 +63,7 @@ public class App {
 		// saving the output
 		OutputFormatter outputFormatter = new OutputFormatter();
 		outputFormatter.setMinSupport(parser.getMinSupport());
-		outputFormatter.setMinConfidence(parser.getMinCredibility());
+		outputFormatter.setMinConfidence(parser.getMinConfidence());
 		outputFormatter.setInputFileName(parser.getInputFileName());
 		outputFormatter.setAlgorithm(algorithm);
 		outputFormatter.setTotalTime(stopWatch.getElapsedTimeSecs());
