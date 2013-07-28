@@ -436,7 +436,7 @@ public class JOCLSetsEngine implements ISetsEngine {
 				vectorPointer, 0, null, null);
 	
 		// Print the data with java
-		System.out.println("\nDebuging Vector");
+		System.out.println("\nDebugging Vector");
         for (char c : vector) {
             System.out.print(new String(BinaryItemSet.getBinaryString(c)) + "\t");
         }
@@ -454,7 +454,7 @@ public class JOCLSetsEngine implements ISetsEngine {
 				this.transCharMapPointer, 0, null, null);
 	
 		// Print the data with java
-		System.out.println("\nDebuging Transactions");
+		System.out.println("\nDebugging Transactions");
 		for (int i = 0; i < transCharMap.length; i++) {
 			System.out.print( new String(BinaryItemSet.getBinaryString(transCharMap[i])) + "\t");
 			if( (i +1) % this.data.getNumberOfAttributesClusters() == 0)
@@ -474,7 +474,7 @@ public class JOCLSetsEngine implements ISetsEngine {
 				tmpMapPtr, 0, null, null);
 	
 		// Print the data with java
-		System.out.println("\nDebuging Temporary");
+		System.out.println("\nDebugging Temporary");
 		for (int i = 0; i < transCharMap.length; i++) {
 			System.out.print( new String(BinaryItemSet.getBinaryString(tmpMap[i])) + "\t");
 			if( (i + 1) % this.data.getNumberOfAttributesClusters() == 0)
