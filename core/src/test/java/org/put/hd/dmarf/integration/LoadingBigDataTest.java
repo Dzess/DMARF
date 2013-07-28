@@ -22,7 +22,7 @@ import org.put.hd.dmarf.data.loaders.SimpleDataLoader;
 
 /**
  * Loading the big data test. Especially accidents data set and kosarak data
- * ser.
+ * set.
  * 
  * @author Peter Jessa 
  * 
@@ -65,13 +65,13 @@ public class LoadingBigDataTest {
 		DataRepresentationBase data = this.dataLoader.loadData();
 		System.out
 				.println("Transactions: " + data.getTransactionsList().size());
-		System.out.println("Attributes clusters:"
+		System.out.println("Attributes clusters :"
 				+ data.getNumberOfAttributesClusters());
 	}
 
 	@Test
 	@Ignore("This test will use too much time and memory")
-	public void loading_accidenst() {
+	public void loading_accidents() {
 		String fileName = "resources/data/accidents.dat";
 
 		// we want to use all types of loader
@@ -86,7 +86,7 @@ public class LoadingBigDataTest {
 		DataRepresentationBase data = this.dataLoader.loadData();
 		System.out
 				.println("Transactions: " + data.getTransactionsList().size());
-		System.out.println("Attributes clusters:"
+		System.out.println("Attributes clusters: "
 				+ data.getNumberOfAttributesClusters());
 	}
 }
