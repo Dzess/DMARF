@@ -38,7 +38,7 @@ public class StringDataBuilder implements IDataRepresentationBuilder {
 
 	public void addItemInTransaction(Integer item) {
 
-		String itemIdentifier = item.toString();
+		String itemIdentifier = item.toString().intern();
 		// attributes
 		if (!attributesString.containsKey(itemIdentifier)) {
 			attributesString.put(itemIdentifier, 1);
