@@ -27,7 +27,7 @@ public class OutputFormatter {
 	/**
 	 * Get the formatted output from the passed values.
 	 * 
-	 * @return String
+	 * @return formatted output
 	 */
 	public String getFormattedOutputString() {
 

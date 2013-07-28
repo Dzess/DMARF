@@ -88,8 +88,9 @@ public class Rule {
 	/**
 	 * Compares two lists, but in the set meaning. Sequence is NOT important
 	 * 
-	 * @param list1 List 1
-	 * @param list2 List 2
+	 * @param list1 the first list
+	 * @param list2 the second list
+     *
 	 * @return True if equal
 	 */
 	private boolean smartEquals(List<Integer> list1, List<Integer> list2) {
