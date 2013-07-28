@@ -31,8 +31,8 @@ public class App {
 		// get some algorithm factory (use stable production factory)
 		IAlgorithmFactory algorithmFactory = new ProductionAlgorithmFactory();
 
-		ArgumentParser parser = null;
-		try {
+		ArgumentParser parser;
+        try {
 			// use parser
 			parser = new ArgumentParser(algorithmFactory);
 			parser.setInputArguments(args);
@@ -63,7 +63,7 @@ public class App {
 		// saving the output
 		OutputFormatter outputFormatter = new OutputFormatter();
 		outputFormatter.setMinSupport(parser.getMinSupport());
-		outputFormatter.setMinCredibility(parser.getMinCredibility());
+		outputFormatter.setMinConfidence(parser.getMinCredibility());
 		outputFormatter.setInputFileName(parser.getInputFileName());
 		outputFormatter.setAlgorithm(algorithm);
 		outputFormatter.setTotalTime(stopWatch.getElapsedTimeSecs());

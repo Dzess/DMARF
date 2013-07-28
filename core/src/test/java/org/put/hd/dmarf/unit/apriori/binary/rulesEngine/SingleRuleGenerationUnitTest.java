@@ -21,7 +21,7 @@ public class SingleRuleGenerationUnitTest {
 
 	private IRulesEngine engine;
 	private int totalSupport;
-	private double confidance;
+	private double confidence;
 	private BinaryItemSet premiseSet;
 	private BinaryItemSet totalSet;
 
@@ -30,7 +30,7 @@ public class SingleRuleGenerationUnitTest {
 		engine = new BinaryRuleEngine();
 
 		this.totalSupport = 10;
-		this.confidance = 0.8;
+		this.confidence = 0.8;
 	}
 
 	@Test
@@ -50,10 +50,10 @@ public class SingleRuleGenerationUnitTest {
 		totalSet = new BinaryItemSet(new char[] { totalVector });
 
 		Rule rule = engine.createRuleFromItemSet(totalSet, premiseSet,
-				this.confidance, this.totalSupport);
+				this.confidence, this.totalSupport);
 
-		Assert.assertTrue((int) (this.confidance * 100) == (int) rule
-				.getConfidance());
+		Assert.assertTrue((int) (this.confidence * 100) == rule
+				.getConfidence());
 		Assert.assertEquals(this.totalSupport, rule.getSupport());
 
 		// assert the premise part
@@ -106,10 +106,10 @@ public class SingleRuleGenerationUnitTest {
 		totalSet = new BinaryItemSet(new char[] { totalVector_1,totalVector_2  });
 
 		Rule rule = engine.createRuleFromItemSet(totalSet, premiseSet,
-				this.confidance, this.totalSupport);
+				this.confidence, this.totalSupport);
 
-		Assert.assertTrue((int) (this.confidance * 100) == (int) rule
-				.getConfidance());
+		Assert.assertTrue((int) (this.confidence * 100) == rule
+				.getConfidence());
 		Assert.assertEquals(this.totalSupport, rule.getSupport());
 
 		// assert the premise part
@@ -126,7 +126,7 @@ public class SingleRuleGenerationUnitTest {
 		totalSet = new BinaryItemSet(new char[] {});
 
 		try {
-			engine.createRuleFromItemSet(totalSet, premiseSet, this.confidance,
+			engine.createRuleFromItemSet(totalSet, premiseSet, this.confidence,
 					this.totalSupport);
 		} catch (Exception e) {
 			return;
@@ -149,7 +149,7 @@ public class SingleRuleGenerationUnitTest {
 		totalSet = new BinaryItemSet(new char[] { totalVector });
 
 		try {
-			engine.createRuleFromItemSet(totalSet, premiseSet, this.confidance,
+			engine.createRuleFromItemSet(totalSet, premiseSet, this.confidence,
 					this.totalSupport);
 		} catch (Exception e) {
 			return;

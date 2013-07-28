@@ -17,7 +17,7 @@ public class OutputFormatter {
 
 	private String inputFileName;
 	private IAlgorithm algorithm;
-	private double minCredibility;
+	private double minConfidence;
 	private double minSupport;
 
 	private final char lineSeparator = '\n';
@@ -27,7 +27,7 @@ public class OutputFormatter {
 	/**
 	 * Get the formatted output from the passed values.
 	 * 
-	 * @return
+	 * @return String
 	 */
 	public String getFormattedOutputString() {
 
@@ -35,26 +35,26 @@ public class OutputFormatter {
 
 		builder = new StringBuilder();
 		// inputFileName
-		append("Dane: " + inputFileName);
+		append("Input: " + inputFileName);
 
 		// minimal support
 		append("Min sup: " + minSupport);
 
 		// minimal confidence
-		append("Min conf: " + minCredibility);
+		append("Min conf: " + minConfidence);
 
 		// number of rules
-		append("No of rules: " + rules.size());
+		append("Number of rules: " + rules.size());
 
-		append("Pamiec: " + "PPP");
-		append("Calkowity czas: " + totalTime);
-		append("Czas bez we/wy: " + algorithm.getElapsedTimeOverall());
-		append("Czas gen. zb. czestych: "
+		append("Memory: " + "PPP");
+		append("Total time: " + totalTime);
+		append("Total time except IO: " + algorithm.getElapsedTimeOverall());
+		append("Time spent on candidate generation: "
 				+ algorithm.getElapsedTimeGeneration());
 
 		builder.append(lineSeparator);
 
-		append("**RULES");
+		append("** RULES **");
 
 		for (Rule rule : rules) {
 			appendRule(rule);
@@ -86,12 +86,12 @@ public class OutputFormatter {
 		append("Support: " + rule.getSupport());
 
 		// Confidence:
-		append("Confidance: " + rule.getConfidance());
+		append("Confidence: " + rule.getConfidence());
 	}
 
 	private void appendItems(List<Integer> items) {
 		for (int i = 0; i < items.size(); i++) {
-			builder.append(items.get(i) + " ");
+            builder.append(items.get(i)).append(" ");
 			if (i + 1 != items.size())
 				builder.append(" AND ");
 		}
@@ -106,8 +106,8 @@ public class OutputFormatter {
 		this.minSupport = minSupport;
 	}
 
-	public void setMinCredibility(double minCredibility) {
-		this.minCredibility = minCredibility;
+	public void setMinConfidence(double minConfidence) {
+		this.minConfidence = minConfidence;
 
 	}
 
