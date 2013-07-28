@@ -18,7 +18,7 @@ public class TimeConsumingTests extends AgainstWekaTestingBase {
 	/**
 	 * Entry point for starting time consuming tests.
 	 * 
-	 * @param args
+	 * @param args Not used
 	 */
 	public static void main(String[] args) {
 		TimeConsumingTests tests = new TimeConsumingTests();
@@ -44,7 +44,7 @@ public class TimeConsumingTests extends AgainstWekaTestingBase {
 		this.minSupport = 0.9;
 		
 		// path to the resources data
-		String fileName = "resources/data/mushroom.dat";
+		String fileName = "src/test/resources/data/mushroom.dat";
 
 		// check for file existence
 		File f = new File(fileName);
@@ -59,7 +59,7 @@ public class TimeConsumingTests extends AgainstWekaTestingBase {
 	@Ignore("Too time consuming")
 	public void retail_testing() {
 		// path to the resources data
-		String fileName = "resources/data/retail.dat";
+		String fileName = "src/test/resources/data/retail.dat";
 
 		// check for file existence
 		File f = new File(fileName);

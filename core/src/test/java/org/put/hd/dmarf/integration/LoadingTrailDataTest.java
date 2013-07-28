@@ -1,7 +1,5 @@
 package org.put.hd.dmarf.integration;
 
-import java.io.File;
-
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
@@ -51,8 +49,7 @@ public class LoadingTrailDataTest {
 		int numberOfAttributes = 5;
 
 		// perform test
-		String pathToFile = "resources" + File.separator + "data"
-				+ File.separator + "trail.dat";
+		String pathToFile = "src/test/resources/data/trail.dat";
 		dataLoader.setInputFileName(pathToFile);
 		result = dataLoader.loadData();
 

@@ -1,6 +1,5 @@
 package org.put.hd.dmarf.integration;
 
-import java.io.File;
 import java.util.LinkedList;
 import java.util.List;
 
@@ -61,8 +60,7 @@ public class LoadingTrailDataFactoryTest {
 	}
 
 	private IDataLoader setUpDataSource() {
-		String pathToFile = "resources" + File.separator + "data"
-				+ File.separator + "trail.dat";
+		String pathToFile = "src/test/resources/data/trail.dat";
 		IDataFormatter fomratter = new SimpleDataFormatter(this.builder);
 		IDataLoader dataloader = new SimpleDataLoader(fomratter);
 		dataloader.setInputFileName(pathToFile);

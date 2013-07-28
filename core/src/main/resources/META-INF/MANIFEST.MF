@@ -1,0 +1,1 @@
+Main-Class: org.put.hd.dmarf.App

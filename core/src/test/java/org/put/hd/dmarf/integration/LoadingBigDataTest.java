@@ -51,7 +51,7 @@ public class LoadingBigDataTest {
 	@Test
 	@Ignore("This test will use too much time and memory")
 	public void loading_kosarak() {
-		String fileName = "resources/data/kosarak.dat";
+		String fileName = "src/test/resources/data/kosarak.dat";
 
 		// we want to use all types of loader
 		List<IDataRepresentationBuilder> list = new LinkedList<IDataRepresentationBuilder>();
@@ -72,7 +72,7 @@ public class LoadingBigDataTest {
 	@Test
 	@Ignore("This test will use too much time and memory")
 	public void loading_accidents() {
-		String fileName = "resources/data/accidents.dat";
+		String fileName = "src/test/resources/data/accidents.dat";
 
 		// we want to use all types of loader
 		List<IDataRepresentationBuilder> list = new LinkedList<IDataRepresentationBuilder>();

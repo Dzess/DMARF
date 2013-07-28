@@ -1,0 +1,17 @@
+Description of the output file format:
+
+Input: the name of the input file
+Min sup: the value of the specified minimum support threshold
+Min conf: the value of the specified minimum confidence threshold
+Number of rules: the total number of rules
+Memory: the maximum amount of memory used
+Total time: total running time of the implementation
+Total time without IO: total running time without IO
+Candidate generation time: time spent generating candidates
+
+
+** RULES **
+
+Rule number: ( item_1 AND item_2 ...AND...item_n)  => ( item_m )
+Support: rule support value
+Confidence: rule confidence value

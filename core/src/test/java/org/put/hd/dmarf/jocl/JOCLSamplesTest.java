@@ -3,6 +3,7 @@ package org.put.hd.dmarf.jocl;
 import org.jocl.*;
 import org.junit.Assert;
 import org.junit.Before;
+import org.junit.Ignore;
 import org.junit.Test;
 
 import static org.jocl.CL.*;
@@ -28,6 +29,7 @@ public class JOCLSamplesTest {
     }
 
     @Test
+    @Ignore("This is just a sample to verify JOCL works")
     public void OpenCL_Test() {
         int n = 10;
         long numBytes[] = new long[1];

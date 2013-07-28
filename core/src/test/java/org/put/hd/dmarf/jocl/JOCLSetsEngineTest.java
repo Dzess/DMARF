@@ -1,6 +1,5 @@
 package org.put.hd.dmarf.jocl;
 
-import java.io.File;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Random;
@@ -51,8 +50,7 @@ public class JOCLSetsEngineTest {
 
 		// perform test
 		String filename = "alignedSet.data";
-		String pathToFile = "resources" + File.separator + "data"
-				+ File.separator + filename;
+		String pathToFile = "src/test/resources/data/" + filename;
 		dataLoader.setInputFileName(pathToFile);
 		System.out.println("Loading data set: " + filename);
 		sw.start();
@@ -165,8 +163,7 @@ public class JOCLSetsEngineTest {
 
 		// perform test
 		String filename = "mushroom.dat";
-		String pathToFile = "resources" + File.separator + "data"
-				+ File.separator + filename;
+		String pathToFile = "src/test/resources/data/" + filename;
 		dataLoader.setInputFileName(pathToFile);
 		System.out.println("Loading data set: " + filename);
 		sw.start();
