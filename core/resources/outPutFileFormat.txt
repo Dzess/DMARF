@@ -1,19 +1,17 @@
-//
-//Opis formatu pliku wyjściowego wg:
-//https://ophelia.cs.put.poznan.pl/webdav/dbdw/students/dbdw-summer_2011/labs/wyjscie.txt
+Description of the output file format:
 
-Dane: nazwa pliku wejsciowego
-Min sup: wartosc zadanego progu minimalnego wsparcia
-Min conf: wartosc zadanego progu minimalnego ufnosci
-No of rules: liczba wszystkich wygenerowanych regul
-Pamiec: wartosc maksymalnej zajetosci pamieciowej
-Calkowity czas: calkowity czas dzialania implementacji
-Czas bez we/wy: czas dzialania implementacji z pominieciem operacji wejscia/wyjscia
-Czas gen. zb. czestych: czas trwania fazy generowania zbiorow czestych
+Input: the name of the input file
+Min sup: the value of the specified minimum support threshold
+Min conf: the value of the specified minimum confidence threshold
+Number of rules: the total number of rules
+Memory: the maximum amount of memory used
+Total time: total running time of the implementation
+Total time without IO: total running time without IO
+Candidate generation time: time spent generating candidates
 
 
-**RULES
+** RULES **
 
-numer reguly: ( item_1 AND item_2 ...AND...item_n)  => ( item_m )
-Support: wartosc wsparcia reguly
-Confidence: wartosci ufnosci reguly
+Rule number: ( item_1 AND item_2 ...AND...item_n)  => ( item_m )
+Support: rule support value
+Confidence: rule confidence value

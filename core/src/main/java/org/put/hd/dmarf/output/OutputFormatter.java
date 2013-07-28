@@ -34,22 +34,15 @@ public class OutputFormatter {
 		List<Rule> rules = algorithm.getRules();
 
 		builder = new StringBuilder();
-		// inputFileName
 		append("Input: " + inputFileName);
-
-		// minimal support
 		append("Min sup: " + minSupport);
-
-		// minimal confidence
 		append("Min conf: " + minConfidence);
-
-		// number of rules
 		append("Number of rules: " + rules.size());
 
 		append("Memory: " + "PPP");
 		append("Total time: " + totalTime);
-		append("Total time except IO: " + algorithm.getElapsedTimeOverall());
-		append("Time spent on candidate generation: "
+		append("Total time without IO: " + algorithm.getElapsedTimeOverall());
+		append("Candidate generation time: "
 				+ algorithm.getElapsedTimeGeneration());
 
 		builder.append(lineSeparator);
@@ -64,9 +57,8 @@ public class OutputFormatter {
 	}
 
 	private void appendRule(Rule rule) {
-
 		// creating the first line
-		// no: ( item_1 AND item_2 ...AND...item_n) => ( item_m )
+		// number: ( item_1 AND item_2 ...AND...item_n) => ( item_m )
 		builder.append(rule.getId());
 		builder.append(": ( ");
 
@@ -81,11 +73,7 @@ public class OutputFormatter {
 		builder.append(")");
 		builder.append(lineSeparator);
 		
-
-		// Support:
 		append("Support: " + rule.getSupport());
-
-		// Confidence:
 		append("Confidence: " + rule.getConfidence());
 	}
 
