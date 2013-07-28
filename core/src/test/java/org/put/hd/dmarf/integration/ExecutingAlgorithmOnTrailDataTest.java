@@ -26,7 +26,7 @@ public class ExecutingAlgorithmOnTrailDataTest extends AgainstWekaTestingBase {
 		// path to the resources data
 		String fileName = "resources/data/lecture.dat";
 
-		double confidance = 0.5;
+		double confidence = 0.5;
 		double support = 0.7;
 
 		runTestingForDataSet(fileName);

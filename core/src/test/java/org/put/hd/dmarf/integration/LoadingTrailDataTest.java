@@ -22,7 +22,7 @@ import org.put.hd.dmarf.data.loaders.SimpleDataLoader;
  */
 public class LoadingTrailDataTest {
 
-	private IDataLoader dataloader;
+	private IDataLoader dataLoader;
 	private IDataFormatter formatter;
 	private IDataRepresentationBuilder builder;
 
@@ -34,7 +34,7 @@ public class LoadingTrailDataTest {
 		// use all the normal classes
 		builder = new BasicDataBuilder();
 		formatter = new SimpleDataFormatter(builder);
-		dataloader = new SimpleDataLoader(formatter);
+		dataLoader = new SimpleDataLoader(formatter);
 	}
 
 	@Test
@@ -53,8 +53,8 @@ public class LoadingTrailDataTest {
 		// perform test
 		String pathToFile = "resources" + File.separator + "data"
 				+ File.separator + "trail.dat";
-		dataloader.setInputFileName(pathToFile);
-		result = dataloader.loadData();
+		dataLoader.setInputFileName(pathToFile);
+		result = dataLoader.loadData();
 
 		// verify the result of the attributes
 		Assert.assertEquals(oneAttribute, result.getAttributesCounter().get(1));

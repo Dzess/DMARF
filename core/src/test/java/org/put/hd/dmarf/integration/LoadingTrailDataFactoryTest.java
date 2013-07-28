@@ -32,7 +32,7 @@ import org.put.hd.dmarf.data.loaders.SimpleDataLoader;
 public class LoadingTrailDataFactoryTest {
 
 	private IDataRepresentationBuilder builder;
-	private IDataLoader dataloader;
+	private IDataLoader dataLoader;
 
 	@Mock
 	private IAlgorithm algorithmMock;
@@ -120,10 +120,10 @@ public class LoadingTrailDataFactoryTest {
 		this.builder = new AlgorithmBasedBuilderFactory(algorithmMock);
 
 		// prepare the set of class for loadings
-		dataloader = setUpDataSource();
+		dataLoader = setUpDataSource();
 
 		// get the test working
-		DataRepresentationBase result = dataloader.loadData();
+		DataRepresentationBase result = dataLoader.loadData();
 
 		// assert that created representations is good
 		Assert.assertEquals(numberOfTransactions, result.getTransactions()
@@ -150,10 +150,10 @@ public class LoadingTrailDataFactoryTest {
 		this.builder = new AlgorithmBasedBuilderFactory(algorithmMock);
 
 		// prepare the set of class for loadings
-		dataloader = setUpDataSource();
+		dataLoader = setUpDataSource();
 
 		// get the test working
-		DataRepresentationBase result = dataloader.loadData();
+		DataRepresentationBase result = dataLoader.loadData();
 
 		// assert that created representations is good
 		Assert.assertEquals(numberOfTransactions, result.getTransactionsList()
@@ -180,10 +180,10 @@ public class LoadingTrailDataFactoryTest {
 		this.builder = new AlgorithmBasedBuilderFactory(algorithmMock);
 
 		// prepare the set of class for loadings
-		dataloader = setUpDataSource();
+		dataLoader = setUpDataSource();
 
 		// get the test working
-		DataRepresentationBase result = dataloader.loadData();
+		DataRepresentationBase result = dataLoader.loadData();
 
 		// expected char map
 		// 4 rows with 1 chunk each

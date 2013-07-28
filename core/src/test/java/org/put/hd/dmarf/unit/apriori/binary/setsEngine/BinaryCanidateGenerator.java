@@ -25,12 +25,12 @@ import org.put.hd.dmarf.data.DataRepresentationBase;
 public class BinaryCanidateGenerator extends BinarySetsEngineTestBase {
 
 	private SortedMap<BinaryItemSet, Integer> frequentSupportMap;
-	private TreeSet<BinaryItemSet> expecetCandidates;
+	private TreeSet<BinaryItemSet> expectedCandidates;
 
 	@Before
 	public void set_up() {
 		engine = new BinarySetsEngine();
-		expecetCandidates = new TreeSet<BinaryItemSet>();
+		expectedCandidates = new TreeSet<BinaryItemSet>();
 	}
 
 	@Test
@@ -109,9 +109,9 @@ public class BinaryCanidateGenerator extends BinarySetsEngineTestBase {
 		vector = 24576;
 		BinaryItemSet set3 = new BinaryItemSet(new char[] { vector });
 
-		expecetCandidates.add(set1);
-		expecetCandidates.add(set2);
-		expecetCandidates.add(set3);
+		expectedCandidates.add(set1);
+		expectedCandidates.add(set2);
+		expectedCandidates.add(set3);
 
 		// generate data
 		DataRepresentationBase data = getDataFromString(dataString);
@@ -121,7 +121,7 @@ public class BinaryCanidateGenerator extends BinarySetsEngineTestBase {
 		Set<BinaryItemSet> result = engine.getCandidateSets(
 				frequentSupportMap.keySet(), 1);
 
-		Assert.assertTrue(expecetCandidates.equals(result));
+		Assert.assertTrue(expectedCandidates.equals(result));
 	}
 
 	@Test
@@ -129,7 +129,7 @@ public class BinaryCanidateGenerator extends BinarySetsEngineTestBase {
 
 		// already generated frequent sets
 		frequentSupportMap = new TreeMap<BinaryItemSet, Integer>();
-		char setVector = 0;
+		char setVector;
 
 		String dataString = "1 2 3";
 		Integer support = 0;
@@ -156,13 +156,13 @@ public class BinaryCanidateGenerator extends BinarySetsEngineTestBase {
 		// 1110 0000 0000 0000
 		char vector = 57344;
 		BinaryItemSet set1 = new BinaryItemSet(new char[] { vector });
-		expecetCandidates.add(set1);
+		expectedCandidates.add(set1);
 
 		// go with test
 		Set<BinaryItemSet> result = engine.getCandidateSets(
 				frequentSupportMap.keySet(), 1);
 
-		Assert.assertTrue(expecetCandidates.equals(result));
+		Assert.assertTrue(expectedCandidates.equals(result));
 	}
 
 	@Test
@@ -186,6 +186,6 @@ public class BinaryCanidateGenerator extends BinarySetsEngineTestBase {
 		Set<BinaryItemSet> result = engine.getCandidateSets(
 				frequentSupportMap.keySet(), 1);
 
-		Assert.assertTrue(expecetCandidates.equals(result));
+		Assert.assertTrue(expectedCandidates.equals(result));
 	}
 }

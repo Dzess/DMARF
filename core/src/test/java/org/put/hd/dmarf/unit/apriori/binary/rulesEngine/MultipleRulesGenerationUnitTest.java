@@ -24,14 +24,14 @@ public class MultipleRulesGenerationUnitTest {
 	private IRulesEngine engine;
 	private SortedMap<BinaryItemSet, Integer> frequentSetsMap;
 	private BinaryItemSet frequentSet;
-	private double confidance;
+	private double confidence;
 
 	@Before
 	public void set_up() {
 		engine = new BinaryRuleEngine();
 
 		// default values for some of the parameters
-		this.confidance = 0.5;
+		this.confidence = 0.5;
 		this.frequentSetsMap = new TreeMap<BinaryItemSet, Integer>();
 	}
 
@@ -42,7 +42,7 @@ public class MultipleRulesGenerationUnitTest {
 		frequentSet = new BinaryItemSet(new char[] { 1 });
 		frequentSetsMap.put(frequentSet, 3);
 
-		List<Rule> result = engine.getRules(frequentSet, this.confidance,
+		List<Rule> result = engine.getRules(frequentSet, this.confidence,
 				frequentSetsMap);
 
 		// get the assertion right

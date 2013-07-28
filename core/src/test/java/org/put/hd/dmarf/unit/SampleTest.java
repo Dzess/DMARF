@@ -10,10 +10,10 @@ public class SampleTest
 {
 
     /**
-     * Rigourous Test :-)
+     * Rigorous Test :-)
      */
     @Test
-    public void rightours_test()
+    public void rigorous_test()
     {
         Assert.assertTrue(true);
     }

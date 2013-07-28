@@ -7,13 +7,10 @@ import java.util.Random;
 
 import javax.naming.directory.InvalidAttributesException;
 
-import org.junit.After;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
-import org.put.hd.dmarf.algorithms.apriori.binary.BinaryItemSet;
 import org.put.hd.dmarf.algorithms.apriori.binary.JOCLSetsEngine;
-import org.put.hd.dmarf.algorithms.apriori.binary.JOCLSetsEngine.DeviceTypeSelector;
 import org.put.hd.dmarf.data.DataRepresentationBase;
 import org.put.hd.dmarf.data.builders.BasicDataBuilder;
 import org.put.hd.dmarf.data.formatters.IDataFormatter;
@@ -25,7 +22,7 @@ import org.put.hd.dmarf.stopwatches.StopWatch;
 
 public class JOCLSetsEngineTest {
 
-	private IDataLoader dataloader;
+	private IDataLoader dataLoader;
 	private IDataFormatter formatter;
 	private BasicDataBuilder builder;
 
@@ -40,7 +37,7 @@ public class JOCLSetsEngineTest {
 		// use all the normal classes
 		builder = new BasicDataBuilder(4);
 		formatter = new SimpleDataFormatter(builder);
-		dataloader = new SimpleDataLoader(formatter);
+		dataLoader = new SimpleDataLoader(formatter);
 
 		sw = new StopWatch();
 
@@ -56,10 +53,10 @@ public class JOCLSetsEngineTest {
 		String filename = "alignedSet.data";
 		String pathToFile = "resources" + File.separator + "data"
 				+ File.separator + filename;
-		dataloader.setInputFileName(pathToFile);
+		dataLoader.setInputFileName(pathToFile);
 		System.out.println("Loading data set: " + filename);
 		sw.start();
-		data = dataloader.loadData();
+		data = dataLoader.loadData();
 		sw.stop();
 
 		System.out.println("Loading took [s]: " + sw.getElapsedTimeSecs());
@@ -170,10 +167,10 @@ public class JOCLSetsEngineTest {
 		String filename = "mushroom.dat";
 		String pathToFile = "resources" + File.separator + "data"
 				+ File.separator + filename;
-		dataloader.setInputFileName(pathToFile);
+		dataLoader.setInputFileName(pathToFile);
 		System.out.println("Loading data set: " + filename);
 		sw.start();
-		data = dataloader.loadData();
+		data = dataLoader.loadData();
 		sw.stop();
 
 		System.out.println("Loading took [s]: " + sw.getElapsedTimeSecs());

@@ -33,7 +33,7 @@ public class LoadingBigDataTest {
 	private IAlgorithm algorithmMock;
 	private IDataRepresentationBuilder builder;
 	private IDataFormatter formatter;
-	private IDataLoader dataloader;
+	private IDataLoader dataLoader;
 
 	@Before
 	public void set_up() {
@@ -45,7 +45,7 @@ public class LoadingBigDataTest {
 		// use all the normal classes
 		builder = new AlgorithmBasedBuilderFactory(algorithmMock);
 		formatter = new SimpleDataFormatter(builder);
-		dataloader = new SimpleDataLoader(formatter);
+		dataLoader = new SimpleDataLoader(formatter);
 	}
 
 	@Test
@@ -61,8 +61,8 @@ public class LoadingBigDataTest {
 		Mockito.when(algorithmMock.getRequiredBuilders()).thenReturn(list);
 
 		setUpLoader();
-		this.dataloader.setInputFileName(fileName);
-		DataRepresentationBase data = this.dataloader.loadData();
+		this.dataLoader.setInputFileName(fileName);
+		DataRepresentationBase data = this.dataLoader.loadData();
 		System.out
 				.println("Transactions: " + data.getTransactionsList().size());
 		System.out.println("Attributes clusters:"
@@ -82,8 +82,8 @@ public class LoadingBigDataTest {
 		Mockito.when(algorithmMock.getRequiredBuilders()).thenReturn(list);
 
 		setUpLoader();
-		this.dataloader.setInputFileName(fileName);
-		DataRepresentationBase data = this.dataloader.loadData();
+		this.dataLoader.setInputFileName(fileName);
+		DataRepresentationBase data = this.dataLoader.loadData();
 		System.out
 				.println("Transactions: " + data.getTransactionsList().size());
 		System.out.println("Attributes clusters:"
