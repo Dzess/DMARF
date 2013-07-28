@@ -144,22 +144,22 @@ public class BasicDataBuilder implements IDataRepresentationBuilder {
 
 		// finding the biggest attribute number
 		// pretty damn odd way
-		int[] attsVector = new int[attributesCounter.keySet().size()];
+		int[] attrVector = new int[attributesCounter.keySet().size()];
 		Iterator<Integer> it = attributesCounter.keySet().iterator();
 		int i = 0;
 		while (it.hasNext()) {
-			attsVector[i] = it.next().intValue();
+			attrVector[i] = it.next();
 			i++;
 		}
 
 		// elements in the vector must be sorted !
-		Arrays.sort(attsVector);
+		Arrays.sort(attrVector);
 
-		if (attsVector.length == 0) {
+		if (attrVector.length == 0) {
 			throw new RuntimeException("No attributes found in data set.");
 		}
 
-		maxAttIndex = attsVector[attsVector.length - 1];
+		maxAttIndex = attrVector[attrVector.length - 1];
 
 		// we need to align attributes clusters
 		if (bitAlignment == 0) {

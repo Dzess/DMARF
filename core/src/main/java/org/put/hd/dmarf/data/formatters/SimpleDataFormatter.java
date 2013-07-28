@@ -33,7 +33,7 @@ public class SimpleDataFormatter implements IDataFormatter {
 		// invoking the dataRepresentation factory
 		while (true) {
 
-			String line = null;
+			String line;
 			try {
 				line = buffer.readLine();
 			} catch (IOException e) {
