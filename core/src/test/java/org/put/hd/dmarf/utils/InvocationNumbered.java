@@ -4,7 +4,7 @@ import java.util.List;
 
 import org.mockito.Mockito;
 import org.mockito.exceptions.base.MockitoException;
-import org.mockito.internal.invocation.Invocation;
+import org.mockito.invocation.Invocation;
 import org.mockito.internal.invocation.InvocationMatcher;
 import org.mockito.internal.verification.api.VerificationData;
 import org.mockito.verification.VerificationMode;
