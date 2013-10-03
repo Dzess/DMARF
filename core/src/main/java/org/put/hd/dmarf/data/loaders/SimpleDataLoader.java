@@ -17,11 +17,11 @@ public class SimpleDataLoader implements IDataLoader {
 	private File inputFile;
 	private final IDataFormatter formatter;
 
-	public SimpleDataLoader(IDataFormatter fomratter) {
-		if (fomratter == null)
+	public SimpleDataLoader(IDataFormatter formatter) {
+		if (formatter == null)
 			throw new NullPointerException("formatter parameter cannot be null");
 
-		this.formatter = fomratter;
+		this.formatter = formatter;
 	}
 
 	public void setInputFileName(String name) {
@@ -40,7 +40,7 @@ public class SimpleDataLoader implements IDataLoader {
 	}
 
 	public DataRepresentationBase loadData() {
-		Reader fileReader = null;
+		Reader fileReader;
 
 		DataRepresentationBase data = null;
 		try {

@@ -16,8 +16,8 @@ public class ItemSetEqualityTests {
 		ItemSet itemSet2 = new ItemSet("B");
 		ItemSet itemSet3 = new ItemSet("A");
 		
-		Assert.assertTrue(itemSet1.equals(itemSet3) == true);
-		Assert.assertTrue(itemSet1.equals(itemSet2) == false);
+		Assert.assertTrue(itemSet1.equals(itemSet3));
+		Assert.assertTrue(!itemSet1.equals(itemSet2));
 	}
 	
 	@Test

@@ -1,7 +1,5 @@
 package org.put.hd.dmarf.integration;
 
-import java.io.File;
-
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
@@ -22,7 +20,7 @@ import org.put.hd.dmarf.data.loaders.SimpleDataLoader;
  */
 public class LoadingTrailDataTest {
 
-	private IDataLoader dataloader;
+	private IDataLoader dataLoader;
 	private IDataFormatter formatter;
 	private IDataRepresentationBuilder builder;
 
@@ -34,7 +32,7 @@ public class LoadingTrailDataTest {
 		// use all the normal classes
 		builder = new BasicDataBuilder();
 		formatter = new SimpleDataFormatter(builder);
-		dataloader = new SimpleDataLoader(formatter);
+		dataLoader = new SimpleDataLoader(formatter);
 	}
 
 	@Test
@@ -51,10 +49,9 @@ public class LoadingTrailDataTest {
 		int numberOfAttributes = 5;
 
 		// perform test
-		String pathToFile = "resources" + File.separator + "data"
-				+ File.separator + "trail.dat";
-		dataloader.setInputFileName(pathToFile);
-		result = dataloader.loadData();
+		String pathToFile = "src/test/resources/data/trail.dat";
+		dataLoader.setInputFileName(pathToFile);
+		result = dataLoader.loadData();
 
 		// verify the result of the attributes
 		Assert.assertEquals(oneAttribute, result.getAttributesCounter().get(1));

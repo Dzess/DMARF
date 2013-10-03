@@ -5,10 +5,9 @@ import java.util.SortedSet;
 import java.util.TreeSet;
 
 /**
- * Faster version (suing integers for values). Has support for
+ * Faster version (using integers for values). Has support for
  * {@link Comparable} interface which is must have feature for
- * {@link SortedList}
- * 
+ *
  * @author Piotr
  * 
  */
@@ -50,7 +49,7 @@ public class FastItemSet implements Comparable<FastItemSet> {
 		else {
 			// the case when we have two sets with the same amount elements, and
 			// we want
-			// the lexigraphic sorting of the elements inside
+			// the lexicographic sorting of the elements inside
 			Iterator<Integer> it1 = this.elements.iterator();
 			Iterator<Integer> it2 = o.elements.iterator();
 			for (int i = 0; i < this.elements.size(); i++) {

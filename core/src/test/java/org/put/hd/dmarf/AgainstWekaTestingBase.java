@@ -20,7 +20,7 @@ import org.put.hd.dmarf.stopwatches.StopWatch;
 public class AgainstWekaTestingBase {
 
 	protected double minSupport;
-	protected double minConfidance;
+	protected double minConfidence;
 	protected IDataLoader loader;
 	protected IDataFormatter fomratter;
 	protected IDataRepresentationBuilder builder;
@@ -38,7 +38,7 @@ public class AgainstWekaTestingBase {
 		DataRepresentationBase wekaData = getWekaData(fileName);
 
 		// get the Weka results - expected ones
-		wekaProvider.start(wekaData, minSupport, minConfidance);
+		wekaProvider.start(wekaData, minSupport, minConfidence);
 		List<Rule> wekaResults = wekaProvider.getRules();
 		sw.stop();
 		
@@ -59,7 +59,7 @@ public class AgainstWekaTestingBase {
 
 			// go with the algorithms
 			sw.start();
-			algorithm.start(data, minSupport, minConfidance);
+			algorithm.start(data, minSupport, minConfidence);
 			sw.stop();
 
 			System.out.println("Algorithm: " + algorithm.toString()
@@ -87,8 +87,7 @@ public class AgainstWekaTestingBase {
 		IDataFormatter wekaFormatter = new SimpleDataFormatter(wekaBuilder);
 		SimpleDataLoader wekaLoader = new SimpleDataLoader(wekaFormatter);
 		wekaLoader.setInputFileName(fileName);
-		DataRepresentationBase wekaData = wekaLoader.loadData();
-		return wekaData;
+        return wekaLoader.loadData();
 	}
 
 	private void verifyOutput(List<Rule> result, List<Rule> expectedRules) {
@@ -115,7 +114,7 @@ public class AgainstWekaTestingBase {
 			List<Rule> expectedRules) {
 
 		// Show what went wrong
-		System.err.println("OutCome: ");
+		System.err.println("Outcome: ");
 
 		for (Rule r : result) {
 			System.err.println(r);
@@ -142,7 +141,7 @@ public class AgainstWekaTestingBase {
 		// set the parameters of the algorithms
 		minSupport = 0.6; // meaning 3 item must support (0*6 * 4 = 2,4 -> 3
 							// rules i guess)
-		minConfidance = 0.75;
+		minConfidence = 0.75;
 	}
 
 }

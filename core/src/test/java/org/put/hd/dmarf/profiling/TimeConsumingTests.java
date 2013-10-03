@@ -8,7 +8,7 @@ import org.junit.Test;
 import org.put.hd.dmarf.AgainstWekaTestingBase;
 
 /**
- * Time consuming tests checking Weka agnainst the data sets on.
+ * Time consuming tests checking Weka against the data sets on.
  * 
  * @author Piotr
  * 
@@ -18,7 +18,7 @@ public class TimeConsumingTests extends AgainstWekaTestingBase {
 	/**
 	 * Entry point for starting time consuming tests.
 	 * 
-	 * @param args
+	 * @param args Not used
 	 */
 	public static void main(String[] args) {
 		TimeConsumingTests tests = new TimeConsumingTests();
@@ -26,7 +26,7 @@ public class TimeConsumingTests extends AgainstWekaTestingBase {
 		tests.set_up();
 		tests.mushroom_testing();
 
-		// TODO: check for the GC before testing (memoty limits for this code is
+		// TODO: check for the GC before testing (memory limits for this code is
 		// pretty awesome)
 		tests.set_up();
 		tests.retail_testing();
@@ -40,15 +40,15 @@ public class TimeConsumingTests extends AgainstWekaTestingBase {
 	@Test
 	public void mushroom_testing() {
 
-		this.minConfidance = 0.9;
+		this.minConfidence = 0.9;
 		this.minSupport = 0.9;
 		
 		// path to the resources data
-		String fileName = "resources/data/mushroom.dat";
+		String fileName = "src/test/resources/data/mushroom.dat";
 
 		// check for file existence
 		File f = new File(fileName);
-		if (f.exists() == false) {
+		if (!f.exists()) {
 			System.err.println(getMessage(fileName));
 		}
 
@@ -59,11 +59,11 @@ public class TimeConsumingTests extends AgainstWekaTestingBase {
 	@Ignore("Too time consuming")
 	public void retail_testing() {
 		// path to the resources data
-		String fileName = "resources/data/retail.dat";
+		String fileName = "src/test/resources/data/retail.dat";
 
 		// check for file existence
 		File f = new File(fileName);
-		if (f.exists() == false) {
+		if (!f.exists()) {
 			System.err.println(getMessage(fileName));
 		}
 
@@ -71,9 +71,8 @@ public class TimeConsumingTests extends AgainstWekaTestingBase {
 	}
 
 	private String getMessage(String fileName) {
-		String msg = "No file '" + fileName
-				+ "' in your resources please be sure too have it";
-		return msg;
+        return "No file '" + fileName
+                + "' in your resources please be sure too have it";
 	}
 
 }

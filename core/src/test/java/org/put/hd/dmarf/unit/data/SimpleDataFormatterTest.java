@@ -26,13 +26,13 @@ public class SimpleDataFormatterTest {
 	/**
 	 * System under test
 	 */
-	private SimpleDataFormatter fomratter;
+	private SimpleDataFormatter formatter;
 
 	@Before
 	public void set_up() {
 		MockitoAnnotations.initMocks(this);
 		
-		fomratter = new SimpleDataFormatter(builderMock);
+		formatter = new SimpleDataFormatter(builderMock);
 	}
 
 	
@@ -44,7 +44,7 @@ public class SimpleDataFormatterTest {
 		Reader someReader = new StringReader(fileMock);
 
 		// check if invoking data get uses the proper builder
-		fomratter.getFormattedData(someReader);
+		formatter.getFormattedData(someReader);
 		
 		// verify that 3 items have appeared in this sequence
 		Mockito.verify(builderMock, new InvocationNumbered(0)).addTransaction(0);
@@ -60,7 +60,7 @@ public class SimpleDataFormatterTest {
 		String fileMock = "2 3" + System.getProperty("line.separator");
 		Reader someReader = new StringReader(fileMock);
 
-		fomratter.getFormattedData(someReader);
+		formatter.getFormattedData(someReader);
 		
 		// verify that 3 items have appeared in this sequence
 		Mockito.verify(builderMock, new InvocationNumbered(0)).addTransaction(0);
@@ -77,7 +77,7 @@ public class SimpleDataFormatterTest {
 		String fileMock = line1 + line2;
 		Reader someReader = new StringReader(fileMock);
 
-		fomratter.getFormattedData(someReader);
+		formatter.getFormattedData(someReader);
 		
 		// verify that 3 items have appeared in this sequence
 		Mockito.verify(builderMock, new InvocationNumbered(0)).addTransaction(0);

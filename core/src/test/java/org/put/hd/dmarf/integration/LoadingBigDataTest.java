@@ -22,7 +22,7 @@ import org.put.hd.dmarf.data.loaders.SimpleDataLoader;
 
 /**
  * Loading the big data test. Especially accidents data set and kosarak data
- * ser.
+ * set.
  * 
  * @author Peter Jessa 
  * 
@@ -33,7 +33,7 @@ public class LoadingBigDataTest {
 	private IAlgorithm algorithmMock;
 	private IDataRepresentationBuilder builder;
 	private IDataFormatter formatter;
-	private IDataLoader dataloader;
+	private IDataLoader dataLoader;
 
 	@Before
 	public void set_up() {
@@ -45,13 +45,13 @@ public class LoadingBigDataTest {
 		// use all the normal classes
 		builder = new AlgorithmBasedBuilderFactory(algorithmMock);
 		formatter = new SimpleDataFormatter(builder);
-		dataloader = new SimpleDataLoader(formatter);
+		dataLoader = new SimpleDataLoader(formatter);
 	}
 
 	@Test
 	@Ignore("This test will use too much time and memory")
 	public void loading_kosarak() {
-		String fileName = "resources/data/kosarak.dat";
+		String fileName = "src/test/resources/data/kosarak.dat";
 
 		// we want to use all types of loader
 		List<IDataRepresentationBuilder> list = new LinkedList<IDataRepresentationBuilder>();
@@ -61,18 +61,18 @@ public class LoadingBigDataTest {
 		Mockito.when(algorithmMock.getRequiredBuilders()).thenReturn(list);
 
 		setUpLoader();
-		this.dataloader.setInputFileName(fileName);
-		DataRepresentationBase data = this.dataloader.loadData();
+		this.dataLoader.setInputFileName(fileName);
+		DataRepresentationBase data = this.dataLoader.loadData();
 		System.out
 				.println("Transactions: " + data.getTransactionsList().size());
-		System.out.println("Attributes clusters:"
+		System.out.println("Attributes clusters :"
 				+ data.getNumberOfAttributesClusters());
 	}
 
 	@Test
 	@Ignore("This test will use too much time and memory")
-	public void loading_accidenst() {
-		String fileName = "resources/data/accidents.dat";
+	public void loading_accidents() {
+		String fileName = "src/test/resources/data/accidents.dat";
 
 		// we want to use all types of loader
 		List<IDataRepresentationBuilder> list = new LinkedList<IDataRepresentationBuilder>();
@@ -82,11 +82,11 @@ public class LoadingBigDataTest {
 		Mockito.when(algorithmMock.getRequiredBuilders()).thenReturn(list);
 
 		setUpLoader();
-		this.dataloader.setInputFileName(fileName);
-		DataRepresentationBase data = this.dataloader.loadData();
+		this.dataLoader.setInputFileName(fileName);
+		DataRepresentationBase data = this.dataLoader.loadData();
 		System.out
 				.println("Transactions: " + data.getTransactionsList().size());
-		System.out.println("Attributes clusters:"
+		System.out.println("Attributes clusters: "
 				+ data.getNumberOfAttributesClusters());
 	}
 }

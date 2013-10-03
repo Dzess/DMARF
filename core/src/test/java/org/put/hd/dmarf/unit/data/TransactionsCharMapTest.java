@@ -1,6 +1,5 @@
 package org.put.hd.dmarf.unit.data;
 
-import java.io.File;
 import java.util.LinkedList;
 import java.util.List;
 
@@ -84,8 +83,7 @@ public class TransactionsCharMapTest {
 	public void sample_aligned_table() {
 
 		// perform test
-		String pathToFile = "resources" + File.separator + "data"
-				+ File.separator + "alignedSet.data";
+		String pathToFile = "src/test/resources/data/alignedSet.data";
 		dataloader.setInputFileName(pathToFile);
 		data = dataloader.loadData();
 
@@ -110,8 +108,7 @@ public class TransactionsCharMapTest {
 	public void sample_non_aligned_table() {
 
 		// perform test
-		String pathToFile = "resources" + File.separator + "data"
-				+ File.separator + "nonAlignedSet.data";
+		String pathToFile = "src/test/resources/data/nonAlignedSet.data";
 		dataloader.setInputFileName(pathToFile);
 		data = dataloader.loadData();
 

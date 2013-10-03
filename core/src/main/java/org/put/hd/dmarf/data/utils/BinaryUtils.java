@@ -34,7 +34,7 @@ public class BinaryUtils {
 	/**
 	 * Generates the whole CharMap for all transactions
 	 * 
-	 * @param transactions
+	 * @param transactionsLists
 	 *            List<List<Integer>> of all transactions. These must not be
 	 *            empty.
 	 * @param numberOfAttributesClusters

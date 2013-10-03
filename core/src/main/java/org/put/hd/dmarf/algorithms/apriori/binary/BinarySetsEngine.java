@@ -122,7 +122,7 @@ public class BinarySetsEngine implements ISetsEngine {
 					for (int i = 0; i < vectorLength; i++) {
 						// hope it will work
 						outputVector[i] = (char) (vector[i] | singleVector[i]);
-						sum += BinaryItemSet.bitcount(outputVector[i]);
+						sum += BinaryItemSet.bitCount(outputVector[i]);
 					}
 
 					// do not add the same set for the second time

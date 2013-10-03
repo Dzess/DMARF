@@ -33,7 +33,7 @@ public class BinaryRuleEngine implements IRulesEngine {
 	 * org.put.hd.dmarf.data.DataRepresentationBase, double,
 	 * java.util.SortedMap)
 	 */
-	public List<Rule> getRules(BinaryItemSet itemSet, double minCredibility,
+	public List<Rule> getRules(BinaryItemSet itemSet, double minConfidence,
 			SortedMap<BinaryItemSet, Integer> frequentSet) {
 
 		List<Rule> itemSetRules = new LinkedList<Rule>();
@@ -44,7 +44,7 @@ public class BinaryRuleEngine implements IRulesEngine {
 		// check if the set passed is the at least two element set
 		int count = 0;
 		for (char elements : itemSet.getAttributeVector()) {
-			count += BinaryItemSet.bitcount(elements);
+			count += BinaryItemSet.bitCount(elements);
 		}
 		// for one and two element sets return the empty list
 		if (count == 0 || count == 1)
@@ -77,7 +77,7 @@ public class BinaryRuleEngine implements IRulesEngine {
 				int supportX = frequentSet.get(currentSet);
 				double confidanceXY = suportXY / (double) supportX;
 
-				if (confidanceXY >= minCredibility) {
+				if (confidanceXY >= minConfidence) {
 
 					// delegate creation of the rule to someone else
 					Rule rule = createRuleFromItemSet(itemSet, currentSet,
@@ -116,7 +116,7 @@ public class BinaryRuleEngine implements IRulesEngine {
 	 * java.util.SortedMap)
 	 */
 	public Rule createRuleFromItemSet(BinaryItemSet itemSet,
-			BinaryItemSet currentSet, double confidance, int suportXY) {
+			BinaryItemSet currentSet, double confidence, int suportXY) {
 
 		if (itemSet.getNumberOfAttributes() == 0
 				|| currentSet.getNumberOfAttributes() == 0)
@@ -158,9 +158,7 @@ public class BinaryRuleEngine implements IRulesEngine {
 			}
 		}
 
-		Rule rule = new Rule(this.ruleCounter++, condPart, exePart,
-				(int) (confidance * 100), suportXY);
-
-		return rule;
+        return new Rule(this.ruleCounter++, condPart, exePart,
+                (int) (confidence * 100), suportXY);
 	}
 }

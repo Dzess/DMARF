@@ -106,7 +106,7 @@ public class BinaryCandidateLevelOneGeneration extends BinarySetsEngineTestBase 
 		String dataString = "1 2 3" + '\n' + "8" + '\n';
 
 		// create expected data (the candidate sets for such elements)
-		SortedMap<BinaryItemSet, Integer> expetedCandidates = new TreeMap<BinaryItemSet, Integer>();
+		SortedMap<BinaryItemSet, Integer> expectedCandidates = new TreeMap<BinaryItemSet, Integer>();
 
 		// get from string to the data representation base
 		DataRepresentationBase data = getDataFromString(dataString);
@@ -116,7 +116,7 @@ public class BinaryCandidateLevelOneGeneration extends BinarySetsEngineTestBase 
 				.getSingleCandidateSets(data, supportThreshold);
 
 		// assert results (the equality of empty maps)
-		Assert.assertTrue(expetedCandidates.equals(result));
+		Assert.assertTrue(expectedCandidates.equals(result));
 
 	}
 }

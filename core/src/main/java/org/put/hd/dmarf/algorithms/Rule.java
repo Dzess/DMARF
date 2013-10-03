@@ -26,14 +26,14 @@ public class Rule {
 
 		builder.append(" ) => ( ");
 
-		List<Integer> itemsExecutive = exectuivePart;
+		List<Integer> itemsExecutive = executivePart;
 		appendItems(itemsExecutive);
 
 		builder.append(" )");
 
-		// print the support and confidance
-		builder.append("  Confidance: ");
-		builder.append(this.confidance);
+		// print the support and confidence
+		builder.append("  Confidence: ");
+		builder.append(this.confidence);
 
 		builder.append("  Support: ");
 		builder.append(this.support);
@@ -47,9 +47,9 @@ public class Rule {
 		int result = 1;
 		result = prime * result
 				+ ((conditionalPart == null) ? 0 : conditionalPart.hashCode());
-		result = prime * result + confidance;
+		result = prime * result + confidence;
 		result = prime * result
-				+ ((exectuivePart == null) ? 0 : exectuivePart.hashCode());
+				+ ((executivePart == null) ? 0 : executivePart.hashCode());
 		
 		result = prime * result + support;
 		return result;
@@ -72,26 +72,25 @@ public class Rule {
 		// custom set comparison
 		else if (!smartEquals(conditionalPart, other.conditionalPart))
 			return false;
-		if (confidance != other.confidance)
+		if (confidence != other.confidence)
 			return false;
-		if (exectuivePart == null) {
-			if (other.exectuivePart != null)
+		if (executivePart == null) {
+			if (other.executivePart != null)
 				return false;
 		}
 		// custom set comparison
-		else if (!smartEquals(exectuivePart, other.exectuivePart))
+		else if (!smartEquals(executivePart, other.executivePart))
 			return false;
 
-		if (support != other.support)
-			return false;
-		return true;
-	}
+        return support == other.support;
+    }
 
 	/**
 	 * Compares two lists, but in the set meaning. Sequence is NOT important
 	 * 
-	 * @param list1
-	 * @param list2
+	 * @param list1 the first list
+	 * @param list2 the second list
+     *
 	 * @return True if equal
 	 */
 	private boolean smartEquals(List<Integer> list1, List<Integer> list2) {
@@ -110,7 +109,7 @@ public class Rule {
 
 	private void appendItems(List<Integer> items) {
 		for (int i = 0; i < items.size(); i++) {
-			builder.append(items.get(i) + " ");
+			builder.append(items.get(i)).append(" ");
 			if (i + 1 != items.size())
 				builder.append(" AND ");
 		}
@@ -119,17 +118,17 @@ public class Rule {
 	private int id;
 
 	public Rule(int id, List<Integer> conditionalPart,
-			List<Integer> exectuivePart, int confidance, int support) {
+			List<Integer> executivePart, int confidence, int support) {
 		this.id = id;
 		this.conditionalPart = conditionalPart;
-		this.exectuivePart = exectuivePart;
-		this.confidance = confidance;
+		this.executivePart = executivePart;
+		this.confidence = confidence;
 		this.support = support;
 	}
 
 	private List<Integer> conditionalPart;
-	private List<Integer> exectuivePart;
-	private int confidance;
+	private List<Integer> executivePart;
+	private int confidence;
 	private int support;
 
 	public int getId() {
@@ -142,14 +141,14 @@ public class Rule {
 	}
 
 	public List<Integer> getExecutivePart() {
-		return exectuivePart;
+		return executivePart;
 	}
 
 	public int getSupport() {
 		return support;
 	}
 
-	public int getConfidance() {
-		return confidance;
+	public int getConfidence() {
+		return confidence;
 	}
 }

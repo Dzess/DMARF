@@ -40,7 +40,7 @@ public class WekaAlgorithm implements IAlgorithm {
 
 	private IStopWatch stopWatch;
 	private double minSupport;
-	private double minCredibility;
+	private double minConfidence;
 
 	public WekaAlgorithm() {
 
@@ -68,13 +68,13 @@ public class WekaAlgorithm implements IAlgorithm {
 	}
 
 	public void start(DataRepresentationBase data, double minSupport,
-			double minCredibility) {
+			double minConfidence) {
 
 		stopWatch.start();
 
 		// for future things
 		this.minSupport = Math.ceil(minSupport * data.getTransactions().size());
-		this.minCredibility = minCredibility;
+		this.minConfidence = minConfidence;
 
 		generateAttributes(data);
 
@@ -90,7 +90,7 @@ public class WekaAlgorithm implements IAlgorithm {
 		apriori.setUpperBoundMinSupport(1);
 
 		// this is confidence parameter - really
-		apriori.setMinMetric(minCredibility);
+		apriori.setMinMetric(minConfidence);
 
 		// run apriori algorithm and save the results
 		try {
@@ -136,7 +136,7 @@ public class WekaAlgorithm implements IAlgorithm {
 		Iterator<Integer> it = data.getAttributesCounter().keySet().iterator();
 		int i = 0;
 		while (it.hasNext()) {
-			vector[i] = it.next().intValue();
+			vector[i] = it.next();
 			i++;
 		}
 
@@ -144,10 +144,9 @@ public class WekaAlgorithm implements IAlgorithm {
 		Arrays.sort(vector);
 
 		// nominal attribute is required for apriori
-		for (int j = 0; j < vector.length; j++) {
-			Integer element = new Integer(vector[j]);
-			attributes.addElement(new Attribute(element.toString(), decisions));
-		}
+        for (int element : vector) {
+            attributes.addElement(new Attribute(String.valueOf(element), decisions));
+        }
 	}
 
 	public List<Rule> getRules() {
@@ -170,15 +169,15 @@ public class WekaAlgorithm implements IAlgorithm {
 			List<Integer> executive = new LinkedList<Integer>();
 			getRulePart(consequence, executive);
 
-			int confidance = 0;
+			int confidence = 0;
 			try {
-				confidance = (int) (rule.getMetricValuesForRule()[0] * 100);
+				confidence = (int) (rule.getMetricValuesForRule()[0] * 100);
 			} catch (Exception e) {
 				// this code should throw up if something is bad
 				e.printStackTrace();
 			}
 
-			Rule dmarfRule = new Rule(i++, conditional, executive, confidance,
+			Rule dmarfRule = new Rule(i++, conditional, executive, confidence,
 					rule.getTotalSupport());
 
 			listOfRules.add(dmarfRule);

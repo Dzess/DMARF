@@ -6,8 +6,7 @@ import java.util.TreeSet;
 
 /**
  * Nested class for representing the frequent set. Used another class for
- * that because of the {@link Comparable} interface which is must have
- * feature for {@link SortedList}
+ * that because of the {@link Comparable} interface
  * 
  * @author Piotr
  * 
@@ -50,7 +49,7 @@ public class ItemSet implements Comparable<ItemSet> {
 		else
 		{
 			// the case when we have two sets with the same amount elements, and we want
-			// the lexigraphic sorting of the elements inside
+			// the lexicographic sorting of the elements inside
 			Iterator<String> it1 = this.elements.iterator();
 			Iterator<String> it2 = o.elements.iterator();
 			for(int i =0 ; i < this.elements.size();i++){

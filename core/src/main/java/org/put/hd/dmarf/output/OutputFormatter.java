@@ -17,7 +17,7 @@ public class OutputFormatter {
 
 	private String inputFileName;
 	private IAlgorithm algorithm;
-	private double minCredibility;
+	private double minConfidence;
 	private double minSupport;
 
 	private final char lineSeparator = '\n';
@@ -27,34 +27,27 @@ public class OutputFormatter {
 	/**
 	 * Get the formatted output from the passed values.
 	 * 
-	 * @return
+	 * @return formatted output
 	 */
 	public String getFormattedOutputString() {
 
 		List<Rule> rules = algorithm.getRules();
 
 		builder = new StringBuilder();
-		// inputFileName
-		append("Dane: " + inputFileName);
-
-		// minimal support
+		append("Input: " + inputFileName);
 		append("Min sup: " + minSupport);
+		append("Min conf: " + minConfidence);
+		append("Number of rules: " + rules.size());
 
-		// minimal confidence
-		append("Min conf: " + minCredibility);
-
-		// number of rules
-		append("No of rules: " + rules.size());
-
-		append("Pamiec: " + "PPP");
-		append("Calkowity czas: " + totalTime);
-		append("Czas bez we/wy: " + algorithm.getElapsedTimeOverall());
-		append("Czas gen. zb. czestych: "
+		append("Memory: " + "PPP");
+		append("Total time: " + totalTime);
+		append("Total time without IO: " + algorithm.getElapsedTimeOverall());
+		append("Candidate generation time: "
 				+ algorithm.getElapsedTimeGeneration());
 
 		builder.append(lineSeparator);
 
-		append("**RULES");
+		append("** RULES **");
 
 		for (Rule rule : rules) {
 			appendRule(rule);
@@ -64,9 +57,8 @@ public class OutputFormatter {
 	}
 
 	private void appendRule(Rule rule) {
-
 		// creating the first line
-		// no: ( item_1 AND item_2 ...AND...item_n) => ( item_m )
+		// number: ( item_1 AND item_2 ...AND...item_n) => ( item_m )
 		builder.append(rule.getId());
 		builder.append(": ( ");
 
@@ -81,17 +73,13 @@ public class OutputFormatter {
 		builder.append(")");
 		builder.append(lineSeparator);
 		
-
-		// Support:
 		append("Support: " + rule.getSupport());
-
-		// Confidence:
-		append("Confidance: " + rule.getConfidance());
+		append("Confidence: " + rule.getConfidence());
 	}
 
 	private void appendItems(List<Integer> items) {
 		for (int i = 0; i < items.size(); i++) {
-			builder.append(items.get(i) + " ");
+            builder.append(items.get(i)).append(" ");
 			if (i + 1 != items.size())
 				builder.append(" AND ");
 		}
@@ -106,8 +94,8 @@ public class OutputFormatter {
 		this.minSupport = minSupport;
 	}
 
-	public void setMinCredibility(double minCredibility) {
-		this.minCredibility = minCredibility;
+	public void setMinConfidence(double minConfidence) {
+		this.minConfidence = minConfidence;
 
 	}
 

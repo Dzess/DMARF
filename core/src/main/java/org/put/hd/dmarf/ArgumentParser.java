@@ -26,13 +26,13 @@ public class ArgumentParser {
 		return minSupport;
 	}
 
-	public double getMinCredibility() {
-		return minCredibility;
+	public double getMinConfidence() {
+		return minConfidence;
 	}
 
 	private String outputFileName;
 	private double minSupport;
-	private double minCredibility;
+	private double minConfidence;
 	private short algorithm;
 
 	private IAlgorithmFactory algorithmFactory;
@@ -48,14 +48,14 @@ public class ArgumentParser {
 	/**
 	 * The message that will be shown upon the failure.
 	 */
-	public final String usageMessage = "Provide arguments in the following manner:"
+	public final String usageMessage = "Provide arguments in the following format:"
 			+ "\n"
-			+ "inputFileName_outputFileName_minSupport_minCredibility_numberOfAlgorithm";
+			+ "inputFileName outputFileName minSupport minConfidence numberOfAlgorithm";
 
 	/**
 	 * The message that will be shown upon the successful read.
 	 */
-	public final String confirmationMessage = "Arguments has been parsed succesfully";
+	public final String confirmationMessage = "Arguments have been parsed successfully";
 
 	public String setInputArguments(String arguments) {
 
@@ -84,17 +84,17 @@ public class ArgumentParser {
 		outputFileName = args[1];
 
 		int minSupportInt;
-		int minCredibityInt;
+		int minConfidenceInt;
 
 		try {
 			minSupportInt = Integer.parseInt(args[2]);
-			minCredibityInt = Integer.parseInt(args[3]);
+			minConfidenceInt = Integer.parseInt(args[3]);
 			algorithm = Short.parseShort(args[4]);
 		} catch (NumberFormatException e) {
 			throw new RuntimeException(usageMessage, e);
 		}
 
-		minCredibility = minCredibityInt / 100.0;
+		minConfidence = minConfidenceInt / 100.0;
 		minSupport = minSupportInt / 100.0;
 
 		// checking the number of algorithms in the factory

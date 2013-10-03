@@ -20,8 +20,7 @@ public class BinarySetsEngineTestBase {
 		Reader stringReader = new StringReader(dataString);
 		SimpleDataFormatter formatter = new SimpleDataFormatter(
 				new BasicDataBuilder());
-		DataRepresentationBase data = formatter.getFormattedData(stringReader);
-		return data;
+        return formatter.getFormattedData(stringReader);
 	}
 
 }

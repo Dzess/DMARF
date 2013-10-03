@@ -55,7 +55,7 @@ public class BinaryItemSetComparityTest {
 	}
 	
 	@Test
-	public void equality_in_data_sets_using_compate(){
+	public void equality_in_data_sets_using_compare(){
 		setUpElements(3);
 		elements1[0] =  137;
 		elements2[0] =  137;

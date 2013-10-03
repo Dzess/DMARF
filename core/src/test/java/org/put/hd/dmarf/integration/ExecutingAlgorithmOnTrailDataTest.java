@@ -24,9 +24,9 @@ public class ExecutingAlgorithmOnTrailDataTest extends AgainstWekaTestingBase {
 	@Test
 	public void run_all_tests_from_simple_algorithm_factory_trial_2() {
 		// path to the resources data
-		String fileName = "resources/data/lecture.dat";
+		String fileName = "src/test/resources/data/lecture.dat";
 
-		double confidance = 0.5;
+		double confidence = 0.5;
 		double support = 0.7;
 
 		runTestingForDataSet(fileName);
@@ -36,7 +36,7 @@ public class ExecutingAlgorithmOnTrailDataTest extends AgainstWekaTestingBase {
 	public void run_all_tests_from_simple_algorithm_factory_trial_1() {
 
 		// path to the resources data
-		String fileName = "resources/data/trail.dat";
+		String fileName = "src/test/resources/data/trail.dat";
 
 		runTestingForDataSet(fileName);
 

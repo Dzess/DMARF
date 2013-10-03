@@ -42,23 +42,23 @@ public class BinaryApriori extends AlgorithmBase {
 	 * 
 	 * @param binaryEngine
 	 *            : engine that will be used for creating sets
-	 * @param bitAligment
+	 * @param bitAlignment
 	 *            : set the bit alignment using the {@link BinaryDataBuilder}
 	 *            bit alignment settings.
 	 */
 	public BinaryApriori(IRulesEngine binaryRuleEngine,
-			ISetsEngine binaryEngine, int bitAligment) {
+			ISetsEngine binaryEngine, int bitAlignment) {
 		this.binaryEngine = binaryEngine;
 		this.binaryRuleEngine = binaryRuleEngine;
 
 		// TODO: change here passing the builders
 		this.passedBuilders = new LinkedList<IDataRepresentationBuilder>();
-		this.passedBuilders.add(new BinaryDataBuilder(bitAligment));
+		this.passedBuilders.add(new BinaryDataBuilder(bitAlignment));
 	}
 
 	@Override
 	protected void startRuleGeneration(DataRepresentationBase data,
-			double minSupport, double minCredibility) {
+			double minSupport, double minConfidence) {
 
 		rules = new LinkedList<Rule>();
 
@@ -68,7 +68,7 @@ public class BinaryApriori extends AlgorithmBase {
 
 			// generate possible rules for this frequent set
 			List<Rule> frequentSetRules = this.binaryRuleEngine.getRules(
-					entry.getKey(), minCredibility, frequentSet);
+					entry.getKey(), minConfidence, frequentSet);
 
 			rules.addAll(frequentSetRules);
 		}
@@ -77,7 +77,7 @@ public class BinaryApriori extends AlgorithmBase {
 
 	@Override
 	protected void startSetGeneration(DataRepresentationBase data,
-			double minSupport, double minCredibility) {
+			double minSupport, double minConfidence) {
 
 		// get the threshold for the minimal support of the frequent set =
 		// ceiling { transactions * percent }
@@ -142,10 +142,9 @@ public class BinaryApriori extends AlgorithmBase {
 	}
 
 	public List<IDataRepresentationBuilder> getRequiredBuilders() {
-		List<IDataRepresentationBuilder> builders = new LinkedList<IDataRepresentationBuilder>(
-				passedBuilders);
 
-		return builders;
+        return new LinkedList<IDataRepresentationBuilder>(
+                passedBuilders);
 	}
 
 }

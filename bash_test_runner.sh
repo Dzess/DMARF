@@ -31,7 +31,7 @@ echo "Location of output folder '$output_folder'"
 echo "Location of the executable '$executable_path'"
 
 # The metrics used in the following algorithms: values in % of all supported set
-confidances="85 90 95"
+confidences="85 90 95"
 supports="85 90 95"
 
 # Ram Limit for Heap Size in the JVM
@@ -70,10 +70,10 @@ for file in $files; do
 	echo "Proceeding with file: '$file' "
 	for algorithm_number in $algorithms; do
 		for support in $supports; do
-			for confidance in $confidances; do
-				# Preapare values for invocation
+			for confidence in $confidences; do
+				# Prepare values for invocation
 				output_file="$file_path_output.$support.$confidance.$algorithm_number.out"
-				invocation="java -Xmx$ram_limit -jar $executable_path $file_path_input $output_file $support $confidance $algorithm_number"
+				invocation="java -Xmx$ram_limit -jar $executable_path $file_path_input $output_file $support $confidence $algorithm_number"
 				echo $invocation
 				`$invocation`
 			done

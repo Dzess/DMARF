@@ -1,6 +1,5 @@
 package org.put.hd.dmarf.integration;
 
-import java.io.File;
 import java.util.LinkedList;
 import java.util.List;
 
@@ -32,7 +31,7 @@ import org.put.hd.dmarf.data.loaders.SimpleDataLoader;
 public class LoadingTrailDataFactoryTest {
 
 	private IDataRepresentationBuilder builder;
-	private IDataLoader dataloader;
+	private IDataLoader dataLoader;
 
 	@Mock
 	private IAlgorithm algorithmMock;
@@ -61,8 +60,7 @@ public class LoadingTrailDataFactoryTest {
 	}
 
 	private IDataLoader setUpDataSource() {
-		String pathToFile = "resources" + File.separator + "data"
-				+ File.separator + "trail.dat";
+		String pathToFile = "src/test/resources/data/trail.dat";
 		IDataFormatter fomratter = new SimpleDataFormatter(this.builder);
 		IDataLoader dataloader = new SimpleDataLoader(fomratter);
 		dataloader.setInputFileName(pathToFile);
@@ -120,10 +118,10 @@ public class LoadingTrailDataFactoryTest {
 		this.builder = new AlgorithmBasedBuilderFactory(algorithmMock);
 
 		// prepare the set of class for loadings
-		dataloader = setUpDataSource();
+		dataLoader = setUpDataSource();
 
 		// get the test working
-		DataRepresentationBase result = dataloader.loadData();
+		DataRepresentationBase result = dataLoader.loadData();
 
 		// assert that created representations is good
 		Assert.assertEquals(numberOfTransactions, result.getTransactions()
@@ -150,10 +148,10 @@ public class LoadingTrailDataFactoryTest {
 		this.builder = new AlgorithmBasedBuilderFactory(algorithmMock);
 
 		// prepare the set of class for loadings
-		dataloader = setUpDataSource();
+		dataLoader = setUpDataSource();
 
 		// get the test working
-		DataRepresentationBase result = dataloader.loadData();
+		DataRepresentationBase result = dataLoader.loadData();
 
 		// assert that created representations is good
 		Assert.assertEquals(numberOfTransactions, result.getTransactionsList()
@@ -180,10 +178,10 @@ public class LoadingTrailDataFactoryTest {
 		this.builder = new AlgorithmBasedBuilderFactory(algorithmMock);
 
 		// prepare the set of class for loadings
-		dataloader = setUpDataSource();
+		dataLoader = setUpDataSource();
 
 		// get the test working
-		DataRepresentationBase result = dataloader.loadData();
+		DataRepresentationBase result = dataLoader.loadData();
 
 		// expected char map
 		// 4 rows with 1 chunk each
